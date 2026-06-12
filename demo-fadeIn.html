@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Demo — Motion fadeIn (SuperJon)</title>
+  <style>
+    :root {
+      --red: #e10600;
+      --white: #ffffff;
+      --yellow: #ffd200;
+      --yellow-text: #1a1a1a;
+      --ink: #15171a;
+      --ink-soft: #555;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 28px;
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      background: #f3f4f6;
+      padding: 24px;
+    }
+
+    .card {
+      width: 320px;
+      background: var(--white);
+      border-radius: 18px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.12);
+      overflow: hidden;
+    }
+
+    /* ===== A animação fadeIn (a mesma do projeto SuperJon) ===== */
+    .lp-done {
+      text-align: center;
+      padding: 40px 24px 48px;
+      animation: fadeIn 0.4s ease both;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .lp-done { animation-duration: 0.001ms !important; }
+    }
+    /* ========================================================= */
+
+    .lp-done__check {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: var(--red);
+      color: var(--white);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      margin-bottom: 16px;
+    }
+
+    .lp-done__title {
+      font-weight: 800;
+      font-style: italic;
+      text-transform: uppercase;
+      font-size: 22px;
+      letter-spacing: -0.5px;
+      line-height: 1.05;
+      color: var(--ink);
+      margin: 0 0 10px;
+    }
+
+    .lp-done__text {
+      font-size: 13px;
+      color: var(--ink-soft);
+      line-height: 1.5;
+      max-width: 280px;
+      margin: 0 auto 20px;
+    }
+
+    .lp-done__badge {
+      display: inline-block;
+      background: var(--yellow);
+      color: var(--yellow-text);
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      padding: 5px 11px;
+      border-radius: 99px;
+    }
+
+    .replay {
+      border: 0;
+      background: var(--ink);
+      color: #fff;
+      font-size: 14px;
+      font-weight: 600;
+      padding: 12px 22px;
+      border-radius: 99px;
+      cursor: pointer;
+    }
+    .replay:hover { opacity: 0.85; }
+
+    .hint { font-size: 12px; color: #888; }
+  </style>
+</head>
+<body>
+  <div class="card" id="card">
+    <div class="lp-done">
+      <div class="lp-done__check">✓</div>
+      <h1 class="lp-done__title">Inscrição confirmada!</h1>
+      <p class="lp-done__text">
+        Você está na Tropa do Jon. Fica de olho que as novidades chegam por aqui.
+      </p>
+      <span class="lp-done__badge">Jon Vlogs × Superbet</span>
+    </div>
+  </div>
+
+  <button class="replay" id="replay">▶ Repetir animação</button>
+  <p class="hint">A animação <strong>fadeIn</strong> roda ao carregar a página e ao clicar no botão.</p>
+
+  <script>
+    const card = document.getElementById('card');
+    document.getElementById('replay').addEventListener('click', () => {
+      const el = card.querySelector('.lp-done');
+      // Reinicia a animação: remove e re-adiciona o elemento
+      const clone = el.cloneNode(true);
+      el.replaceWith(clone);
+    });
+  </script>
+</body>
+</html>
