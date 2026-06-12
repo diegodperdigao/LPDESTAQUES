@@ -1,283 +1,408 @@
 /* ===========================================================
-   SuperJon — LP de conversão
-   Lógica: render data-driven, seleção única, progresso,
-   validação do CTA e submissão abstraída (submitLead).
+   SuperJon — LP de conversão (Jon Vlogs × Superbet)
+   Fluxo:
+     gate   -> "Já tem conta na Superbet?"  (Sim / Não)
+       Sim  -> form
+       Não  -> create -> (abre cadastro em nova aba) -> form
+     form   -> coleta dados -> submitLead -> grupo de WhatsApp
    =========================================================== */
 
 (function () {
   'use strict';
 
-  /* -----------------------------------------------------------
-     Configuração das perguntas (data-driven).
-     Conjunto completo de qualificação conforme a spec.
-     - id:        chave usada no payload
-     - text:      enunciado
-     - required:  bloqueia o CTA até responder
-     - qualifier: faixa de aposta marca o tier (VIP do VIP)
-     - options:   { value, label, variant?: 'yellow', tier?: 'vip' }
-     ----------------------------------------------------------- */
-  var QUESTIONS = [
-    {
-      id: 'ja_aposta',
-      text: 'Você já aposta?',
-      required: true,
-      options: [
-        { value: 'sim', label: 'Sim' },
-        { value: 'nao', label: 'Ainda não' }
-      ]
-    },
-    {
-      id: 'preferencia',
-      text: 'Você curte mais cassino ou esporte?',
-      required: true,
-      options: [
-        { value: 'cassino', label: 'Cassino' },
-        { value: 'esporte', label: 'Esporte' },
-        { value: 'os_dois', label: 'Os dois', variant: 'yellow' }
-      ]
-    },
-    {
-      id: 'faixa_aposta',
-      text: 'Quanto costuma apostar por mês?',
-      required: true,
-      qualifier: true,
-      options: [
-        { value: 'ate_1000', label: 'Até R$ 1.000' },
-        { value: '1000_5000', label: 'R$ 1.000 a 5.000' },
-        { value: 'mais_5000', label: '+ de R$ 5.000', tier: 'vip' }
-      ]
-    },
-    {
-      id: 'tem_conta',
-      text: 'Já tem conta na Superbet?',
-      required: true,
-      options: [
-        { value: 'sim', label: 'Sim' },
-        { value: 'nao', label: 'Não' }
-      ]
-    }
+  /* ===========================================================
+     CONFIG — plugar os valores reais aqui
+     =========================================================== */
+
+  // Link de cadastro da Superbet (abre em nova aba no fluxo "Não tenho conta")
+  var REGISTRATION_URL = '';            // ex.: 'https://superbet.com/...afiliado'
+
+  // Grupo de WhatsApp (destino final do lead).
+  var WHATSAPP_GROUP_URL = '';          // ex.: 'https://chat.whatsapp.com/XXXX'
+  var WHATSAPP_GROUP_URL_VIP = '';      // opcional: grupo VIP (faixa 5.000+)
+
+  // Selo +18 oficial da Superbet (imagem). Se vazio, usa placeholder estilizado.
+  var SEAL_URL = '';                    // ex.: 'https://.../selo-18.png'
+
+  // Texto do Termo de Condições exibido no modal.
+  // PLACEHOLDER — substituir pelo texto jurídico oficial antes de ir ao ar.
+  var TERMS_TEXT = [
+    'Ao enviar seus dados nesta página, você declara ter no mínimo 18 anos e ' +
+      'concorda em receber comunicações do grupo do SuperJon na Superbet pelos ' +
+      'contatos informados (WhatsApp, e-mail e/ou telefone).',
+    'Seus dados são tratados conforme a Lei Geral de Proteção de Dados (LGPD) e ' +
+      'utilizados para qualificação, comunicação e ações de marketing relacionadas ' +
+      'à Superbet. Você pode solicitar a remoção a qualquer momento.',
+    'Esta página não promete prêmios, bônus ou aumento de chance de ganho como ' +
+      'recompensa por cadastro ou depósito. Promoções, quando existirem, são ' +
+      'comunicadas dentro do grupo e seguem regras próprias.',
+    'Conteúdo destinado a maiores de 18 anos. Aposte com responsabilidade. ' +
+      'Este texto é um rascunho e deve passar por revisão jurídica.'
   ];
 
   /* -----------------------------------------------------------
-     Destino dos dados — abstraído para plugar depois
-     (Supabase / planilha / webhook da automação).
-     Recebe o payload e deve resolver/rejeitar uma Promise.
+     Destino dos dados — planilha (Google Sheets via webhook).
+     Recebe o payload (flat, pronto pra virar linha) e devolve Promise.
      ----------------------------------------------------------- */
+  var SHEETS_WEBHOOK_URL = '';          // ex.: URL do Apps Script (doPost)
+
   async function submitLead(payload) {
-    // TODO: plugar destino real. Exemplos:
-    //
-    //  return fetch('https://SEU-WEBHOOK', {
-    //    method: 'POST',
-    //    headers: { 'Content-Type': 'application/json' },
-    //    body: JSON.stringify(payload)
-    //  }).then(function (r) {
-    //    if (!r.ok) throw new Error('Falha ao enviar lead');
-    //  });
-    //
-    // Por enquanto apenas loga e simula sucesso.
+    // Quando SHEETS_WEBHOOK_URL estiver configurado, envia pra planilha.
+    // Dica: um Google Apps Script publicado como Web App (doPost) recebe o JSON
+    // e dá appendRow numa planilha — simples e sem backend.
+    if (SHEETS_WEBHOOK_URL) {
+      return fetch(SHEETS_WEBHOOK_URL, {
+        method: 'POST',
+        // 'no-cors' evita bloqueio de CORS do Apps Script; resposta fica opaca.
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+    }
+    // Sem destino configurado ainda: loga e simula sucesso.
     console.log('[submitLead] payload:', payload);
-    return new Promise(function (resolve) {
-      setTimeout(resolve, 600);
-    });
+    return new Promise(function (resolve) { setTimeout(resolve, 500); });
   }
 
-  // Link do grupo (WhatsApp/Telegram). Pode ser sobrescrito por tier.
-  var GROUP_URL = '';            // ex.: 'https://chat.whatsapp.com/...'
-  var GROUP_URL_VIP = '';        // ex.: grupo da fila do VIP do VIP
+  /* ===========================================================
+     Dados do formulário
+     =========================================================== */
 
-  /* ----------------------------- Estado ----------------------------- */
-  var answers = {};              // { questionId: optionValue }
+  // Campos de texto (cards numerados)
+  var FIELDS = [
+    { id: 'nome', label: 'Nome', type: 'text', autocomplete: 'name',
+      placeholder: 'Seu nome completo' },
+    { id: 'contato_superbet', label: 'E-mail ou ID Superbet', type: 'text',
+      autocomplete: 'email', placeholder: 'email@exemplo.com ou seu ID' },
+    { id: 'telefone', label: 'Telefone', type: 'tel', autocomplete: 'tel',
+      inputmode: 'tel', placeholder: '(11) 99999-9999' }
+  ];
 
-  /* --------------------------- Elementos --------------------------- */
-  var container = document.getElementById('questions');
-  var form = document.getElementById('leadForm');
-  var cta = document.getElementById('ctaButton');
-  var progressFill = document.getElementById('progressFill');
-  var progressBar = document.querySelector('.lp-progress');
-  var lpBody = document.querySelector('.lp-body');
+  // Pergunta de faixa de aposta (chips) — qualifica o tier
+  var BET = {
+    id: 'faixa_aposta',
+    label: 'Sobre quanto você aposta?',
+    options: [
+      { value: 'ate_1000', label: 'Até R$ 1.000' },
+      { value: '1000_3000', label: 'R$ 1.000 a 3.000' },
+      { value: '3000_5000', label: 'R$ 3.000 a 5.000' },
+      { value: '5000_mais', label: 'R$ 5.000+', tier: 'vip' }
+    ]
+  };
 
-  /* --------------------------- Origem / UTM --------------------------- */
+  /* ===========================================================
+     Estado
+     =========================================================== */
+  var state = {
+    hasAccount: null,        // 'sim' | 'criou_agora'
+    data: {},                // valores dos campos de texto
+    bet: null                // valor da faixa
+  };
+
+  var screenEl = document.getElementById('screen');
+
+  /* ===========================================================
+     Tracking (origem / UTM)
+     =========================================================== */
   function getTracking() {
     var params = new URLSearchParams(window.location.search);
     var utm = {};
     ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term'].forEach(function (k) {
-      if (params.get(k)) utm[k] = params.get(k);
+      utm[k] = params.get(k) || '';
     });
-    return {
-      utm: utm,
-      referrer: document.referrer || null,
-      landing_url: window.location.href
-    };
+    return utm;
   }
 
-  /* ----------------------------- Render ----------------------------- */
-  function render() {
-    var frag = document.createDocumentFragment();
+  /* ===========================================================
+     Helpers de criação de elementos
+     =========================================================== */
+  function el(tag, cls, text) {
+    var n = document.createElement(tag);
+    if (cls) n.className = cls;
+    if (text != null) n.textContent = text;
+    return n;
+  }
 
-    QUESTIONS.forEach(function (q, idx) {
-      var card = document.createElement('div');
-      card.className = 'lp-q';
-      card.dataset.qid = q.id;
+  function cardShell(num, labelText) {
+    var card = el('div', 'lp-q');
+    var head = el('div', 'lp-q__head');
+    if (num != null) head.appendChild(el('span', 'lp-q__num', String(num)));
+    head.appendChild(el('span', 'lp-q__text', labelText));
+    card.appendChild(head);
+    return card;
+  }
 
-      // Cabeçalho: número + enunciado
-      var head = document.createElement('div');
-      head.className = 'lp-q__head';
+  /* ===========================================================
+     TELA: gate — "Já tem conta na Superbet?"
+     =========================================================== */
+  function renderGate() {
+    screenEl.innerHTML = '';
+    state.hasAccount = null;
 
-      var num = document.createElement('span');
-      num.className = 'lp-q__num';
-      num.textContent = idx + 1;
+    screenEl.appendChild(el('p', 'lp-section-label', 'Antes de começar'));
 
-      var text = document.createElement('span');
-      text.className = 'lp-q__text';
-      text.textContent = q.text;
+    var card = cardShell(null, 'Você já tem conta na Superbet?');
+    var chips = el('div', 'lp-chips');
 
-      head.appendChild(num);
-      head.appendChild(text);
-      card.appendChild(head);
-
-      // Chips
-      var chips = document.createElement('div');
-      chips.className = 'lp-chips';
-
-      q.options.forEach(function (opt) {
-        var chip = document.createElement('button');
-        chip.type = 'button';
-        chip.className = 'chip' + (opt.variant === 'yellow' ? ' chip--yellow' : '');
-        chip.textContent = opt.label;
-        chip.dataset.value = opt.value;
-        chip.setAttribute('role', 'radio');
-        chip.setAttribute('aria-checked', 'false');
-
-        chip.addEventListener('click', function () {
-          select(q, opt, chips, chip, card);
-        });
-
-        chips.appendChild(chip);
+    [['sim', 'Sim, já tenho'], ['nao', 'Ainda não']].forEach(function (pair) {
+      var chip = el('button', 'chip', pair[1]);
+      chip.type = 'button';
+      chip.addEventListener('click', function () {
+        if (pair[0] === 'sim') {
+          state.hasAccount = 'sim';
+          renderForm(false);
+        } else {
+          renderCreate();
+        }
       });
-
-      card.appendChild(chips);
-      frag.appendChild(card);
+      chips.appendChild(chip);
     });
 
-    container.appendChild(frag);
-    updateProgress();
+    card.appendChild(chips);
+    screenEl.appendChild(card);
+    appendFooter();
   }
 
-  /* --------------------------- Seleção única --------------------------- */
-  function select(question, option, chipsEl, chipEl, cardEl) {
-    answers[question.id] = option.value;
+  /* ===========================================================
+     TELA: create — "Crie sua conta agora"
+     =========================================================== */
+  function renderCreate() {
+    screenEl.innerHTML = '';
 
-    // Desmarca todos os chips da pergunta, marca o escolhido
-    var siblings = chipsEl.querySelectorAll('.chip');
-    siblings.forEach(function (c) {
-      c.classList.remove('is-selected');
-      c.setAttribute('aria-checked', 'false');
+    screenEl.appendChild(el('p', 'lp-section-label', 'Quase lá'));
+
+    var intro = el('p', 'lp-intro',
+      'Pra entrar no grupo você precisa de uma conta na Superbet. ' +
+      'Cria a sua agora — leva menos de 2 minutos.');
+    screenEl.appendChild(intro);
+
+    var btn = el('button', 'lp-cta', 'Crie sua conta agora');
+    btn.type = 'button';
+    btn.addEventListener('click', function () {
+      // Abre o cadastro em nova aba e mantém esta aba já no formulário
+      if (REGISTRATION_URL) {
+        window.open(REGISTRATION_URL, '_blank', 'noopener');
+      } else {
+        console.warn('[create] REGISTRATION_URL não configurado.');
+      }
+      state.hasAccount = 'criou_agora';
+      renderForm(true);
     });
-    chipEl.classList.add('is-selected');
-    chipEl.setAttribute('aria-checked', 'true');
+    screenEl.appendChild(btn);
 
-    // Removeu pendência ao responder
-    cardEl.classList.remove('is-pending');
+    var back = el('button', 'lp-link-btn', 'Já tenho conta');
+    back.type = 'button';
+    back.addEventListener('click', function () {
+      state.hasAccount = 'sim';
+      renderForm(false);
+    });
+    screenEl.appendChild(back);
 
-    updateProgress();
+    appendFooter();
   }
 
-  /* --------------------------- Progresso --------------------------- */
-  function requiredQuestions() {
-    return QUESTIONS.filter(function (q) { return q.required; });
-  }
+  /* ===========================================================
+     TELA: form — coleta de dados
+     =========================================================== */
+  function renderForm(fromCreate) {
+    screenEl.innerHTML = '';
 
-  function answeredCount() {
-    return requiredQuestions().filter(function (q) {
-      return answers[q.id] != null;
-    }).length;
-  }
+    // Barra de progresso
+    var prog = el('div', 'lp-progress');
+    prog.setAttribute('role', 'progressbar');
+    prog.setAttribute('aria-valuemin', '0');
+    prog.setAttribute('aria-valuemax', '100');
+    var fill = el('div', 'lp-progress__fill');
+    prog.appendChild(fill);
+    screenEl.appendChild(prog);
 
-  function updateProgress() {
-    var req = requiredQuestions().length;
-    var done = answeredCount();
-    var pct = req === 0 ? 100 : Math.round((done / req) * 100);
-    progressFill.style.width = pct + '%';
-    if (progressBar) progressBar.setAttribute('aria-valuenow', String(pct));
-  }
+    // Chamada (muda se veio do "criar conta")
+    if (fromCreate) {
+      var done = el('p', 'lp-intro lp-intro--success',
+        'Agora que deu tudo certo com o cadastro, responde essas perguntas pra liberar o seu acesso:');
+      screenEl.appendChild(done);
+    } else {
+      screenEl.appendChild(el('p', 'lp-section-label', 'Seus dados'));
+    }
 
-  function isComplete() {
-    return answeredCount() === requiredQuestions().length;
-  }
+    var form = el('form', 'lp-form');
+    form.noValidate = true;
 
-  /* --------------------------- Payload --------------------------- */
-  function buildPayload() {
-    // Define tier a partir da pergunta qualificadora
-    var tier = 'standard';
-    QUESTIONS.forEach(function (q) {
-      if (!q.qualifier) return;
-      var chosen = q.options.filter(function (o) { return o.value === answers[q.id]; })[0];
-      if (chosen && chosen.tier === 'vip') tier = 'vip';
+    var n = 1;
+
+    // Campos de texto
+    FIELDS.forEach(function (f) {
+      var card = cardShell(n++, f.label);
+      var input = el('input', 'lp-input');
+      input.type = f.type;
+      input.name = f.id;
+      input.placeholder = f.placeholder || '';
+      if (f.autocomplete) input.autocomplete = f.autocomplete;
+      if (f.inputmode) input.setAttribute('inputmode', f.inputmode);
+      input.value = state.data[f.id] || '';
+      input.addEventListener('input', function () {
+        state.data[f.id] = input.value;
+        card.classList.remove('is-pending');
+        updateProgress(fill, prog);
+      });
+      card.appendChild(input);
+      card.dataset.field = f.id;
+      form.appendChild(card);
     });
 
-    var tracking = getTracking();
+    // Faixa de aposta (chips)
+    var betCard = cardShell(n++, BET.label);
+    betCard.dataset.field = BET.id;
+    var chips = el('div', 'lp-chips');
+    BET.options.forEach(function (opt) {
+      var chip = el('button', 'chip', opt.label);
+      chip.type = 'button';
+      if (state.bet === opt.value) chip.classList.add('is-selected');
+      chip.addEventListener('click', function () {
+        state.bet = opt.value;
+        chips.querySelectorAll('.chip').forEach(function (c) { c.classList.remove('is-selected'); });
+        chip.classList.add('is-selected');
+        betCard.classList.remove('is-pending');
+        updateProgress(fill, prog);
+      });
+      chips.appendChild(chip);
+    });
+    betCard.appendChild(chips);
+    form.appendChild(betCard);
 
-    return {
-      answers: Object.assign({}, answers),
-      tier: tier,                              // 'vip' = candidato ao VIP do VIP
-      vip_candidate: tier === 'vip',
-      submitted_at: new Date().toISOString(),
-      source: 'lp_superjon',
-      utm: tracking.utm,
-      referrer: tracking.referrer,
-      landing_url: tracking.landing_url,
-      user_agent: navigator.userAgent
-    };
+    // Consentimento
+    var consent = el('p', 'lp-consent');
+    consent.appendChild(document.createTextNode('Ao enviar, você concorda com os '));
+    var termsLink = el('button', 'lp-terms-link', 'Termos e Condições');
+    termsLink.type = 'button';
+    termsLink.addEventListener('click', openTerms);
+    consent.appendChild(termsLink);
+    consent.appendChild(document.createTextNode('.'));
+    form.appendChild(consent);
+
+    // CTA
+    var cta = el('button', 'lp-cta', 'Quero entrar no grupo agora');
+    cta.type = 'submit';
+    form.appendChild(cta);
+
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      handleSubmit(cta);
+    });
+
+    screenEl.appendChild(form);
+    appendFooter();
+    updateProgress(fill, prog);
   }
 
-  /* --------------------------- Validação visual --------------------------- */
-  function highlightPending() {
-    var firstPending = null;
-    requiredQuestions().forEach(function (q) {
-      var card = container.querySelector('[data-qid="' + q.id + '"]');
+  /* ===========================================================
+     Validação / progresso
+     =========================================================== */
+  function fieldFilled(id) {
+    if (id === BET.id) return state.bet != null;
+    return (state.data[id] || '').trim().length > 0;
+  }
+
+  function requiredIds() {
+    return FIELDS.map(function (f) { return f.id; }).concat([BET.id]);
+  }
+
+  function updateProgress(fill, prog) {
+    var ids = requiredIds();
+    var done = ids.filter(fieldFilled).length;
+    var pct = Math.round((done / ids.length) * 100);
+    fill.style.width = pct + '%';
+    if (prog) prog.setAttribute('aria-valuenow', String(pct));
+  }
+
+  function validateField(id) {
+    var v = (state.data[id] || '').trim();
+    if (id === BET.id) return state.bet != null;
+    if (!v) return false;
+    if (id === 'contato_superbet') {
+      // e-mail OU id: aceita e-mail válido ou texto com >= 3 chars (ID)
+      var isEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
+      return isEmail || v.length >= 3;
+    }
+    if (id === 'telefone') {
+      var digits = v.replace(/\D/g, '');
+      return digits.length >= 10;
+    }
+    return v.length >= 2; // nome
+  }
+
+  function highlightInvalid() {
+    var first = null;
+    requiredIds().forEach(function (id) {
+      var card = screenEl.querySelector('[data-field="' + id + '"]');
       if (!card) return;
-      if (answers[q.id] == null) {
+      if (!validateField(id)) {
         card.classList.add('is-pending');
-        if (!firstPending) firstPending = card;
+        if (!first) first = card;
       } else {
         card.classList.remove('is-pending');
       }
     });
-    if (firstPending) {
-      firstPending.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    if (first) {
+      first.classList.add('shake');
+      setTimeout(function () { first.classList.remove('shake'); }, 400);
+      first.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      var inp = first.querySelector('input');
+      if (inp) inp.focus({ preventScroll: true });
     }
   }
 
-  /* --------------------------- Confirmação --------------------------- */
-  function showConfirmation(payload) {
-    var url = payload.tier === 'vip' && GROUP_URL_VIP ? GROUP_URL_VIP : GROUP_URL;
-
-    // Redireciona se houver link configurado; senão, mostra tela de confirmação
-    if (url) {
-      window.location.href = url;
-      return;
-    }
-
-    var isVip = payload.tier === 'vip';
-    lpBody.innerHTML =
-      '<div class="lp-done">' +
-        '<div class="lp-done__check" aria-hidden="true">✓</div>' +
-        (isVip
-          ? '<div class="lp-done__badge">Fila VIP do VIP</div>'
-          : '') +
-        '<h2 class="lp-done__title">Recebemos seu cadastro</h2>' +
-        '<p class="lp-done__text">A equipe vai te direcionar pro grupo certo. ' +
-          'Fica de olho no contato que você usou pra acessar.</p>' +
-        '<p class="lp-foot">Conteúdo para maiores de 18 anos. Jogue com responsabilidade.</p>' +
-      '</div>';
+  /* ===========================================================
+     Payload (flat, pronto pra virar linha de planilha)
+     =========================================================== */
+  function betLabel(value) {
+    var o = BET.options.filter(function (x) { return x.value === value; })[0];
+    return o ? o.label : '';
   }
 
-  /* --------------------------- Submit --------------------------- */
-  form.addEventListener('submit', function (e) {
-    e.preventDefault();
+  function tierOf(value) {
+    var o = BET.options.filter(function (x) { return x.value === value; })[0];
+    return o && o.tier === 'vip' ? 'vip' : 'standard';
+  }
 
-    if (!isComplete()) {
-      highlightPending();
+  function buildPayload() {
+    var utm = getTracking();
+    var tier = tierOf(state.bet);
+    return {
+      // dados do lead
+      nome: (state.data.nome || '').trim(),
+      contato_superbet: (state.data.contato_superbet || '').trim(),
+      telefone: (state.data.telefone || '').trim(),
+      faixa_aposta: state.bet,
+      faixa_aposta_label: betLabel(state.bet),
+      // qualificação
+      ja_tinha_conta: state.hasAccount === 'sim' ? 'sim' : 'criou_agora',
+      tier: tier,
+      vip_candidate: tier === 'vip',
+      // consentimento
+      consentimento: true,
+      consentimento_texto: 'Ao enviar, você concorda com os Termos e Condições.',
+      // origem
+      origem: 'lp_superjon',
+      utm_source: utm.utm_source,
+      utm_medium: utm.utm_medium,
+      utm_campaign: utm.utm_campaign,
+      utm_content: utm.utm_content,
+      utm_term: utm.utm_term,
+      referrer: document.referrer || '',
+      landing_url: window.location.href,
+      user_agent: navigator.userAgent,
+      submitted_at: new Date().toISOString()
+    };
+  }
+
+  /* ===========================================================
+     Submit
+     =========================================================== */
+  function handleSubmit(cta) {
+    var ok = requiredIds().every(validateField);
+    if (!ok) {
+      highlightInvalid();
       return;
     }
 
@@ -285,20 +410,105 @@
 
     cta.classList.add('is-loading');
     cta.disabled = true;
+    var original = cta.textContent;
     cta.textContent = 'Enviando...';
 
     submitLead(payload)
-      .then(function () {
-        showConfirmation(payload);
-      })
+      .then(function () { goToGroup(payload); })
       .catch(function (err) {
         console.error('[submitLead] erro:', err);
         cta.classList.remove('is-loading');
         cta.disabled = false;
         cta.textContent = 'Tentar de novo';
       });
+  }
+
+  function goToGroup(payload) {
+    var url = (payload.tier === 'vip' && WHATSAPP_GROUP_URL_VIP)
+      ? WHATSAPP_GROUP_URL_VIP
+      : WHATSAPP_GROUP_URL;
+
+    if (url) {
+      window.location.href = url;
+      return;
+    }
+    renderDone(payload);
+  }
+
+  /* ===========================================================
+     TELA: done (fallback se não houver link de grupo)
+     =========================================================== */
+  function renderDone(payload) {
+    screenEl.innerHTML = '';
+    var box = el('div', 'lp-done');
+    box.appendChild(el('div', 'lp-done__check', '✓'));
+    if (payload.vip_candidate) {
+      box.appendChild(el('div', 'lp-done__badge', 'Fila VIP'));
+    }
+    box.appendChild(el('h2', 'lp-done__title', 'Tudo certo!'));
+    box.appendChild(el('p', 'lp-done__text',
+      'Recebemos seus dados. Em instantes você entra no grupo do SuperJon. ' +
+      'Fica de olho no WhatsApp informado.'));
+    screenEl.appendChild(box);
+    appendFooter();
+  }
+
+  /* ===========================================================
+     Rodapé + selo +18
+     =========================================================== */
+  function appendFooter() {
+    var foot = el('div', 'lp-foot');
+    foot.appendChild(buildSeal());
+    foot.appendChild(el('span', null,
+      'Conteúdo para maiores de 18 anos. Jogue com responsabilidade.'));
+    screenEl.appendChild(foot);
+  }
+
+  function buildSeal() {
+    if (SEAL_URL) {
+      var img = el('img', 'lp-seal-img');
+      img.src = SEAL_URL;
+      img.alt = '+18';
+      return img;
+    }
+    return el('span', 'lp-seal', '+18');
+  }
+
+  // Selo no rodapé do hero (desktop)
+  function paintHeroSeal() {
+    document.querySelectorAll('[data-seal]').forEach(function (node) {
+      node.replaceWith(buildSeal());
+    });
+  }
+
+  /* ===========================================================
+     Modal de Termos
+     =========================================================== */
+  var modal = document.getElementById('termsModal');
+  var termsBody = document.getElementById('termsBody');
+
+  function openTerms() {
+    termsBody.innerHTML = '';
+    TERMS_TEXT.forEach(function (p) { termsBody.appendChild(el('p', null, p)); });
+    modal.hidden = false;
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeTerms() {
+    modal.hidden = true;
+    document.body.style.overflow = '';
+  }
+
+  modal.addEventListener('click', function (e) {
+    if (e.target.hasAttribute('data-close')) closeTerms();
+  });
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && !modal.hidden) closeTerms();
   });
 
-  /* ----------------------------- Init ----------------------------- */
-  render();
+  /* ===========================================================
+     Init
+     =========================================================== */
+  paintHeroSeal();
+  renderGate();
 })();
