@@ -222,6 +222,92 @@ body {
   margin-bottom: 11px;
 }
 
+/* ===================== Gate (pergunta de entrada) ===================== */
+.lp-gate {
+  padding-top: 4px;
+  animation: fadeIn 0.4s ease both;
+}
+.lp-gate__eyebrow {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.4px;
+  color: var(--red);
+  margin-bottom: 12px;
+}
+.lp-gate__title {
+  font-family: var(--font-hero);
+  font-weight: 800;
+  font-style: italic;
+  text-transform: uppercase;
+  font-size: clamp(24px, 7vw, 34px);
+  line-height: 1.02;
+  letter-spacing: -1px;
+  color: var(--ink);
+}
+.lp-gate__hl { color: var(--red); }
+.lp-gate__sub {
+  margin-top: 10px;
+  font-size: 13px;
+  color: var(--ink-soft);
+  line-height: 1.45;
+}
+.lp-gate__opts {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 20px;
+}
+.lp-gate__opt {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  width: 100%;
+  padding: 16px 18px;
+  background: var(--white);
+  border: 1.5px solid var(--line-strong);
+  border-radius: 13px;
+  font-family: var(--font-body);
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--ink);
+  cursor: pointer;
+  transition: border-color 0.16s ease, transform 0.12s ease, box-shadow 0.16s ease, background 0.16s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+.lp-gate__opt-arrow {
+  font-family: var(--font-hero);
+  font-style: italic;
+  font-weight: 800;
+  color: var(--ink-faint);
+  transition: transform 0.16s ease, color 0.16s ease;
+}
+.lp-gate__opt:hover {
+  border-color: var(--red);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 22px -14px var(--red);
+}
+.lp-gate__opt:hover .lp-gate__opt-arrow {
+  transform: translateX(4px);
+  color: var(--red);
+}
+.lp-gate__opt:active { transform: translateY(0); }
+/* "Sim" como opção principal (vermelha) */
+.lp-gate__opt--primary {
+  background: var(--red);
+  border-color: var(--red);
+  color: var(--white);
+  box-shadow: 0 12px 24px -14px var(--red);
+}
+.lp-gate__opt--primary .lp-gate__opt-arrow { color: rgba(255, 255, 255, 0.8); }
+.lp-gate__opt--primary:hover {
+  background: var(--red-deep);
+  border-color: var(--red-deep);
+}
+.lp-gate__opt--primary:hover .lp-gate__opt-arrow { color: var(--white); }
+
 /* Texto introdutório (telas create / form-pós-cadastro) */
 .lp-intro {
   font-size: 14px;
@@ -442,6 +528,38 @@ body {
 .lp-cta.is-loading {
   opacity: 0.75;
   pointer-events: none;
+}
+
+/* CTA com motion — chama a atenção pro clique (ex.: "Crie sua conta agora") */
+.lp-cta--pulse {
+  position: relative;
+  overflow: hidden;
+  animation: ctaPulse 1.9s ease-in-out infinite;
+}
+.lp-cta--pulse::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -65%;
+  width: 45%;
+  height: 100%;
+  background: linear-gradient(120deg, transparent, rgba(255, 255, 255, 0.5), transparent);
+  transform: skewX(-20deg);
+  animation: ctaShine 2.6s ease-in-out infinite;
+}
+@keyframes ctaPulse {
+  0%, 100% {
+    box-shadow: 0 12px 24px -12px var(--red);
+    transform: translateY(0) scale(1);
+  }
+  50% {
+    box-shadow: 0 18px 36px -10px var(--red), 0 0 0 5px rgba(253, 1, 4, 0.16);
+    transform: translateY(-2px) scale(1.015);
+  }
+}
+@keyframes ctaShine {
+  0% { left: -65%; }
+  55%, 100% { left: 150%; }
 }
 
 /* Rodapé de responsabilidade */
@@ -955,27 +1073,38 @@ body {
     screenEl.innerHTML = '';
     state.hasAccount = null;
 
-    screenEl.appendChild(el('p', 'lp-section-label', 'Antes de começar'));
+    var gate = el('div', 'lp-gate');
+    gate.appendChild(el('span', 'lp-gate__eyebrow', 'Comece por aqui'));
 
-    var card = cardShell(null, 'Você já tem conta na Superbet?');
-    var chips = el('div', 'lp-chips');
+    var title = el('h2', 'lp-gate__title');
+    title.innerHTML = 'Você já tem conta na <span class="lp-gate__hl">Superbet</span>?';
+    gate.appendChild(title);
 
-    [['sim', 'Sim, já tenho'], ['nao', 'Ainda não']].forEach(function (pair) {
-      var chip = el('button', 'chip', pair[1]);
-      chip.type = 'button';
-      chip.addEventListener('click', function () {
-        if (pair[0] === 'sim') {
+    gate.appendChild(el('p', 'lp-gate__sub',
+      'Em 1 toque a gente te leva pro caminho certo.'));
+
+    var opts = el('div', 'lp-gate__opts');
+    [
+      ['sim', 'Sim, já tenho', 'lp-gate__opt--primary'],
+      ['nao', 'Ainda não tenho', '']
+    ].forEach(function (item) {
+      var btn = el('button', 'lp-gate__opt ' + item[2]);
+      btn.type = 'button';
+      btn.appendChild(el('span', 'lp-gate__opt-label', item[1]));
+      btn.appendChild(el('span', 'lp-gate__opt-arrow', '→'));
+      btn.addEventListener('click', function () {
+        if (item[0] === 'sim') {
           state.hasAccount = 'sim';
           renderForm(false);
         } else {
           renderCreate();
         }
       });
-      chips.appendChild(chip);
+      opts.appendChild(btn);
     });
+    gate.appendChild(opts);
 
-    card.appendChild(chips);
-    screenEl.appendChild(card);
+    screenEl.appendChild(gate);
     appendFooter();
   }
 
@@ -992,7 +1121,7 @@ body {
       'Cria a sua agora — leva menos de 2 minutos.');
     screenEl.appendChild(intro);
 
-    var btn = el('button', 'lp-cta', 'Crie sua conta agora');
+    var btn = el('button', 'lp-cta lp-cta--pulse', 'Crie sua conta agora');
     btn.type = 'button';
     btn.addEventListener('click', function () {
       // Abre o cadastro em nova aba e mantém esta aba já no formulário

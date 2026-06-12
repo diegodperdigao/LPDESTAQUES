@@ -139,27 +139,38 @@
     screenEl.innerHTML = '';
     state.hasAccount = null;
 
-    screenEl.appendChild(el('p', 'lp-section-label', 'Antes de começar'));
+    var gate = el('div', 'lp-gate');
+    gate.appendChild(el('span', 'lp-gate__eyebrow', 'Comece por aqui'));
 
-    var card = cardShell(null, 'Você já tem conta na Superbet?');
-    var chips = el('div', 'lp-chips');
+    var title = el('h2', 'lp-gate__title');
+    title.innerHTML = 'Você já tem conta na <span class="lp-gate__hl">Superbet</span>?';
+    gate.appendChild(title);
 
-    [['sim', 'Sim, já tenho'], ['nao', 'Ainda não']].forEach(function (pair) {
-      var chip = el('button', 'chip', pair[1]);
-      chip.type = 'button';
-      chip.addEventListener('click', function () {
-        if (pair[0] === 'sim') {
+    gate.appendChild(el('p', 'lp-gate__sub',
+      'Em 1 toque a gente te leva pro caminho certo.'));
+
+    var opts = el('div', 'lp-gate__opts');
+    [
+      ['sim', 'Sim, já tenho', 'lp-gate__opt--primary'],
+      ['nao', 'Ainda não tenho', '']
+    ].forEach(function (item) {
+      var btn = el('button', 'lp-gate__opt ' + item[2]);
+      btn.type = 'button';
+      btn.appendChild(el('span', 'lp-gate__opt-label', item[1]));
+      btn.appendChild(el('span', 'lp-gate__opt-arrow', '→'));
+      btn.addEventListener('click', function () {
+        if (item[0] === 'sim') {
           state.hasAccount = 'sim';
           renderForm(false);
         } else {
           renderCreate();
         }
       });
-      chips.appendChild(chip);
+      opts.appendChild(btn);
     });
+    gate.appendChild(opts);
 
-    card.appendChild(chips);
-    screenEl.appendChild(card);
+    screenEl.appendChild(gate);
     appendFooter();
   }
 
@@ -176,7 +187,7 @@
       'Cria a sua agora — leva menos de 2 minutos.');
     screenEl.appendChild(intro);
 
-    var btn = el('button', 'lp-cta', 'Crie sua conta agora');
+    var btn = el('button', 'lp-cta lp-cta--pulse', 'Crie sua conta agora');
     btn.type = 'button';
     btn.addEventListener('click', function () {
       // Abre o cadastro em nova aba e mantém esta aba já no formulário
