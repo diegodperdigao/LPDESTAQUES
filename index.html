@@ -23,8 +23,16 @@
     <header class="lp-hero">
       <div class="lp-hero__inner">
         <div class="lp-hero__top">
-          <!-- Logo Superbet (branca via filtro). Fallback: wordmark -->
-          <span class="lp-logo" aria-label="Superbet">superbet<span class="lp-logo__dot">.</span></span>
+          <!-- Logo Superbet (vermelha → branca via filtro). Fallback: wordmark -->
+          <span class="lp-logo-wrap">
+            <img
+              src="https://i.ibb.co/YBhrn1zz/Superbet-Logo-svg.png"
+              alt="Superbet"
+              class="lp-logo-img"
+              onerror="this.style.display='none';this.nextElementSibling.style.display='inline-block';"
+            />
+            <span class="lp-logo" aria-label="Superbet" style="display:none">superbet<span class="lp-logo__dot">.</span></span>
+          </span>
           <div class="lp-avatar" aria-label="Jon Vlogs">JON VLOGS</div>
         </div>
 

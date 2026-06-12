@@ -90,12 +90,23 @@ body {
   justify-content: space-between;
 }
 
-/* Logo Superbet — fallback wordmark.
-   Para a logo oficial PNG: trocar por <img> com
-   filter: brightness(0) invert(1); height: 15px; */
+/* Logo Superbet — imagem oficial (vermelha → branca via filtro).
+   O wordmark .lp-logo entra só se a imagem falhar (onerror). */
+.lp-logo-wrap {
+  display: inline-flex;
+  align-items: center;
+  margin-top: 18px;
+}
+
+.lp-logo-img {
+  height: 15px;
+  width: auto;
+  display: block;
+  filter: brightness(0) invert(1);
+}
+
 .lp-logo {
   display: inline-block;
-  margin-top: 18px;
   font-family: var(--font-hero);
   font-weight: 800;
   font-style: italic;
@@ -439,8 +450,15 @@ body {
     margin-bottom: auto;
   }
 
-  .lp-logo {
+  .lp-logo-wrap {
     margin-top: 0;
+  }
+
+  .lp-logo-img {
+    height: 22px;
+  }
+
+  .lp-logo {
     font-size: 24px;
   }
 
