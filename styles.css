@@ -1,6 +1,7 @@
 /* ===========================================================
    SuperJon — LP de conversão (Jon Vlogs × Superbet)
-   Tokens e estilos conforme lp_jon_spec.md
+   Responsiva: mobile (empilhada) + desktop (split-screen)
+   Tokens conforme lp_jon_spec.md
    =========================================================== */
 
 :root {
@@ -41,14 +42,15 @@ body {
   text-rendering: optimizeLegibility;
 }
 
-/* Container mobile-first, centralizado em telas largas */
+/* =====================================================
+   LAYOUT BASE — MOBILE (empilhado, coluna única)
+   ===================================================== */
 .lp {
   width: 100%;
-  max-width: 440px;
-  margin: 0 auto;
   min-height: 100dvh;
   background: var(--white);
-  overflow: hidden;
+  display: flex;
+  flex-direction: column;
 }
 
 /* ===================== Hero ===================== */
@@ -58,16 +60,38 @@ body {
   color: var(--white);
   padding: 0 20px 30px;
   padding-top: env(safe-area-inset-top, 0px);
+  overflow: hidden;
+}
+
+/* brilho decorativo sutil */
+.lp-hero::after {
+  content: "";
+  position: absolute;
+  width: 360px;
+  height: 360px;
+  right: -120px;
+  top: -140px;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.16), transparent 70%);
+  pointer-events: none;
+}
+
+.lp-hero__inner {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 480px;
+  margin: 0 auto;
 }
 
 .lp-hero__top {
   position: relative;
   display: flex;
   align-items: flex-start;
+  justify-content: space-between;
 }
 
 /* Logo Superbet — fallback wordmark.
-   Para usar a logo oficial PNG: trocar por <img> com filtro
+   Para a logo oficial PNG: trocar por <img> com
    filter: brightness(0) invert(1); height: 15px; */
 .lp-logo {
   display: inline-block;
@@ -86,9 +110,7 @@ body {
 }
 
 .lp-avatar {
-  position: absolute;
-  top: 48px;
-  right: 0;
+  margin-top: 14px;
   width: 42px;
   height: 42px;
   border-radius: 50%;
@@ -102,10 +124,14 @@ body {
   font-weight: 700;
   line-height: 1.05;
   letter-spacing: 0.2px;
+  flex: 0 0 auto;
+}
+
+.lp-hero__headline {
+  margin-top: 14px;
 }
 
 .lp-hero__title {
-  margin-top: 14px;
   font-family: var(--font-hero);
   font-weight: 800;
   font-style: italic;
@@ -123,9 +149,21 @@ body {
   max-width: 90%;
 }
 
+/* No mobile o 18+ do hero some (já tem no rodapé do corpo) */
+.lp-hero__foot {
+  display: none;
+}
+
 /* ===================== Corpo ===================== */
 .lp-body {
   padding: 20px 18px 16px;
+  flex: 1 1 auto;
+}
+
+.lp-body__inner {
+  width: 100%;
+  max-width: 480px;
+  margin: 0 auto;
 }
 
 /* Barra de progresso */
@@ -155,13 +193,19 @@ body {
   margin-bottom: 11px;
 }
 
+/* Grid de perguntas (1 coluna no mobile) */
+.lp-questions {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 9px;
+}
+
 /* Card de pergunta */
 .lp-q {
   background: var(--bg-2);
   border: 1px solid var(--line);
   border-radius: 11px;
   padding: 11px 12px;
-  margin-bottom: 9px;
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
@@ -223,6 +267,10 @@ body {
   -webkit-tap-highlight-color: transparent;
 }
 
+.chip:hover {
+  border-color: var(--ink-soft);
+}
+
 .chip:active {
   transform: scale(0.97);
 }
@@ -249,7 +297,7 @@ body {
 /* Botão CTA */
 .lp-cta {
   width: 100%;
-  margin-top: 8px;
+  margin-top: 14px;
   background: var(--red);
   color: var(--white);
   font-family: var(--font-hero);
@@ -349,6 +397,148 @@ body {
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(8px); }
   to { opacity: 1; transform: translateY(0); }
+}
+
+/* =====================================================
+   DESKTOP / TABLET LARGO — split-screen
+   ===================================================== */
+@media (min-width: 880px) {
+  .lp {
+    flex-direction: row;
+    align-items: stretch;
+  }
+
+  /* Hero vira painel esquerdo fixo, tela cheia */
+  .lp-hero {
+    flex: 0 0 42%;
+    max-width: 560px;
+    padding: 48px 56px;
+    display: flex;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    height: 100dvh;
+  }
+
+  .lp-hero::after {
+    width: 520px;
+    height: 520px;
+    right: -160px;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+
+  .lp-hero__inner {
+    max-width: 100%;
+    display: flex;
+    flex-direction: column;
+    min-height: 60%;
+  }
+
+  .lp-hero__top {
+    margin-bottom: auto;
+  }
+
+  .lp-logo {
+    margin-top: 0;
+    font-size: 24px;
+  }
+
+  .lp-avatar {
+    margin-top: -4px;
+    width: 54px;
+    height: 54px;
+    font-size: 10px;
+  }
+
+  .lp-hero__headline {
+    margin: 32px 0;
+  }
+
+  .lp-hero__title {
+    font-size: clamp(44px, 5vw, 64px);
+    letter-spacing: -2px;
+  }
+
+  .lp-hero__subtitle {
+    margin-top: 14px;
+    font-size: 16px;
+    max-width: 28ch;
+  }
+
+  /* 18+ aparece no rodapé do hero no desktop */
+  .lp-hero__foot {
+    display: block;
+    margin-top: auto;
+    font-size: 11px;
+    opacity: 0.8;
+    line-height: 1.5;
+  }
+
+  /* Corpo vira painel direito, rolável, conteúdo centralizado */
+  .lp-body {
+    flex: 1 1 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 56px 48px;
+    min-height: 100dvh;
+  }
+
+  .lp-body__inner {
+    max-width: 620px;
+  }
+
+  .lp-section-label {
+    font-size: 11px;
+    margin-bottom: 16px;
+  }
+
+  /* Perguntas em 2 colunas no desktop */
+  .lp-questions {
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+
+  .lp-q {
+    padding: 14px 15px;
+    border-radius: 13px;
+  }
+
+  .lp-q__text {
+    font-size: 14px;
+  }
+
+  .chip {
+    font-size: 12.5px;
+    padding: 8px 13px;
+  }
+
+  .lp-cta {
+    font-size: 16px;
+    padding: 16px;
+    margin-top: 20px;
+  }
+
+  /* No desktop o 18+ do corpo some (já está no hero) */
+  .lp-foot {
+    display: none;
+  }
+
+  /* Confirmação ocupa as duas colunas */
+  .lp-done {
+    grid-column: 1 / -1;
+    padding: 32px 24px;
+  }
+  .lp-done__title { font-size: 28px; }
+  .lp-done__text { font-size: 15px; max-width: 360px; }
+}
+
+/* Telas muito largas — não deixar o hero gigante */
+@media (min-width: 1500px) {
+  .lp-body__inner {
+    max-width: 680px;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -19,40 +19,51 @@
 </head>
 <body>
   <main class="lp" id="lp">
-    <!-- Hero -->
+    <!-- Hero (esquerda no desktop, topo no mobile) -->
     <header class="lp-hero">
-      <div class="lp-hero__top">
-        <!-- Logo Superbet (branca via filtro). Fallback: wordmark -->
-        <span class="lp-logo" aria-label="Superbet">superbet<span class="lp-logo__dot">.</span></span>
-        <div class="lp-avatar" aria-label="Jon Vlogs">JON VLOGS</div>
+      <div class="lp-hero__inner">
+        <div class="lp-hero__top">
+          <!-- Logo Superbet (branca via filtro). Fallback: wordmark -->
+          <span class="lp-logo" aria-label="Superbet">superbet<span class="lp-logo__dot">.</span></span>
+          <div class="lp-avatar" aria-label="Jon Vlogs">JON VLOGS</div>
+        </div>
+
+        <div class="lp-hero__headline">
+          <h1 class="lp-hero__title">SuperJon</h1>
+          <p class="lp-hero__subtitle">
+            Responde as perguntas ao lado e a equipe te direciona pro grupo certo.
+          </p>
+        </div>
+
+        <p class="lp-hero__foot">
+          Conteúdo para maiores de 18 anos. Jogue com responsabilidade.
+        </p>
       </div>
-      <h1 class="lp-hero__title">SuperJon</h1>
-      <p class="lp-hero__subtitle">
-        Responde as perguntas abaixo e a equipe te direciona pro grupo certo.
-      </p>
     </header>
 
-    <!-- Corpo -->
+    <!-- Corpo (direita no desktop, abaixo no mobile) -->
     <section class="lp-body">
-      <!-- Barra de progresso -->
-      <div class="lp-progress" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
-        <div class="lp-progress__fill" id="progressFill"></div>
+      <div class="lp-body__inner">
+        <!-- Barra de progresso -->
+        <div class="lp-progress" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+          <div class="lp-progress__fill" id="progressFill"></div>
+        </div>
+
+        <p class="lp-section-label">Perguntas rápidas</p>
+
+        <!-- Perguntas (renderizadas via JS) -->
+        <form id="leadForm" novalidate>
+          <div id="questions" class="lp-questions"></div>
+
+          <button type="submit" class="lp-cta" id="ctaButton">
+            Quero entrar no grupo agora
+          </button>
+        </form>
+
+        <p class="lp-foot">
+          Conteúdo para maiores de 18 anos. Jogue com responsabilidade.
+        </p>
       </div>
-
-      <p class="lp-section-label">Perguntas rápidas</p>
-
-      <!-- Perguntas (renderizadas via JS) -->
-      <form id="leadForm" novalidate>
-        <div id="questions"></div>
-
-        <button type="submit" class="lp-cta" id="ctaButton">
-          Quero entrar no grupo agora
-        </button>
-      </form>
-
-      <p class="lp-foot">
-        Conteúdo para maiores de 18 anos. Jogue com responsabilidade.
-      </p>
     </section>
   </main>
 

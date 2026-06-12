@@ -1,0 +1,929 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#FD0104" />
+  <title>SuperJon — Entre no grupo</title>
+  <meta name="description" content="Responda as perguntas rápidas e a equipe te direciona pro grupo certo. Conteúdo para maiores de 18 anos." />
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Roboto+Flex:ital,opsz,wght@0,8..144,400..900;1,8..144,600..900&display=swap"
+    rel="stylesheet"
+  />
+
+  <style>
+/* ===========================================================
+   SuperJon — LP de conversão (Jon Vlogs × Superbet)
+   Responsiva: mobile (empilhada) + desktop (split-screen)
+   Tokens conforme lp_jon_spec.md
+   =========================================================== */
+
+:root {
+  /* Cores */
+  --red: #FD0104;          /* Super Red — principal */
+  --red-deep: #d10003;     /* gradiente do hero */
+  --burgundy: #540031;     /* acento secundário */
+  --dark-purple: #181020;  /* fundos escuros pontuais */
+  --yellow: #FFE200;       /* Generosity Yellow */
+  --white: #FFFFFF;
+  --ink: #1a1320;          /* texto principal */
+  --ink-soft: #5c5566;     /* texto secundário */
+  --ink-faint: #938b9c;    /* labels, rodapé */
+  --bg-2: #fbf9f7;         /* fundo dos cards */
+  --line: rgba(24, 16, 32, 0.12);
+  --line-strong: rgba(24, 16, 32, 0.22);
+  --yellow-text: #7a5c00;  /* texto sobre amarelo */
+  --yellow-text-2: #9a7600;
+
+  --font-hero: 'Roboto Flex', system-ui, sans-serif;
+  --font-body: 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  background: var(--white);
+}
+
+body {
+  font-family: var(--font-body);
+  color: var(--ink);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* =====================================================
+   LAYOUT BASE — MOBILE (empilhado, coluna única)
+   ===================================================== */
+.lp {
+  width: 100%;
+  min-height: 100dvh;
+  background: var(--white);
+  display: flex;
+  flex-direction: column;
+}
+
+/* ===================== Hero ===================== */
+.lp-hero {
+  position: relative;
+  background: linear-gradient(155deg, var(--red), var(--red-deep));
+  color: var(--white);
+  padding: 0 20px 30px;
+  padding-top: env(safe-area-inset-top, 0px);
+  overflow: hidden;
+}
+
+/* brilho decorativo sutil */
+.lp-hero::after {
+  content: "";
+  position: absolute;
+  width: 360px;
+  height: 360px;
+  right: -120px;
+  top: -140px;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.16), transparent 70%);
+  pointer-events: none;
+}
+
+.lp-hero__inner {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 480px;
+  margin: 0 auto;
+}
+
+.lp-hero__top {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+/* Logo Superbet — fallback wordmark.
+   Para a logo oficial PNG: trocar por <img> com
+   filter: brightness(0) invert(1); height: 15px; */
+.lp-logo {
+  display: inline-block;
+  margin-top: 18px;
+  font-family: var(--font-hero);
+  font-weight: 800;
+  font-style: italic;
+  font-size: 18px;
+  letter-spacing: -0.5px;
+  color: var(--white);
+  line-height: 1;
+}
+
+.lp-logo__dot {
+  color: var(--yellow);
+}
+
+.lp-avatar {
+  margin-top: 14px;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(255, 255, 255, 0.45);
+  background: rgba(255, 255, 255, 0.12);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  font-size: 8.5px;
+  font-weight: 700;
+  line-height: 1.05;
+  letter-spacing: 0.2px;
+  flex: 0 0 auto;
+}
+
+.lp-hero__headline {
+  margin-top: 14px;
+}
+
+.lp-hero__title {
+  font-family: var(--font-hero);
+  font-weight: 800;
+  font-style: italic;
+  text-transform: uppercase;
+  font-size: 26px;
+  line-height: 1;
+  letter-spacing: -1px;
+}
+
+.lp-hero__subtitle {
+  margin-top: 8px;
+  font-size: 12px;
+  line-height: 1.45;
+  opacity: 0.92;
+  max-width: 90%;
+}
+
+/* No mobile o 18+ do hero some (já tem no rodapé do corpo) */
+.lp-hero__foot {
+  display: none;
+}
+
+/* ===================== Corpo ===================== */
+.lp-body {
+  padding: 20px 18px 16px;
+  flex: 1 1 auto;
+}
+
+.lp-body__inner {
+  width: 100%;
+  max-width: 480px;
+  margin: 0 auto;
+}
+
+/* Barra de progresso */
+.lp-progress {
+  height: 3px;
+  background: var(--line);
+  border-radius: 99px;
+  margin-bottom: 13px;
+  overflow: hidden;
+}
+
+.lp-progress__fill {
+  height: 100%;
+  width: 0%;
+  background: var(--red);
+  border-radius: 99px;
+  transition: width 0.32s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Label de seção */
+.lp-section-label {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.4px;
+  color: var(--ink-faint);
+  margin-bottom: 11px;
+}
+
+/* Grid de perguntas (1 coluna no mobile) */
+.lp-questions {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 9px;
+}
+
+/* Card de pergunta */
+.lp-q {
+  background: var(--bg-2);
+  border: 1px solid var(--line);
+  border-radius: 11px;
+  padding: 11px 12px;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* Destaque de pendência ao tentar enviar incompleto */
+.lp-q.is-pending {
+  border-color: var(--red);
+  box-shadow: 0 0 0 3px rgba(253, 1, 4, 0.10);
+}
+
+.lp-q__head {
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+  margin-bottom: 9px;
+}
+
+.lp-q__num {
+  flex: 0 0 auto;
+  width: 24px;
+  height: 24px;
+  border-radius: 7px;
+  background: var(--red);
+  color: var(--white);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-hero);
+  font-weight: 800;
+  font-style: italic;
+  font-size: 12px;
+}
+
+.lp-q__text {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--ink);
+  line-height: 1.3;
+  padding-top: 3px;
+}
+
+/* Chips */
+.lp-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.chip {
+  font-family: var(--font-body);
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--ink-soft);
+  background: var(--white);
+  border: 1.5px solid var(--line-strong);
+  border-radius: 9px;
+  padding: 7px 11px;
+  cursor: pointer;
+  transition: background 0.16s ease, border-color 0.16s ease, color 0.16s ease, transform 0.08s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.chip:hover {
+  border-color: var(--ink-soft);
+}
+
+.chip:active {
+  transform: scale(0.97);
+}
+
+.chip:focus-visible {
+  outline: 2px solid var(--red);
+  outline-offset: 2px;
+}
+
+/* Selecionado — vermelho (padrão) */
+.chip.is-selected {
+  background: var(--red);
+  border-color: var(--red);
+  color: var(--white);
+}
+
+/* Selecionado — amarelo (ex.: "Os dois") */
+.chip.is-selected.chip--yellow {
+  background: var(--yellow);
+  border-color: var(--yellow);
+  color: var(--yellow-text);
+}
+
+/* Botão CTA */
+.lp-cta {
+  width: 100%;
+  margin-top: 14px;
+  background: var(--red);
+  color: var(--white);
+  font-family: var(--font-hero);
+  font-weight: 800;
+  font-style: italic;
+  text-transform: uppercase;
+  font-size: 14px;
+  letter-spacing: 0.3px;
+  border: none;
+  padding: 13px;
+  border-radius: 11px;
+  box-shadow: 0 12px 24px -12px var(--red);
+  cursor: pointer;
+  transition: transform 0.1s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.lp-cta:hover {
+  box-shadow: 0 14px 28px -10px var(--red);
+}
+
+.lp-cta:active {
+  transform: translateY(1px) scale(0.995);
+}
+
+.lp-cta:disabled {
+  cursor: not-allowed;
+}
+
+.lp-cta.is-loading {
+  opacity: 0.75;
+  pointer-events: none;
+}
+
+/* Rodapé de responsabilidade */
+.lp-foot {
+  text-align: center;
+  font-size: 9px;
+  color: var(--ink-faint);
+  padding: 10px 18px 16px;
+  line-height: 1.45;
+}
+
+/* ===================== Tela de confirmação ===================== */
+.lp-done {
+  text-align: center;
+  padding: 40px 24px 48px;
+  animation: fadeIn 0.4s ease both;
+}
+
+.lp-done__check {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: var(--red);
+  color: var(--white);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+  margin-bottom: 16px;
+}
+
+.lp-done__title {
+  font-family: var(--font-hero);
+  font-weight: 800;
+  font-style: italic;
+  text-transform: uppercase;
+  font-size: 22px;
+  letter-spacing: -0.5px;
+  line-height: 1.05;
+  color: var(--ink);
+  margin-bottom: 10px;
+}
+
+.lp-done__text {
+  font-size: 13px;
+  color: var(--ink-soft);
+  line-height: 1.5;
+  max-width: 280px;
+  margin: 0 auto 20px;
+}
+
+.lp-done__badge {
+  display: inline-block;
+  background: var(--yellow);
+  color: var(--yellow-text);
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  padding: 5px 11px;
+  border-radius: 99px;
+  margin-bottom: 18px;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* =====================================================
+   DESKTOP / TABLET LARGO — split-screen
+   ===================================================== */
+@media (min-width: 880px) {
+  .lp {
+    flex-direction: row;
+    align-items: stretch;
+  }
+
+  /* Hero vira painel esquerdo fixo, tela cheia */
+  .lp-hero {
+    flex: 0 0 42%;
+    max-width: 560px;
+    padding: 48px 56px;
+    display: flex;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    height: 100dvh;
+  }
+
+  .lp-hero::after {
+    width: 520px;
+    height: 520px;
+    right: -160px;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+
+  .lp-hero__inner {
+    max-width: 100%;
+    display: flex;
+    flex-direction: column;
+    min-height: 60%;
+  }
+
+  .lp-hero__top {
+    margin-bottom: auto;
+  }
+
+  .lp-logo {
+    margin-top: 0;
+    font-size: 24px;
+  }
+
+  .lp-avatar {
+    margin-top: -4px;
+    width: 54px;
+    height: 54px;
+    font-size: 10px;
+  }
+
+  .lp-hero__headline {
+    margin: 32px 0;
+  }
+
+  .lp-hero__title {
+    font-size: clamp(44px, 5vw, 64px);
+    letter-spacing: -2px;
+  }
+
+  .lp-hero__subtitle {
+    margin-top: 14px;
+    font-size: 16px;
+    max-width: 28ch;
+  }
+
+  /* 18+ aparece no rodapé do hero no desktop */
+  .lp-hero__foot {
+    display: block;
+    margin-top: auto;
+    font-size: 11px;
+    opacity: 0.8;
+    line-height: 1.5;
+  }
+
+  /* Corpo vira painel direito, rolável, conteúdo centralizado */
+  .lp-body {
+    flex: 1 1 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 56px 48px;
+    min-height: 100dvh;
+  }
+
+  .lp-body__inner {
+    max-width: 620px;
+  }
+
+  .lp-section-label {
+    font-size: 11px;
+    margin-bottom: 16px;
+  }
+
+  /* Perguntas em 2 colunas no desktop */
+  .lp-questions {
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+
+  .lp-q {
+    padding: 14px 15px;
+    border-radius: 13px;
+  }
+
+  .lp-q__text {
+    font-size: 14px;
+  }
+
+  .chip {
+    font-size: 12.5px;
+    padding: 8px 13px;
+  }
+
+  .lp-cta {
+    font-size: 16px;
+    padding: 16px;
+    margin-top: 20px;
+  }
+
+  /* No desktop o 18+ do corpo some (já está no hero) */
+  .lp-foot {
+    display: none;
+  }
+
+  /* Confirmação ocupa as duas colunas */
+  .lp-done {
+    grid-column: 1 / -1;
+    padding: 32px 24px;
+  }
+  .lp-done__title { font-size: 28px; }
+  .lp-done__text { font-size: 15px; max-width: 360px; }
+}
+
+/* Telas muito largas — não deixar o hero gigante */
+@media (min-width: 1500px) {
+  .lp-body__inner {
+    max-width: 680px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    transition-duration: 0.001ms !important;
+  }
+}
+
+</style>
+</head>
+<body>
+  <main class="lp" id="lp">
+    <!-- Hero (esquerda no desktop, topo no mobile) -->
+    <header class="lp-hero">
+      <div class="lp-hero__inner">
+        <div class="lp-hero__top">
+          <!-- Logo Superbet (branca via filtro). Fallback: wordmark -->
+          <span class="lp-logo" aria-label="Superbet">superbet<span class="lp-logo__dot">.</span></span>
+          <div class="lp-avatar" aria-label="Jon Vlogs">JON VLOGS</div>
+        </div>
+
+        <div class="lp-hero__headline">
+          <h1 class="lp-hero__title">SuperJon</h1>
+          <p class="lp-hero__subtitle">
+            Responde as perguntas ao lado e a equipe te direciona pro grupo certo.
+          </p>
+        </div>
+
+        <p class="lp-hero__foot">
+          Conteúdo para maiores de 18 anos. Jogue com responsabilidade.
+        </p>
+      </div>
+    </header>
+
+    <!-- Corpo (direita no desktop, abaixo no mobile) -->
+    <section class="lp-body">
+      <div class="lp-body__inner">
+        <!-- Barra de progresso -->
+        <div class="lp-progress" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+          <div class="lp-progress__fill" id="progressFill"></div>
+        </div>
+
+        <p class="lp-section-label">Perguntas rápidas</p>
+
+        <!-- Perguntas (renderizadas via JS) -->
+        <form id="leadForm" novalidate>
+          <div id="questions" class="lp-questions"></div>
+
+          <button type="submit" class="lp-cta" id="ctaButton">
+            Quero entrar no grupo agora
+          </button>
+        </form>
+
+        <p class="lp-foot">
+          Conteúdo para maiores de 18 anos. Jogue com responsabilidade.
+        </p>
+      </div>
+    </section>
+  </main>
+
+  <script>
+/* ===========================================================
+   SuperJon — LP de conversão
+   Lógica: render data-driven, seleção única, progresso,
+   validação do CTA e submissão abstraída (submitLead).
+   =========================================================== */
+
+(function () {
+  'use strict';
+
+  /* -----------------------------------------------------------
+     Configuração das perguntas (data-driven).
+     Conjunto completo de qualificação conforme a spec.
+     - id:        chave usada no payload
+     - text:      enunciado
+     - required:  bloqueia o CTA até responder
+     - qualifier: faixa de aposta marca o tier (VIP do VIP)
+     - options:   { value, label, variant?: 'yellow', tier?: 'vip' }
+     ----------------------------------------------------------- */
+  var QUESTIONS = [
+    {
+      id: 'ja_aposta',
+      text: 'Você já aposta?',
+      required: true,
+      options: [
+        { value: 'sim', label: 'Sim' },
+        { value: 'nao', label: 'Ainda não' }
+      ]
+    },
+    {
+      id: 'preferencia',
+      text: 'Você curte mais cassino ou esporte?',
+      required: true,
+      options: [
+        { value: 'cassino', label: 'Cassino' },
+        { value: 'esporte', label: 'Esporte' },
+        { value: 'os_dois', label: 'Os dois', variant: 'yellow' }
+      ]
+    },
+    {
+      id: 'faixa_aposta',
+      text: 'Quanto costuma apostar por mês?',
+      required: true,
+      qualifier: true,
+      options: [
+        { value: 'ate_1000', label: 'Até R$ 1.000' },
+        { value: '1000_5000', label: 'R$ 1.000 a 5.000' },
+        { value: 'mais_5000', label: '+ de R$ 5.000', tier: 'vip' }
+      ]
+    },
+    {
+      id: 'tem_conta',
+      text: 'Já tem conta na Superbet?',
+      required: true,
+      options: [
+        { value: 'sim', label: 'Sim' },
+        { value: 'nao', label: 'Não' }
+      ]
+    }
+  ];
+
+  /* -----------------------------------------------------------
+     Destino dos dados — abstraído para plugar depois
+     (Supabase / planilha / webhook da automação).
+     Recebe o payload e deve resolver/rejeitar uma Promise.
+     ----------------------------------------------------------- */
+  async function submitLead(payload) {
+    // TODO: plugar destino real. Exemplos:
+    //
+    //  return fetch('https://SEU-WEBHOOK', {
+    //    method: 'POST',
+    //    headers: { 'Content-Type': 'application/json' },
+    //    body: JSON.stringify(payload)
+    //  }).then(function (r) {
+    //    if (!r.ok) throw new Error('Falha ao enviar lead');
+    //  });
+    //
+    // Por enquanto apenas loga e simula sucesso.
+    console.log('[submitLead] payload:', payload);
+    return new Promise(function (resolve) {
+      setTimeout(resolve, 600);
+    });
+  }
+
+  // Link do grupo (WhatsApp/Telegram). Pode ser sobrescrito por tier.
+  var GROUP_URL = '';            // ex.: 'https://chat.whatsapp.com/...'
+  var GROUP_URL_VIP = '';        // ex.: grupo da fila do VIP do VIP
+
+  /* ----------------------------- Estado ----------------------------- */
+  var answers = {};              // { questionId: optionValue }
+
+  /* --------------------------- Elementos --------------------------- */
+  var container = document.getElementById('questions');
+  var form = document.getElementById('leadForm');
+  var cta = document.getElementById('ctaButton');
+  var progressFill = document.getElementById('progressFill');
+  var progressBar = document.querySelector('.lp-progress');
+  var lpBody = document.querySelector('.lp-body');
+
+  /* --------------------------- Origem / UTM --------------------------- */
+  function getTracking() {
+    var params = new URLSearchParams(window.location.search);
+    var utm = {};
+    ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term'].forEach(function (k) {
+      if (params.get(k)) utm[k] = params.get(k);
+    });
+    return {
+      utm: utm,
+      referrer: document.referrer || null,
+      landing_url: window.location.href
+    };
+  }
+
+  /* ----------------------------- Render ----------------------------- */
+  function render() {
+    var frag = document.createDocumentFragment();
+
+    QUESTIONS.forEach(function (q, idx) {
+      var card = document.createElement('div');
+      card.className = 'lp-q';
+      card.dataset.qid = q.id;
+
+      // Cabeçalho: número + enunciado
+      var head = document.createElement('div');
+      head.className = 'lp-q__head';
+
+      var num = document.createElement('span');
+      num.className = 'lp-q__num';
+      num.textContent = idx + 1;
+
+      var text = document.createElement('span');
+      text.className = 'lp-q__text';
+      text.textContent = q.text;
+
+      head.appendChild(num);
+      head.appendChild(text);
+      card.appendChild(head);
+
+      // Chips
+      var chips = document.createElement('div');
+      chips.className = 'lp-chips';
+
+      q.options.forEach(function (opt) {
+        var chip = document.createElement('button');
+        chip.type = 'button';
+        chip.className = 'chip' + (opt.variant === 'yellow' ? ' chip--yellow' : '');
+        chip.textContent = opt.label;
+        chip.dataset.value = opt.value;
+        chip.setAttribute('role', 'radio');
+        chip.setAttribute('aria-checked', 'false');
+
+        chip.addEventListener('click', function () {
+          select(q, opt, chips, chip, card);
+        });
+
+        chips.appendChild(chip);
+      });
+
+      card.appendChild(chips);
+      frag.appendChild(card);
+    });
+
+    container.appendChild(frag);
+    updateProgress();
+  }
+
+  /* --------------------------- Seleção única --------------------------- */
+  function select(question, option, chipsEl, chipEl, cardEl) {
+    answers[question.id] = option.value;
+
+    // Desmarca todos os chips da pergunta, marca o escolhido
+    var siblings = chipsEl.querySelectorAll('.chip');
+    siblings.forEach(function (c) {
+      c.classList.remove('is-selected');
+      c.setAttribute('aria-checked', 'false');
+    });
+    chipEl.classList.add('is-selected');
+    chipEl.setAttribute('aria-checked', 'true');
+
+    // Removeu pendência ao responder
+    cardEl.classList.remove('is-pending');
+
+    updateProgress();
+  }
+
+  /* --------------------------- Progresso --------------------------- */
+  function requiredQuestions() {
+    return QUESTIONS.filter(function (q) { return q.required; });
+  }
+
+  function answeredCount() {
+    return requiredQuestions().filter(function (q) {
+      return answers[q.id] != null;
+    }).length;
+  }
+
+  function updateProgress() {
+    var req = requiredQuestions().length;
+    var done = answeredCount();
+    var pct = req === 0 ? 100 : Math.round((done / req) * 100);
+    progressFill.style.width = pct + '%';
+    if (progressBar) progressBar.setAttribute('aria-valuenow', String(pct));
+  }
+
+  function isComplete() {
+    return answeredCount() === requiredQuestions().length;
+  }
+
+  /* --------------------------- Payload --------------------------- */
+  function buildPayload() {
+    // Define tier a partir da pergunta qualificadora
+    var tier = 'standard';
+    QUESTIONS.forEach(function (q) {
+      if (!q.qualifier) return;
+      var chosen = q.options.filter(function (o) { return o.value === answers[q.id]; })[0];
+      if (chosen && chosen.tier === 'vip') tier = 'vip';
+    });
+
+    var tracking = getTracking();
+
+    return {
+      answers: Object.assign({}, answers),
+      tier: tier,                              // 'vip' = candidato ao VIP do VIP
+      vip_candidate: tier === 'vip',
+      submitted_at: new Date().toISOString(),
+      source: 'lp_superjon',
+      utm: tracking.utm,
+      referrer: tracking.referrer,
+      landing_url: tracking.landing_url,
+      user_agent: navigator.userAgent
+    };
+  }
+
+  /* --------------------------- Validação visual --------------------------- */
+  function highlightPending() {
+    var firstPending = null;
+    requiredQuestions().forEach(function (q) {
+      var card = container.querySelector('[data-qid="' + q.id + '"]');
+      if (!card) return;
+      if (answers[q.id] == null) {
+        card.classList.add('is-pending');
+        if (!firstPending) firstPending = card;
+      } else {
+        card.classList.remove('is-pending');
+      }
+    });
+    if (firstPending) {
+      firstPending.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  }
+
+  /* --------------------------- Confirmação --------------------------- */
+  function showConfirmation(payload) {
+    var url = payload.tier === 'vip' && GROUP_URL_VIP ? GROUP_URL_VIP : GROUP_URL;
+
+    // Redireciona se houver link configurado; senão, mostra tela de confirmação
+    if (url) {
+      window.location.href = url;
+      return;
+    }
+
+    var isVip = payload.tier === 'vip';
+    lpBody.innerHTML =
+      '<div class="lp-done">' +
+        '<div class="lp-done__check" aria-hidden="true">✓</div>' +
+        (isVip
+          ? '<div class="lp-done__badge">Fila VIP do VIP</div>'
+          : '') +
+        '<h2 class="lp-done__title">Recebemos seu cadastro</h2>' +
+        '<p class="lp-done__text">A equipe vai te direcionar pro grupo certo. ' +
+          'Fica de olho no contato que você usou pra acessar.</p>' +
+        '<p class="lp-foot">Conteúdo para maiores de 18 anos. Jogue com responsabilidade.</p>' +
+      '</div>';
+  }
+
+  /* --------------------------- Submit --------------------------- */
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+
+    if (!isComplete()) {
+      highlightPending();
+      return;
+    }
+
+    var payload = buildPayload();
+
+    cta.classList.add('is-loading');
+    cta.disabled = true;
+    cta.textContent = 'Enviando...';
+
+    submitLead(payload)
+      .then(function () {
+        showConfirmation(payload);
+      })
+      .catch(function (err) {
+        console.error('[submitLead] erro:', err);
+        cta.classList.remove('is-loading');
+        cta.disabled = false;
+        cta.textContent = 'Tentar de novo';
+      });
+  });
+
+  /* ----------------------------- Init ----------------------------- */
+  render();
+})();
+
+</script>
+</body>
+</html>
