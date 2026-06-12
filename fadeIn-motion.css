@@ -1,0 +1,28 @@
+/* ============================================================
+   Motion "fadeIn" — SuperJon (Jon Vlogs × Superbet)
+   Animação de entrada usada na tela de confirmação do lead (.lp-done)
+   ============================================================ */
+
+/* Aplicação (exemplo de uso) */
+.lp-done {
+  animation: fadeIn 0.4s ease both;
+}
+
+/* Definição da animação */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Respeita usuários que pedem menos movimento */
+@media (prefers-reduced-motion: reduce) {
+  .lp-done {
+    animation-duration: 0.001ms !important;
+  }
+}
