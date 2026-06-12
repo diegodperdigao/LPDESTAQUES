@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#FD0104" />
+  <title>SuperJon — Entre no grupo</title>
+  <meta name="description" content="Responda as perguntas rápidas e a equipe te direciona pro grupo certo. Conteúdo para maiores de 18 anos." />
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Roboto+Flex:ital,opsz,wght@0,8..144,400..900;1,8..144,600..900&display=swap"
+    rel="stylesheet"
+  />
+
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <main class="lp" id="lp">
+    <!-- Hero -->
+    <header class="lp-hero">
+      <div class="lp-hero__top">
+        <!-- Logo Superbet (branca via filtro). Fallback: wordmark -->
+        <span class="lp-logo" aria-label="Superbet">superbet<span class="lp-logo__dot">.</span></span>
+        <div class="lp-avatar" aria-label="Jon Vlogs">JON VLOGS</div>
+      </div>
+      <h1 class="lp-hero__title">SuperJon</h1>
+      <p class="lp-hero__subtitle">
+        Responde as perguntas abaixo e a equipe te direciona pro grupo certo.
+      </p>
+    </header>
+
+    <!-- Corpo -->
+    <section class="lp-body">
+      <!-- Barra de progresso -->
+      <div class="lp-progress" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+        <div class="lp-progress__fill" id="progressFill"></div>
+      </div>
+
+      <p class="lp-section-label">Perguntas rápidas</p>
+
+      <!-- Perguntas (renderizadas via JS) -->
+      <form id="leadForm" novalidate>
+        <div id="questions"></div>
+
+        <button type="submit" class="lp-cta" id="ctaButton">
+          Quero entrar no grupo agora
+        </button>
+      </form>
+
+      <p class="lp-foot">
+        Conteúdo para maiores de 18 anos. Jogue com responsabilidade.
+      </p>
+    </section>
+  </main>
+
+  <script src="./app.js" defer></script>
+</body>
+</html>
