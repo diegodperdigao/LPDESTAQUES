@@ -187,17 +187,22 @@
       'Cria a sua agora — leva menos de 2 minutos.');
     screenEl.appendChild(intro);
 
-    var btn = el('button', 'lp-cta lp-cta--pulse', 'Crie sua conta agora');
-    btn.type = 'button';
-    btn.addEventListener('click', function () {
-      // Abre o cadastro em nova aba e mantém esta aba já no formulário
-      if (REGISTRATION_URL) {
-        window.open(REGISTRATION_URL, '_blank', 'noopener');
-      } else {
+    // Link real (não window.open): garante NOVA aba no PC, celular e
+    // navegadores in-app (Instagram/WhatsApp), sem bloqueio de popup.
+    var btn = el('a', 'lp-cta lp-cta--pulse', 'Crie sua conta agora');
+    btn.href = REGISTRATION_URL || '#';
+    btn.target = '_blank';
+    btn.rel = 'noopener noreferrer';
+    btn.setAttribute('role', 'button');
+    btn.addEventListener('click', function (e) {
+      if (!REGISTRATION_URL) {
+        e.preventDefault(); // sem link configurado: só transiciona (teste)
         console.warn('[create] REGISTRATION_URL não configurado.');
       }
       state.hasAccount = 'criou_agora';
-      renderForm(true);
+      // Atraso pequeno: deixa a nova aba abrir (gesto do clique) ANTES de
+      // trocar o conteúdo desta aba — senão remover o <a> cancelaria a abertura.
+      setTimeout(function () { renderForm(true); }, 80);
     });
     screenEl.appendChild(btn);
 

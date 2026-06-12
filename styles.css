@@ -474,8 +474,9 @@ body {
   color: var(--yellow-text);
 }
 
-/* Botão CTA */
+/* Botão CTA (serve para <button> e <a>) */
 .lp-cta {
+  display: block;
   width: 100%;
   margin-top: 14px;
   background: var(--red);
@@ -486,6 +487,9 @@ body {
   text-transform: uppercase;
   font-size: 14px;
   letter-spacing: 0.3px;
+  line-height: 1;
+  text-align: center;
+  text-decoration: none;
   border: none;
   padding: 13px;
   border-radius: 11px;
