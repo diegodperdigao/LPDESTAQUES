@@ -322,7 +322,7 @@ body {
 .lp-link-btn {
   display: block;
   width: 100%;
-  margin-top: 26px;
+  margin-top: 44px;
   background: none;
   border: none;
   color: var(--ink-soft);
@@ -529,11 +529,10 @@ body {
   pointer-events: none;
 }
 
-/* CTA com motion. Idle: pulso sutil. Hover: brilho varrendo + glow. */
+/* CTA com motion. Idle: estático (sem brilho). Hover: brilho varrendo + glow. */
 .lp-cta--pulse {
   position: relative;
   overflow: hidden;
-  animation: ctaPulse 2.1s ease-in-out infinite;
 }
 /* brilho (shine) — escondido; só aparece/varre no hover */
 .lp-cta--pulse::after {
@@ -549,23 +548,12 @@ body {
   pointer-events: none;
 }
 .lp-cta--pulse:hover {
-  animation-play-state: paused;            /* congela o pulso ao focar */
   transform: translateY(-2px) scale(1.015);
   box-shadow: 0 18px 40px -8px var(--red), 0 0 0 5px rgba(253, 1, 4, 0.18);
 }
 .lp-cta--pulse:hover::after {
   opacity: 1;
   animation: ctaShine 1s ease-out;          /* varre uma vez por hover */
-}
-@keyframes ctaPulse {
-  0%, 100% {
-    box-shadow: 0 12px 24px -12px var(--red);
-    transform: translateY(0) scale(1);
-  }
-  50% {
-    box-shadow: 0 15px 28px -12px var(--red);
-    transform: translateY(-1px) scale(1.008);
-  }
 }
 @keyframes ctaShine {
   0% { left: -65%; }
