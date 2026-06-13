@@ -156,11 +156,16 @@ body {
   flex: 0 0 auto;
 }
 
-/* Avatar como motion (vídeo do Jon Vlogs) */
-.lp-avatar--video {
-  object-fit: cover;
-  background: #000;
-  padding: 0;
+/* Motion do Jon Vlogs — direto sobre o vermelho, sem caixa/forma.
+   Altura proporcional à logo da Superbet (sem borda nem fundo). */
+.lp-jon-motion {
+  display: block;
+  height: 22px;
+  width: auto;
+  margin-top: 15px;
+  background: transparent;
+  border: none;
+  object-fit: contain;
 }
 
 .lp-hero__headline {
@@ -787,11 +792,9 @@ body {
     font-size: 24px;
   }
 
-  .lp-avatar {
-    margin-top: -4px;
-    width: 54px;
-    height: 54px;
-    font-size: 10px;
+  .lp-jon-motion {
+    height: 32px;
+    margin-top: -6px;
   }
 
   /* headline centralizada no espaço entre o topo e a base */
@@ -919,14 +922,14 @@ body {
             />
             <span class="lp-logo" aria-label="Superbet" style="display:none">superbet<span class="lp-logo__dot">.</span></span>
           </span>
-          <!-- Motion do Jon Vlogs (troque o src por assets/jonvlogs-logo.webm p/ a outra versão) -->
+          <!-- Motion do Jon Vlogs, direto sobre o vermelho (webm com alpha).
+               Troque o src por assets/jonvlogs-logo.webm p/ a outra versão. -->
           <video
-            class="lp-avatar lp-avatar--video"
+            class="lp-jon-motion"
             autoplay muted loop playsinline
             aria-label="Jon Vlogs"
           >
             <source src="./assets/jonvlogs-vertical.webm" type="video/webm" />
-            JON VLOGS
           </video>
         </div>
 
