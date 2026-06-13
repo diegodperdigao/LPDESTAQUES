@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>CTA Lab — SuperJon</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Roboto+Flex:ital,opsz,wght@0,8..144,400..900;1,8..144,600..900&display=swap" rel="stylesheet" />
+<style>
+  :root{ --red:#FD0104; --ink:#1a1320; --faint:#938b9c; --line:rgba(24,16,32,.12); }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:Inter,sans-serif;background:#fff;color:var(--ink);padding:28px 18px 60px;max-width:520px;margin:0 auto}
+  h1{font-family:'Roboto Flex';font-weight:800;font-style:italic;text-transform:uppercase;font-size:22px;letter-spacing:-.5px;margin-bottom:6px}
+  .sub{font-size:13px;color:var(--faint);margin-bottom:26px;line-height:1.5}
+  .item{padding:22px 0;border-top:1px solid var(--line)}
+  .tag{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--red);margin-bottom:14px;display:flex;gap:8px;align-items:center}
+  .tag b{color:var(--ink)}
+  .desc{font-size:12px;color:var(--faint);margin-top:12px;line-height:1.5}
+
+  /* Botão base (igual ao da LP) */
+  .cta{position:relative;width:100%;background:var(--red);color:#fff;font-family:'Roboto Flex';font-weight:800;font-style:italic;text-transform:uppercase;font-size:15px;letter-spacing:.3px;line-height:1;border:none;padding:15px;border-radius:11px;box-shadow:0 12px 24px -12px var(--red);cursor:pointer}
+  .cta span{position:relative;z-index:2}
+
+  /* A — Glow pulsante (halo) */
+  .glow{animation:glowPulse 1.9s ease-in-out infinite}
+  @keyframes glowPulse{0%,100%{box-shadow:0 12px 24px -12px var(--red)}50%{box-shadow:0 12px 24px -12px var(--red),0 0 0 6px rgba(253,1,4,.16),0 0 28px 4px rgba(253,1,4,.4)}}
+
+  /* B — Borda iluminada girando */
+  .beam{overflow:hidden;z-index:0}
+  .beam::before{content:"";position:absolute;inset:-60%;background:conic-gradient(from 0deg,transparent 0 290deg,#fff 330deg,transparent 360deg);animation:spin 2.4s linear infinite;z-index:0}
+  .beam::after{content:"";position:absolute;inset:2px;border-radius:9px;background:var(--red);z-index:1}
+  @keyframes spin{to{transform:rotate(360deg)}}
+
+  /* C — Glint (brilho que passa) */
+  .glint{overflow:hidden}
+  .glint::after{content:"";position:absolute;top:0;left:-75%;width:50%;height:100%;background:linear-gradient(120deg,transparent,rgba(255,255,255,.55),transparent);transform:skewX(-20deg);animation:sweep 3.4s ease-in-out infinite;z-index:1}
+  @keyframes sweep{0%{left:-75%}30%,100%{left:160%}}
+
+  /* D — Ripple (anel/radar saindo) */
+  .ripple::before{content:"";position:absolute;inset:0;border-radius:inherit;box-shadow:0 0 0 0 rgba(253,1,4,.5);animation:rip 2s ease-out infinite;z-index:0}
+  @keyframes rip{0%{box-shadow:0 0 0 0 rgba(253,1,4,.45)}70%{box-shadow:0 0 0 16px rgba(253,1,4,0)}100%{box-shadow:0 0 0 0 rgba(253,1,4,0)}}
+
+  /* E — Bob (sobe e desce sutil) */
+  .bob{animation:bob 1.7s ease-in-out infinite}
+  @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
+
+  /* F — Sólido (sem animação) */
+</style>
+</head>
+<body>
+  <h1>Laboratório de botão</h1>
+  <p class="sub">Mesmo botão final, vários estilos de animação. Veja qual te agrada e me diga a letra (A–F).</p>
+
+  <div class="item">
+    <div class="tag"><b>A.</b> Glow pulsante (halo)</div>
+    <button class="cta glow"><span>Quero entrar no grupo agora</span></button>
+    <p class="desc">Halo vermelho acende/apaga. Calmo, sem mudar de tamanho.</p>
+  </div>
+
+  <div class="item">
+    <div class="tag"><b>B.</b> Borda iluminada girando</div>
+    <button class="cta beam"><span>Quero entrar no grupo agora</span></button>
+    <p class="desc">Facho de luz percorre a borda. Moderno/premium.</p>
+  </div>
+
+  <div class="item">
+    <div class="tag"><b>C.</b> Glint (brilho que passa) — atual</div>
+    <button class="cta glint"><span>Quero entrar no grupo agora</span></button>
+    <p class="desc">Um brilho varre o botão a cada ~3s. Sutil.</p>
+  </div>
+
+  <div class="item">
+    <div class="tag"><b>D.</b> Ripple (anel saindo)</div>
+    <button class="cta ripple"><span>Quero entrar no grupo agora</span></button>
+    <p class="desc">Anel vermelho emana do botão, tipo radar.</p>
+  </div>
+
+  <div class="item">
+    <div class="tag"><b>E.</b> Bob (sobe e desce)</div>
+    <button class="cta bob"><span>Quero entrar no grupo agora</span></button>
+    <p class="desc">Leve flutuação vertical, tipo "me clica".</p>
+  </div>
+
+  <div class="item">
+    <div class="tag"><b>F.</b> Sólido (sem animação)</div>
+    <button class="cta"><span>Quero entrar no grupo agora</span></button>
+    <p class="desc">Destaque só pela cor/tamanho. Mais sóbrio.</p>
+  </div>
+</body>
+</html>
