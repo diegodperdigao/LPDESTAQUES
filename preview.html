@@ -640,12 +640,19 @@ body {
   z-index: 0;
   overflow: hidden;
 }
-.lp-cta--go::before {           /* facho de luz que percorre a borda */
+.lp-cta--go::before {           /* glow que percorre TODA a borda, uniforme */
   content: "";
   position: absolute;
-  inset: -60%;
-  background: conic-gradient(from 0deg, transparent 0 290deg, #fff 330deg, transparent 360deg);
-  animation: ctaBeam 2.4s linear infinite;
+  top: 0;
+  left: 0;
+  width: 78px;
+  height: 78px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #fff 0%, rgba(255, 255, 255, 0.4) 35%, transparent 65%);
+  offset-path: border-box;      /* segue o contorno do botão */
+  offset-anchor: 50% 50%;
+  offset-distance: 0%;
+  animation: ctaTravel 2.6s linear infinite;
   z-index: 0;
   pointer-events: none;
 }
@@ -665,7 +672,20 @@ body {
   transform: translateY(-3px);
   box-shadow: 0 18px 34px -10px var(--red);
 }
-@keyframes ctaBeam { to { transform: rotate(360deg); } }
+@keyframes ctaTravel { to { offset-distance: 100%; } }
+
+/* Fallback: navegadores sem offset-path -> cônico girando (menos uniforme) */
+@supports not (offset-path: border-box) {
+  .lp-cta--go::before {
+    width: auto;
+    height: auto;
+    inset: -60%;
+    border-radius: 0;
+    background: conic-gradient(from 0deg, transparent 0 290deg, #fff 330deg, transparent 360deg);
+    animation: ctaBeam 2.4s linear infinite;
+  }
+  @keyframes ctaBeam { to { transform: rotate(360deg); } }
+}
 
 /* Rodapé de responsabilidade — selo +18 + texto, fixo no fim da página */
 .lp-foot {
