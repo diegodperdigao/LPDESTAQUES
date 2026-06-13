@@ -526,6 +526,19 @@
   /* ===========================================================
      Init
      =========================================================== */
+  /* ===========================================================
+     Motion do Jon Vlogs — playback levemente mais lento
+     =========================================================== */
+  (function slowMotion() {
+    var v = document.querySelector('.lp-jon-motion');
+    if (!v) return;
+    var RATE = 0.7; // 1 = normal; <1 mais lento
+    var apply = function () { try { v.playbackRate = RATE; } catch (e) {} };
+    v.addEventListener('loadedmetadata', apply);
+    v.addEventListener('play', apply);
+    apply();
+  })();
+
   paintHeroSeal();
   renderGate();
 })();

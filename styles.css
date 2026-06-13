@@ -142,7 +142,7 @@ body {
    filter deixa o motion branco preservando a transparência (igual à logo). */
 .lp-jon-motion {
   display: block;
-  height: 40px;
+  height: 48px;
   width: auto;
   background: transparent;
   border: none;
@@ -779,7 +779,7 @@ body {
   }
 
   .lp-jon-motion {
-    height: 56px;
+    height: 68px;
   }
 
   /* headline centralizada no espaço entre o topo e a base */

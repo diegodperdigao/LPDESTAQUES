@@ -160,7 +160,7 @@ body {
    filter deixa o motion branco preservando a transparência (igual à logo). */
 .lp-jon-motion {
   display: block;
-  height: 40px;
+  height: 48px;
   width: auto;
   background: transparent;
   border: none;
@@ -797,7 +797,7 @@ body {
   }
 
   .lp-jon-motion {
-    height: 56px;
+    height: 68px;
   }
 
   /* headline centralizada no espaço entre o topo e a base */
@@ -1497,6 +1497,19 @@ body {
   /* ===========================================================
      Init
      =========================================================== */
+  /* ===========================================================
+     Motion do Jon Vlogs — playback levemente mais lento
+     =========================================================== */
+  (function slowMotion() {
+    var v = document.querySelector('.lp-jon-motion');
+    if (!v) return;
+    var RATE = 0.7; // 1 = normal; <1 mais lento
+    var apply = function () { try { v.playbackRate = RATE; } catch (e) {} };
+    v.addEventListener('loadedmetadata', apply);
+    v.addEventListener('play', apply);
+    apply();
+  })();
+
   paintHeroSeal();
   renderGate();
 })();
