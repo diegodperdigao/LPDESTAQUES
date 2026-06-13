@@ -958,6 +958,23 @@ body {
 }
 
 </style>
+
+<style>
+/* VARIANTE: imersivo */
+
+@media (max-width:879px){
+  .lp-hero{ padding:0 22px 40px; background:linear-gradient(160deg,#FD0104,#c00003); }
+  .lp-hero__top{ padding-top:22px; }
+  .lp-hero__title{ font-size:36px; margin-top:30px; letter-spacing:-1.5px; }
+  .lp-hero__subtitle{ font-size:13px; margin-top:10px; max-width:80%; }
+  .lp-jon-motion{ height:54px; }
+  .lp-body__inner{ justify-content:flex-start; padding:26px 0 18px; }
+  .lp-gate__eyebrow{ font-size:10px; }
+  .lp-gate__title{ font-size:clamp(26px,8vw,36px); }
+}
+
+.proto-badge{position:fixed;z-index:99;left:50%;bottom:10px;transform:translateX(-50%);background:#181020;color:#fff;font:600 10px Inter,sans-serif;padding:5px 10px;border-radius:99px;opacity:.85;letter-spacing:.4px}@media(min-width:880px){.proto-badge{display:none}}
+</style>
 </head>
 <body>
   <main class="lp" id="lp">
@@ -1562,5 +1579,5 @@ body {
 })();
 
 </script>
-</body>
+<div class="proto-badge">Variação B · Imersivo</div></body>
 </html>

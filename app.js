@@ -179,7 +179,7 @@
     screenEl.innerHTML = '';
 
     var wrap = el('div', 'lp-gate');
-    wrap.appendChild(el('span', 'lp-gate__eyebrow', 'Falta só um passo'));
+    wrap.appendChild(el('span', 'lp-gate__eyebrow', 'Falta pouco'));
 
     var title = el('h2', 'lp-gate__title');
     title.innerHTML = 'Crie sua conta na <span class="lp-gate__hl">Superbet</span>';
