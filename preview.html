@@ -322,7 +322,7 @@ body {
 .lp-link-btn {
   display: block;
   width: 100%;
-  margin-top: 12px;
+  margin-top: 26px;
   background: none;
   border: none;
   color: var(--ink-soft);
@@ -529,12 +529,13 @@ body {
   pointer-events: none;
 }
 
-/* CTA com motion — chama a atenção pro clique (ex.: "Crie sua conta agora") */
+/* CTA com motion. Idle: pulso sutil. Hover: brilho varrendo + glow. */
 .lp-cta--pulse {
   position: relative;
   overflow: hidden;
-  animation: ctaPulse 1.9s ease-in-out infinite;
+  animation: ctaPulse 2.1s ease-in-out infinite;
 }
+/* brilho (shine) — escondido; só aparece/varre no hover */
 .lp-cta--pulse::after {
   content: "";
   position: absolute;
@@ -542,9 +543,19 @@ body {
   left: -65%;
   width: 45%;
   height: 100%;
-  background: linear-gradient(120deg, transparent, rgba(255, 255, 255, 0.5), transparent);
+  background: linear-gradient(120deg, transparent, rgba(255, 255, 255, 0.55), transparent);
   transform: skewX(-20deg);
-  animation: ctaShine 2.6s ease-in-out infinite;
+  opacity: 0;
+  pointer-events: none;
+}
+.lp-cta--pulse:hover {
+  animation-play-state: paused;            /* congela o pulso ao focar */
+  transform: translateY(-2px) scale(1.015);
+  box-shadow: 0 18px 40px -8px var(--red), 0 0 0 5px rgba(253, 1, 4, 0.18);
+}
+.lp-cta--pulse:hover::after {
+  opacity: 1;
+  animation: ctaShine 1s ease-out;          /* varre uma vez por hover */
 }
 @keyframes ctaPulse {
   0%, 100% {
@@ -552,13 +563,13 @@ body {
     transform: translateY(0) scale(1);
   }
   50% {
-    box-shadow: 0 18px 36px -10px var(--red), 0 0 0 5px rgba(253, 1, 4, 0.16);
-    transform: translateY(-2px) scale(1.015);
+    box-shadow: 0 15px 28px -12px var(--red);
+    transform: translateY(-1px) scale(1.008);
   }
 }
 @keyframes ctaShine {
   0% { left: -65%; }
-  55%, 100% { left: 150%; }
+  100% { left: 150%; }
 }
 
 /* Rodapé — abriga o selo regulatório */
