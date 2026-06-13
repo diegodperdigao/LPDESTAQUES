@@ -611,32 +611,28 @@ body {
 }
 
 /* CTA final (entrar no grupo) — destaque DIFERENTE do botão de cadastro:
-   um brilho que flui pelo botão + a seta que avança. */
+   um brilho passa pelo botão de tempos em tempos (glint periódico). */
 .lp-cta--go {
-  background-image: linear-gradient(
-    100deg,
-    var(--red) 0%, var(--red) 30%,
-    #ff3c3e 45%, #ff5052 50%, #ff3c3e 55%,
-    var(--red) 70%, var(--red) 100%
-  );
-  background-size: 220% 100%;
-  background-repeat: no-repeat;
-  animation: ctaFlow 2.6s linear infinite;
+  position: relative;
+  overflow: hidden;
 }
-.lp-cta__label { position: relative; z-index: 1; }
-.lp-cta__arrow {
-  display: inline-block;
-  margin-left: 8px;
-  animation: ctaArrow 1.3s ease-in-out infinite;
+.lp-cta--go::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -75%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(120deg, transparent, rgba(255, 255, 255, 0.55), transparent);
+  transform: skewX(-20deg);
+  animation: ctaSweep 3.4s ease-in-out infinite;
+  pointer-events: none;
 }
 .lp-cta--go:hover { box-shadow: 0 16px 32px -10px var(--red); }
-@keyframes ctaFlow {
-  0% { background-position: 130% 0; }
-  100% { background-position: -130% 0; }
-}
-@keyframes ctaArrow {
-  0%, 100% { transform: translateX(0); }
-  50% { transform: translateX(5px); }
+@keyframes ctaSweep {
+  0% { left: -75%; }
+  /* varre rápido e pausa até o próximo ciclo */
+  30%, 100% { left: 160%; }
 }
 
 /* Rodapé de responsabilidade — selo +18 + texto, fixo no fim da página */
