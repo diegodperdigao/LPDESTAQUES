@@ -147,7 +147,6 @@ body {
   background: transparent;
   border: none;
   object-fit: contain;
-  filter: brightness(0) invert(1);
 }
 
 .lp-hero__headline {
