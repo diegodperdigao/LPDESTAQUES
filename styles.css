@@ -138,11 +138,11 @@ body {
   flex: 0 0 auto;
 }
 
-/* Motion do Jon Vlogs — direto sobre o vermelho, sem caixa/forma.
-   filter deixa o motion branco preservando a transparência (igual à logo). */
+/* Motion do Jon Vlogs — webm cortado no logo, direto sobre o vermelho.
+   filter deixa branco preservando a transparência (igual à logo). */
 .lp-jon-motion {
   display: block;
-  height: 48px;
+  height: 28px;
   width: auto;
   background: transparent;
   border: none;
@@ -179,8 +179,11 @@ body {
 
 /* ===================== Corpo ===================== */
 .lp-body {
-  padding: 20px 18px 16px;
+  padding: 24px 18px 20px;
   flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .lp-body__inner {
@@ -779,7 +782,7 @@ body {
   }
 
   .lp-jon-motion {
-    height: 68px;
+    height: 34px;
   }
 
   /* headline centralizada no espaço entre o topo e a base */

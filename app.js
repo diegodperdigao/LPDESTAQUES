@@ -527,16 +527,35 @@
      Init
      =========================================================== */
   /* ===========================================================
-     Motion do Jon Vlogs — playback levemente mais lento
+     Motion do Jon Vlogs — velocidade + fallback p/ iOS/Safari
+     (que não tocam VP9 com alpha: troca o vídeo por imagem estática)
      =========================================================== */
-  (function slowMotion() {
-    var v = document.querySelector('.lp-jon-motion');
+  (function setupMotion() {
+    var v = document.querySelector('video.lp-jon-motion');
     if (!v) return;
-    var RATE = 0.7; // 1 = normal; <1 mais lento
+    var RATE = 0.85; // meio-termo (1 = normal)
     var apply = function () { try { v.playbackRate = RATE; } catch (e) {} };
+
+    var playing = false;
+    v.addEventListener('playing', function () { playing = true; apply(); });
+    v.addEventListener('timeupdate', function () { playing = true; });
     v.addEventListener('loadedmetadata', apply);
-    v.addEventListener('play', apply);
     apply();
+
+    var fellBack = false;
+    var fallback = function () {
+      if (fellBack) return;
+      fellBack = true;
+      var img = document.createElement('img');
+      img.className = 'lp-jon-motion';
+      img.src = './assets/jonvlogs.png';
+      img.alt = 'Jon Vlogs';
+      v.replaceWith(img);
+    };
+    v.addEventListener('error', fallback, true);
+    // Se em ~2,5s não houver reprodução real, assume que o browser não
+    // decodifica o webm (iOS) e mostra a imagem estática.
+    setTimeout(function () { if (!playing) fallback(); }, 2500);
   })();
 
   paintHeroSeal();
