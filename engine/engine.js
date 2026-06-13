@@ -249,8 +249,10 @@
     consent.appendChild(document.createTextNode('.'));
     form.appendChild(consent);
 
-    var cta = el('button', 'lp-cta', F.cta);
+    var cta = el('button', 'lp-cta lp-cta--go');
     cta.type = 'submit';
+    cta.appendChild(el('span', 'lp-cta__label', F.cta));
+    cta.appendChild(el('span', 'lp-cta__arrow', '→'));
     form.appendChild(cta);
 
     form.addEventListener('submit', function (e) { e.preventDefault(); handleSubmit(cta); });
