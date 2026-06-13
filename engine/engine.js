@@ -249,8 +249,9 @@
     consent.appendChild(document.createTextNode('.'));
     form.appendChild(consent);
 
-    var cta = el('button', 'lp-cta lp-cta--go', F.cta);
+    var cta = el('button', 'lp-cta lp-cta--go');
     cta.type = 'submit';
+    cta.appendChild(el('span', 'lp-cta__label', F.cta));
     form.appendChild(cta);
 
     form.addEventListener('submit', function (e) { e.preventDefault(); handleSubmit(cta); });
@@ -357,16 +358,17 @@
   function handleSubmit(cta) {
     if (!requiredIds().every(validateField)) { highlightInvalid(); return; }
     var row = buildRow();
+    var lbl = cta.querySelector('.lp-cta__label') || cta;
     cta.classList.add('is-loading');
     cta.disabled = true;
-    cta.textContent = 'Enviando...';
+    lbl.textContent = 'Enviando...';
     submitLead(row)
       .then(function () { goToGroup(row); })
       .catch(function (err) {
         console.error('[submitLead] erro:', err);
         cta.classList.remove('is-loading');
         cta.disabled = false;
-        cta.textContent = 'Tentar de novo';
+        lbl.textContent = 'Tentar de novo';
       });
   }
 
