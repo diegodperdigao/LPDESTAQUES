@@ -629,7 +629,7 @@ body {
   offset-path: border-box;      /* segue o contorno do botão */
   offset-anchor: 50% 50%;
   offset-distance: 0%;
-  animation: ctaTravel 2.6s linear infinite;
+  animation: ctaTravel 3.8s linear infinite;
   z-index: 0;
   pointer-events: none;
 }
@@ -659,7 +659,7 @@ body {
     inset: -60%;
     border-radius: 0;
     background: conic-gradient(from 0deg, transparent 0 290deg, #fff 330deg, transparent 360deg);
-    animation: ctaBeam 2.4s linear infinite;
+    animation: ctaBeam 3.6s linear infinite;
   }
   @keyframes ctaBeam { to { transform: rotate(360deg); } }
 }
