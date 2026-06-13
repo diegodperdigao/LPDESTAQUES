@@ -529,9 +529,9 @@
     var img = document.querySelector('img.lp-jon-motion');
     if (!img) return;
     var STATIC = './assets/jonvlogs.png';
-    // A escrita termina ~2,9s; o webp segura o último frame por 0,5s (até ~3,4s).
-    // Trocamos pelo PNG DURANTE esse hold (3,1s) -> parada natural, sem flash.
-    var DURATION = 3100;
+    // A revelação termina ~1,5s e segura o logo até ~2,1s. Trocamos pelo PNG
+    // durante esse hold (1,7s) -> parada natural, sem flash de reset do WebP.
+    var DURATION = 1700;
     var pre = new Image();
     pre.src = STATIC; // pré-carrega p/ troca instantânea
     setTimeout(function () {
