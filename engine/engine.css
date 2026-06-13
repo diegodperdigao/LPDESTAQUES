@@ -150,7 +150,7 @@ body {
 }
 
 .lp-hero__headline {
-  margin-top: 14px;
+  margin-top: 32px; /* respiro entre a linha das logos e o título SUPERJON */
 }
 
 /* No mobile o selo do hero some (aparece no rodapé do corpo) */
