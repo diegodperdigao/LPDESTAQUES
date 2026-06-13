@@ -327,6 +327,42 @@ body {
 }
 .lp-gate__opt--primary:hover .lp-gate__opt-arrow { color: var(--white); }
 
+/* Passo-a-passo (tela "criar conta") */
+.lp-steps {
+  list-style: none;
+  margin: 20px 0 6px;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.lp-steps li {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--ink-soft);
+}
+.lp-steps__n {
+  flex: 0 0 auto;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--red);
+  color: var(--white);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-hero);
+  font-weight: 800;
+  font-style: italic;
+  font-size: 12px;
+}
+
+/* Utilitários responsivos (texto que muda entre mobile/desktop) */
+.u-only-desktop { display: none; }
+
 /* Texto introdutório (telas create / form-pós-cadastro) */
 .lp-intro {
   font-size: 14px;
@@ -758,6 +794,10 @@ body {
     align-items: stretch;
   }
 
+  /* alterna o texto direcional do subtítulo (abaixo -> ao lado) */
+  .u-only-mobile { display: none; }
+  .u-only-desktop { display: inline; }
+
   /* Hero vira painel esquerdo fixo, tela cheia */
   .lp-hero {
     flex: 0 0 42%;
@@ -942,7 +982,7 @@ body {
         <div class="lp-hero__headline">
           <h1 class="lp-hero__title">SuperJon</h1>
           <p class="lp-hero__subtitle">
-            Responda abaixo e garanta sua vaga no grupo do Jon Vlogs.
+            Responda <span class="u-only-mobile">abaixo</span><span class="u-only-desktop">ao lado</span> e garanta sua vaga no grupo do Jon Vlogs.
           </p>
         </div>
 
@@ -1154,16 +1194,34 @@ body {
   function renderCreate() {
     screenEl.innerHTML = '';
 
-    screenEl.appendChild(el('p', 'lp-section-label', 'Quase lá'));
+    var wrap = el('div', 'lp-gate');
+    wrap.appendChild(el('span', 'lp-gate__eyebrow', 'Falta só um passo'));
 
-    var intro = el('p', 'lp-intro',
-      'Pra entrar no grupo você precisa de uma conta na Superbet. ' +
-      'Cria a sua agora — leva menos de 2 minutos.');
-    screenEl.appendChild(intro);
+    var title = el('h2', 'lp-gate__title');
+    title.innerHTML = 'Crie sua conta na <span class="lp-gate__hl">Superbet</span>';
+    wrap.appendChild(title);
+
+    wrap.appendChild(el('p', 'lp-gate__sub',
+      'É rápido e gratuito. Assim que criar, volte aqui pra liberar seu acesso ao grupo.'));
+
+    // Passo-a-passo: deixa claro o fluxo de ida (nova aba) e volta
+    var steps = document.createElement('ol');
+    steps.className = 'lp-steps';
+    [
+      'Crie sua conta na Superbet',
+      'Volte para esta página',
+      'Responda e entre no grupo'
+    ].forEach(function (txt, i) {
+      var li = document.createElement('li');
+      li.appendChild(el('span', 'lp-steps__n', String(i + 1)));
+      li.appendChild(el('span', null, txt));
+      steps.appendChild(li);
+    });
+    wrap.appendChild(steps);
 
     // Link real (não window.open): garante NOVA aba no PC, celular e
     // navegadores in-app (Instagram/WhatsApp), sem bloqueio de popup.
-    var btn = el('a', 'lp-cta lp-cta--pulse', 'Crie sua conta agora');
+    var btn = el('a', 'lp-cta lp-cta--pulse', 'Criar conta agora');
     btn.href = REGISTRATION_URL || '#';
     btn.target = '_blank';
     btn.rel = 'noopener noreferrer';
@@ -1178,7 +1236,7 @@ body {
       // trocar o conteúdo desta aba — senão remover o <a> cancelaria a abertura.
       setTimeout(function () { renderForm(true); }, 80);
     });
-    screenEl.appendChild(btn);
+    wrap.appendChild(btn);
 
     var back = el('button', 'lp-link-btn', 'Já tenho conta');
     back.type = 'button';
@@ -1186,7 +1244,9 @@ body {
       state.hasAccount = 'sim';
       renderForm(false);
     });
-    screenEl.appendChild(back);
+    wrap.appendChild(back);
+
+    screenEl.appendChild(wrap);
   }
 
   /* ===========================================================

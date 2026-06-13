@@ -309,6 +309,42 @@ body {
 }
 .lp-gate__opt--primary:hover .lp-gate__opt-arrow { color: var(--white); }
 
+/* Passo-a-passo (tela "criar conta") */
+.lp-steps {
+  list-style: none;
+  margin: 20px 0 6px;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.lp-steps li {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--ink-soft);
+}
+.lp-steps__n {
+  flex: 0 0 auto;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--red);
+  color: var(--white);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-hero);
+  font-weight: 800;
+  font-style: italic;
+  font-size: 12px;
+}
+
+/* Utilitários responsivos (texto que muda entre mobile/desktop) */
+.u-only-desktop { display: none; }
+
 /* Texto introdutório (telas create / form-pós-cadastro) */
 .lp-intro {
   font-size: 14px;
@@ -739,6 +775,10 @@ body {
     flex-direction: row;
     align-items: stretch;
   }
+
+  /* alterna o texto direcional do subtítulo (abaixo -> ao lado) */
+  .u-only-mobile { display: none; }
+  .u-only-desktop { display: inline; }
 
   /* Hero vira painel esquerdo fixo, tela cheia */
   .lp-hero {

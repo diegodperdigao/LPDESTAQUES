@@ -178,16 +178,34 @@
   function renderCreate() {
     screenEl.innerHTML = '';
 
-    screenEl.appendChild(el('p', 'lp-section-label', 'Quase lá'));
+    var wrap = el('div', 'lp-gate');
+    wrap.appendChild(el('span', 'lp-gate__eyebrow', 'Falta só um passo'));
 
-    var intro = el('p', 'lp-intro',
-      'Pra entrar no grupo você precisa de uma conta na Superbet. ' +
-      'Cria a sua agora — leva menos de 2 minutos.');
-    screenEl.appendChild(intro);
+    var title = el('h2', 'lp-gate__title');
+    title.innerHTML = 'Crie sua conta na <span class="lp-gate__hl">Superbet</span>';
+    wrap.appendChild(title);
+
+    wrap.appendChild(el('p', 'lp-gate__sub',
+      'É rápido e gratuito. Assim que criar, volte aqui pra liberar seu acesso ao grupo.'));
+
+    // Passo-a-passo: deixa claro o fluxo de ida (nova aba) e volta
+    var steps = document.createElement('ol');
+    steps.className = 'lp-steps';
+    [
+      'Crie sua conta na Superbet',
+      'Volte para esta página',
+      'Responda e entre no grupo'
+    ].forEach(function (txt, i) {
+      var li = document.createElement('li');
+      li.appendChild(el('span', 'lp-steps__n', String(i + 1)));
+      li.appendChild(el('span', null, txt));
+      steps.appendChild(li);
+    });
+    wrap.appendChild(steps);
 
     // Link real (não window.open): garante NOVA aba no PC, celular e
     // navegadores in-app (Instagram/WhatsApp), sem bloqueio de popup.
-    var btn = el('a', 'lp-cta lp-cta--pulse', 'Crie sua conta agora');
+    var btn = el('a', 'lp-cta lp-cta--pulse', 'Criar conta agora');
     btn.href = REGISTRATION_URL || '#';
     btn.target = '_blank';
     btn.rel = 'noopener noreferrer';
@@ -202,7 +220,7 @@
       // trocar o conteúdo desta aba — senão remover o <a> cancelaria a abertura.
       setTimeout(function () { renderForm(true); }, 80);
     });
-    screenEl.appendChild(btn);
+    wrap.appendChild(btn);
 
     var back = el('button', 'lp-link-btn', 'Já tenho conta');
     back.type = 'button';
@@ -210,7 +228,9 @@
       state.hasAccount = 'sim';
       renderForm(false);
     });
-    screenEl.appendChild(back);
+    wrap.appendChild(back);
+
+    screenEl.appendChild(wrap);
   }
 
   /* ===========================================================
