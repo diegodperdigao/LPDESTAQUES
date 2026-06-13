@@ -160,11 +160,6 @@ body {
   max-width: 90%;
 }
 
-/* No mobile o 18+ do hero some (já tem no rodapé do corpo) */
-.lp-hero__foot {
-  display: none;
-}
-
 /* ===================== Corpo ===================== */
 .lp-body {
   padding: 20px 18px 16px;
@@ -548,39 +543,68 @@ body {
   55%, 100% { left: 150%; }
 }
 
-/* Rodapé de responsabilidade */
+/* Rodapé — abriga o selo regulatório */
 .lp-foot {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
-  font-size: 9px;
-  color: var(--ink-faint);
-  padding: 14px 18px 16px;
-  line-height: 1.45;
-  text-align: left;
+  padding: 18px 18px 22px;
 }
 
-/* Selo +18 — placeholder estilizado (trocar por SEAL_URL oficial) */
-.lp-seal {
-  flex: 0 0 auto;
-  width: 26px;
-  height: 26px;
-  border-radius: 50%;
-  border: 1.5px solid currentColor;
+/* Selo oficial SPA/MF (recriação). Fallback p/ imagem via .lp-seal-img */
+.spa-seal {
   display: inline-flex;
+  align-items: stretch;
+  background: var(--red);
+  color: #fff;
+  border-radius: 12px;
+  overflow: hidden;
+  max-width: 100%;
+  box-shadow: 0 8px 20px -12px rgba(253, 1, 4, 0.7);
+}
+.spa-seal__age {
+  display: flex;
   align-items: center;
   justify-content: center;
-  font-family: var(--font-hero);
+  padding: 8px 13px;
+}
+.spa-seal__age span {
+  width: 34px;
+  height: 34px;
+  border: 2px solid #fff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-body);
   font-weight: 800;
-  font-style: italic;
-  font-size: 10px;
-  letter-spacing: -0.5px;
+  font-size: 12.5px;
+  letter-spacing: -0.3px;
+}
+.spa-seal__lines {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  border-left: 1.5px solid rgba(255, 255, 255, 0.45);
+}
+.spa-seal__line {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 6px 14px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.2px;
+  white-space: nowrap;
+}
+.spa-seal__line svg { flex: 0 0 auto; }
+.spa-seal__divider {
+  height: 1.5px;
+  background: rgba(255, 255, 255, 0.45);
 }
 .lp-seal-img {
-  flex: 0 0 auto;
-  height: 28px;
-  width: auto;
+  max-width: 100%;
+  height: auto;
   display: block;
 }
 
@@ -716,9 +740,9 @@ body {
   .lp-hero {
     flex: 0 0 42%;
     max-width: 560px;
-    padding: 48px 56px;
+    padding: 44px 56px 48px;
     display: flex;
-    align-items: center;
+    align-items: stretch;
     position: sticky;
     top: 0;
     height: 100dvh;
@@ -734,13 +758,14 @@ body {
 
   .lp-hero__inner {
     max-width: 100%;
+    flex: 1 1 auto;
     display: flex;
     flex-direction: column;
-    min-height: 60%;
   }
 
+  /* logo + avatar fixos no topo */
   .lp-hero__top {
-    margin-bottom: auto;
+    margin-bottom: 0;
   }
 
   .lp-logo-wrap {
@@ -762,8 +787,9 @@ body {
     font-size: 10px;
   }
 
+  /* headline centralizada no espaço entre o topo e a base */
   .lp-hero__headline {
-    margin: 32px 0;
+    margin: auto 0;
   }
 
   .lp-hero__title {
@@ -776,20 +802,6 @@ body {
     font-size: 16px;
     max-width: 28ch;
   }
-
-  /* 18+ aparece no rodapé do hero no desktop */
-  .lp-hero__foot {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-top: auto;
-    font-size: 11px;
-    opacity: 0.85;
-    line-height: 1.5;
-    max-width: 30ch;
-  }
-  .lp-hero__foot .lp-seal { width: 30px; height: 30px; font-size: 11px; }
-  .lp-hero__foot .lp-seal-img { height: 32px; }
 
   /* Corpo vira painel direito, rolável, conteúdo centralizado */
   .lp-body {
@@ -836,9 +848,10 @@ body {
     margin-top: 20px;
   }
 
-  /* No desktop o 18+ do corpo some (já está no hero) */
+  /* No desktop o selo fica alinhado à esquerda do painel branco */
   .lp-foot {
-    display: none;
+    justify-content: flex-start;
+    padding-top: 24px;
   }
 
   /* Confirmação ocupa as duas colunas */

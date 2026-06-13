@@ -178,11 +178,6 @@ body {
   max-width: 90%;
 }
 
-/* No mobile o 18+ do hero some (já tem no rodapé do corpo) */
-.lp-hero__foot {
-  display: none;
-}
-
 /* ===================== Corpo ===================== */
 .lp-body {
   padding: 20px 18px 16px;
@@ -566,39 +561,68 @@ body {
   55%, 100% { left: 150%; }
 }
 
-/* Rodapé de responsabilidade */
+/* Rodapé — abriga o selo regulatório */
 .lp-foot {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
-  font-size: 9px;
-  color: var(--ink-faint);
-  padding: 14px 18px 16px;
-  line-height: 1.45;
-  text-align: left;
+  padding: 18px 18px 22px;
 }
 
-/* Selo +18 — placeholder estilizado (trocar por SEAL_URL oficial) */
-.lp-seal {
-  flex: 0 0 auto;
-  width: 26px;
-  height: 26px;
-  border-radius: 50%;
-  border: 1.5px solid currentColor;
+/* Selo oficial SPA/MF (recriação). Fallback p/ imagem via .lp-seal-img */
+.spa-seal {
   display: inline-flex;
+  align-items: stretch;
+  background: var(--red);
+  color: #fff;
+  border-radius: 12px;
+  overflow: hidden;
+  max-width: 100%;
+  box-shadow: 0 8px 20px -12px rgba(253, 1, 4, 0.7);
+}
+.spa-seal__age {
+  display: flex;
   align-items: center;
   justify-content: center;
-  font-family: var(--font-hero);
+  padding: 8px 13px;
+}
+.spa-seal__age span {
+  width: 34px;
+  height: 34px;
+  border: 2px solid #fff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-body);
   font-weight: 800;
-  font-style: italic;
-  font-size: 10px;
-  letter-spacing: -0.5px;
+  font-size: 12.5px;
+  letter-spacing: -0.3px;
+}
+.spa-seal__lines {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  border-left: 1.5px solid rgba(255, 255, 255, 0.45);
+}
+.spa-seal__line {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 6px 14px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.2px;
+  white-space: nowrap;
+}
+.spa-seal__line svg { flex: 0 0 auto; }
+.spa-seal__divider {
+  height: 1.5px;
+  background: rgba(255, 255, 255, 0.45);
 }
 .lp-seal-img {
-  flex: 0 0 auto;
-  height: 28px;
-  width: auto;
+  max-width: 100%;
+  height: auto;
   display: block;
 }
 
@@ -734,9 +758,9 @@ body {
   .lp-hero {
     flex: 0 0 42%;
     max-width: 560px;
-    padding: 48px 56px;
+    padding: 44px 56px 48px;
     display: flex;
-    align-items: center;
+    align-items: stretch;
     position: sticky;
     top: 0;
     height: 100dvh;
@@ -752,13 +776,14 @@ body {
 
   .lp-hero__inner {
     max-width: 100%;
+    flex: 1 1 auto;
     display: flex;
     flex-direction: column;
-    min-height: 60%;
   }
 
+  /* logo + avatar fixos no topo */
   .lp-hero__top {
-    margin-bottom: auto;
+    margin-bottom: 0;
   }
 
   .lp-logo-wrap {
@@ -780,8 +805,9 @@ body {
     font-size: 10px;
   }
 
+  /* headline centralizada no espaço entre o topo e a base */
   .lp-hero__headline {
-    margin: 32px 0;
+    margin: auto 0;
   }
 
   .lp-hero__title {
@@ -794,20 +820,6 @@ body {
     font-size: 16px;
     max-width: 28ch;
   }
-
-  /* 18+ aparece no rodapé do hero no desktop */
-  .lp-hero__foot {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-top: auto;
-    font-size: 11px;
-    opacity: 0.85;
-    line-height: 1.5;
-    max-width: 30ch;
-  }
-  .lp-hero__foot .lp-seal { width: 30px; height: 30px; font-size: 11px; }
-  .lp-hero__foot .lp-seal-img { height: 32px; }
 
   /* Corpo vira painel direito, rolável, conteúdo centralizado */
   .lp-body {
@@ -854,9 +866,10 @@ body {
     margin-top: 20px;
   }
 
-  /* No desktop o 18+ do corpo some (já está no hero) */
+  /* No desktop o selo fica alinhado à esquerda do painel branco */
   .lp-foot {
-    display: none;
+    justify-content: flex-start;
+    padding-top: 24px;
   }
 
   /* Confirmação ocupa as duas colunas */
@@ -908,11 +921,6 @@ body {
           <p class="lp-hero__subtitle">
             Entra pro grupo do Jon na Superbet. Responde rapidinho e libera seu acesso.
           </p>
-        </div>
-
-        <div class="lp-hero__foot">
-          <span class="lp-seal" data-seal></span>
-          <span>Conteúdo para maiores de 18 anos. Jogue com responsabilidade.</span>
         </div>
       </div>
     </header>
@@ -1413,26 +1421,40 @@ body {
   function appendFooter() {
     var foot = el('div', 'lp-foot');
     foot.appendChild(buildSeal());
-    foot.appendChild(el('span', null,
-      'Conteúdo para maiores de 18 anos. Jogue com responsabilidade.'));
     screenEl.appendChild(foot);
   }
 
+  // Selo regulatório (recriação do selo oficial SPA/MF).
+  // Se SEAL_URL for definido, usa a imagem oficial no lugar.
   function buildSeal() {
     if (SEAL_URL) {
       var img = el('img', 'lp-seal-img');
       img.src = SEAL_URL;
-      img.alt = '+18';
+      img.alt = '18+ Jogue com responsabilidade — PORTARIA SPA/MF Nº2.090';
       return img;
     }
-    return el('span', 'lp-seal', '+18');
-  }
-
-  // Selo no rodapé do hero (desktop)
-  function paintHeroSeal() {
-    document.querySelectorAll('[data-seal]').forEach(function (node) {
-      node.replaceWith(buildSeal());
-    });
+    var warn = '<svg viewBox="0 0 24 24" width="13" height="13" fill="none" ' +
+      'stroke="currentColor" stroke-width="2" stroke-linejoin="round" stroke-linecap="round">' +
+      '<path d="M12 4 2.5 20h19L12 4Z"/><line x1="12" y1="10" x2="12" y2="14.5"/>' +
+      '<circle cx="12" cy="17.3" r="0.9" fill="currentColor" stroke="none"/></svg>';
+    var info = '<svg viewBox="0 0 24 24" width="13" height="13" fill="none" ' +
+      'stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/>' +
+      '<line x1="12" y1="11.5" x2="12" y2="16.5"/>' +
+      '<circle cx="12" cy="8" r="0.9" fill="currentColor" stroke="none"/></svg>';
+    var seal = el('div', 'spa-seal');
+    seal.setAttribute('role', 'img');
+    seal.setAttribute('aria-label',
+      '18+ Jogue com responsabilidade. Portaria SPA/MF número 2.090.');
+    seal.innerHTML =
+      '<div class="spa-seal__age"><span>18+</span></div>' +
+      '<div class="spa-seal__lines">' +
+        '<div class="spa-seal__line">' + warn +
+          '<span>Jogue com responsabilidade</span></div>' +
+        '<div class="spa-seal__divider"></div>' +
+        '<div class="spa-seal__line">' + info +
+          '<span>PORTARIA SPA/MF Nº2.090</span></div>' +
+      '</div>';
+    return seal;
   }
 
   /* ===========================================================
@@ -1463,7 +1485,6 @@ body {
   /* ===========================================================
      Init
      =========================================================== */
-  paintHeroSeal();
   renderGate();
 })();
 

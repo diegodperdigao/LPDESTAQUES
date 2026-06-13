@@ -475,26 +475,40 @@
   function appendFooter() {
     var foot = el('div', 'lp-foot');
     foot.appendChild(buildSeal());
-    foot.appendChild(el('span', null,
-      'Conteúdo para maiores de 18 anos. Jogue com responsabilidade.'));
     screenEl.appendChild(foot);
   }
 
+  // Selo regulatório (recriação do selo oficial SPA/MF).
+  // Se SEAL_URL for definido, usa a imagem oficial no lugar.
   function buildSeal() {
     if (SEAL_URL) {
       var img = el('img', 'lp-seal-img');
       img.src = SEAL_URL;
-      img.alt = '+18';
+      img.alt = '18+ Jogue com responsabilidade — PORTARIA SPA/MF Nº2.090';
       return img;
     }
-    return el('span', 'lp-seal', '+18');
-  }
-
-  // Selo no rodapé do hero (desktop)
-  function paintHeroSeal() {
-    document.querySelectorAll('[data-seal]').forEach(function (node) {
-      node.replaceWith(buildSeal());
-    });
+    var warn = '<svg viewBox="0 0 24 24" width="13" height="13" fill="none" ' +
+      'stroke="currentColor" stroke-width="2" stroke-linejoin="round" stroke-linecap="round">' +
+      '<path d="M12 4 2.5 20h19L12 4Z"/><line x1="12" y1="10" x2="12" y2="14.5"/>' +
+      '<circle cx="12" cy="17.3" r="0.9" fill="currentColor" stroke="none"/></svg>';
+    var info = '<svg viewBox="0 0 24 24" width="13" height="13" fill="none" ' +
+      'stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/>' +
+      '<line x1="12" y1="11.5" x2="12" y2="16.5"/>' +
+      '<circle cx="12" cy="8" r="0.9" fill="currentColor" stroke="none"/></svg>';
+    var seal = el('div', 'spa-seal');
+    seal.setAttribute('role', 'img');
+    seal.setAttribute('aria-label',
+      '18+ Jogue com responsabilidade. Portaria SPA/MF número 2.090.');
+    seal.innerHTML =
+      '<div class="spa-seal__age"><span>18+</span></div>' +
+      '<div class="spa-seal__lines">' +
+        '<div class="spa-seal__line">' + warn +
+          '<span>Jogue com responsabilidade</span></div>' +
+        '<div class="spa-seal__divider"></div>' +
+        '<div class="spa-seal__line">' + info +
+          '<span>PORTARIA SPA/MF Nº2.090</span></div>' +
+      '</div>';
+    return seal;
   }
 
   /* ===========================================================
@@ -525,6 +539,5 @@
   /* ===========================================================
      Init
      =========================================================== */
-  paintHeroSeal();
   renderGate();
 })();
