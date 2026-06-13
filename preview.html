@@ -1511,11 +1511,8 @@ body {
     if (!v) return;
     var RATE = 0.85; // meio-termo (1 = normal)
     var apply = function () { try { v.playbackRate = RATE; } catch (e) {} };
-
-    var playing = false;
-    v.addEventListener('playing', function () { playing = true; apply(); });
-    v.addEventListener('timeupdate', function () { playing = true; });
     v.addEventListener('loadedmetadata', apply);
+    v.addEventListener('playing', apply);
     apply();
 
     var fellBack = false;
@@ -1528,10 +1525,20 @@ body {
       img.alt = 'Jon Vlogs';
       v.replaceWith(img);
     };
+
+    // Decide pela capacidade do browser, não por timeout (evita congelar
+    // no desktop quando o vídeo demora a carregar do CDN).
+    var canWebm = v.canPlayType &&
+      v.canPlayType('video/webm; codecs="vp9"') !== '';
+    if (!canWebm) {
+      // iOS/Safari não tocam VP9-alpha -> imagem estática direto.
+      fallback();
+      return;
+    }
+    // Se o arquivo falhar ao carregar (404/codec), cai pra imagem.
     v.addEventListener('error', fallback, true);
-    // Se em ~2,5s não houver reprodução real, assume que o browser não
-    // decodifica o webm (iOS) e mostra a imagem estática.
-    setTimeout(function () { if (!playing) fallback(); }, 2500);
+    var src = v.querySelector('source');
+    if (src) src.addEventListener('error', fallback);
   })();
 
   paintHeroSeal();
