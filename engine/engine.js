@@ -1,0 +1,433 @@
+/* ===========================================================
+   LP Engine — núcleo genérico (multi-marca)
+   Lê a config da marca em window.BRAND (brands/<marca>/config.js).
+   Fluxo: gate -> (create) -> form -> submitLead(Supabase) -> grupo.
+   =========================================================== */
+(function () {
+  'use strict';
+
+  var B = window.BRAND;
+  if (!B) { console.error('[engine] window.BRAND não definido.'); return; }
+
+  /* ----------------------- Helpers ----------------------- */
+  function el(tag, cls, text) {
+    var n = document.createElement(tag);
+    if (cls) n.className = cls;
+    if (text != null) n.textContent = text;
+    return n;
+  }
+
+  function cardShell(num, labelText) {
+    var card = el('div', 'lp-q');
+    var head = el('div', 'lp-q__head');
+    if (num != null) head.appendChild(el('span', 'lp-q__num', String(num)));
+    head.appendChild(el('span', 'lp-q__text', labelText));
+    card.appendChild(head);
+    return card;
+  }
+
+  function getTracking() {
+    var params = new URLSearchParams(window.location.search);
+    var utm = {};
+    ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term'].forEach(function (k) {
+      utm[k] = params.get(k) || '';
+    });
+    return utm;
+  }
+
+  /* ----------------------- Estado ----------------------- */
+  var state = { hasAccount: null, data: {}, bet: null };
+  var FIELDS = B.form.fields;
+  var BET = B.form.bet;
+  var screenEl = document.getElementById('screen');
+
+  /* ===========================================================
+     Branding: tokens, meta e hero (a partir da config)
+     =========================================================== */
+  function applyBranding() {
+    if (B.meta) {
+      if (B.meta.title) document.title = B.meta.title;
+      setMeta('name', 'description', B.meta.description);
+      setMeta('name', 'theme-color', B.meta.themeColor);
+    }
+    if (B.tokens) {
+      var root = document.documentElement;
+      Object.keys(B.tokens).forEach(function (k) { root.style.setProperty(k, B.tokens[k]); });
+    }
+    renderHero();
+  }
+
+  function setMeta(attr, key, val) {
+    if (!val) return;
+    var m = document.querySelector('meta[' + attr + '="' + key + '"]');
+    if (!m) { m = document.createElement('meta'); m.setAttribute(attr, key); document.head.appendChild(m); }
+    m.setAttribute('content', val);
+  }
+
+  function renderHero() {
+    var h = B.hero || {};
+    var logo = document.querySelector('.lp-logo-img');
+    var word = document.querySelector('.lp-logo');
+    if (logo) {
+      logo.src = h.brandLogo || '';
+      logo.alt = h.brandWordmark || '';
+      if (h.brandLogoWhite === false) logo.style.filter = 'none';
+      logo.onerror = function () {
+        logo.style.display = 'none';
+        if (word) {
+          word.innerHTML = (h.brandWordmark || '') + '<span class="lp-logo__dot">.</span>';
+          word.style.display = 'inline-block';
+        }
+      };
+    }
+    var jon = document.querySelector('.lp-jon-motion');
+    if (jon) { jon.src = h.creatorLogo || ''; jon.alt = h.creatorAlt || ''; }
+
+    var title = document.querySelector('.lp-hero__title');
+    if (title) title.textContent = h.title || '';
+
+    var sub = document.querySelector('.lp-hero__subtitle');
+    if (sub) {
+      sub.innerHTML =
+        '<span class="u-only-mobile">' + escapeHtml(h.subtitleMobile || '') + '</span>' +
+        '<span class="u-only-desktop">' + escapeHtml(h.subtitleDesktop || '') + '</span>';
+    }
+  }
+
+  function escapeHtml(s) {
+    return String(s).replace(/[&<>"]/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c];
+    });
+  }
+
+  /* ===========================================================
+     TELA: gate
+     =========================================================== */
+  function renderGate() {
+    screenEl.innerHTML = '';
+    state.hasAccount = null;
+    var g = B.gate;
+
+    var gate = el('div', 'lp-gate');
+    gate.appendChild(el('span', 'lp-gate__eyebrow', g.eyebrow));
+    var title = el('h2', 'lp-gate__title');
+    title.innerHTML = g.questionHTML;
+    gate.appendChild(title);
+    gate.appendChild(el('p', 'lp-gate__sub', g.sub));
+
+    var opts = el('div', 'lp-gate__opts');
+    [['sim', g.yes, 'lp-gate__opt--primary'], ['nao', g.no, '']].forEach(function (item) {
+      var btn = el('button', 'lp-gate__opt ' + item[2]);
+      btn.type = 'button';
+      btn.appendChild(el('span', 'lp-gate__opt-label', item[1]));
+      btn.appendChild(el('span', 'lp-gate__opt-arrow', '→'));
+      btn.addEventListener('click', function () {
+        if (item[0] === 'sim') { state.hasAccount = 'sim'; renderForm(false); }
+        else { renderCreate(); }
+      });
+      opts.appendChild(btn);
+    });
+    gate.appendChild(opts);
+    screenEl.appendChild(gate);
+  }
+
+  /* ===========================================================
+     TELA: create
+     =========================================================== */
+  function renderCreate() {
+    screenEl.innerHTML = '';
+    var c = B.create;
+
+    var wrap = el('div', 'lp-gate');
+    wrap.appendChild(el('span', 'lp-gate__eyebrow', c.eyebrow));
+    var title = el('h2', 'lp-gate__title');
+    title.innerHTML = c.titleHTML;
+    wrap.appendChild(title);
+    wrap.appendChild(el('p', 'lp-gate__sub', c.sub));
+
+    var steps = document.createElement('ol');
+    steps.className = 'lp-steps';
+    (c.steps || []).forEach(function (txt, i) {
+      var li = document.createElement('li');
+      li.appendChild(el('span', 'lp-steps__n', String(i + 1)));
+      li.appendChild(el('span', null, txt));
+      steps.appendChild(li);
+    });
+    wrap.appendChild(steps);
+
+    // Link real -> NOVA aba garantida (PC, mobile, in-app)
+    var reg = (B.links && B.links.registration) || '';
+    var btn = el('a', 'lp-cta lp-cta--pulse', c.cta);
+    btn.href = reg || '#';
+    btn.target = '_blank';
+    btn.rel = 'noopener noreferrer';
+    btn.setAttribute('role', 'button');
+    btn.addEventListener('click', function (e) {
+      if (!reg) { e.preventDefault(); console.warn('[create] links.registration não configurado.'); }
+      state.hasAccount = 'criou_agora';
+      setTimeout(function () { renderForm(true); }, 80);
+    });
+    wrap.appendChild(btn);
+
+    var back = el('button', 'lp-link-btn', c.back);
+    back.type = 'button';
+    back.addEventListener('click', function () { state.hasAccount = 'sim'; renderForm(false); });
+    wrap.appendChild(back);
+
+    screenEl.appendChild(wrap);
+  }
+
+  /* ===========================================================
+     TELA: form
+     =========================================================== */
+  function renderForm(fromCreate) {
+    screenEl.innerHTML = '';
+    var F = B.form;
+
+    var prog = el('div', 'lp-progress');
+    prog.setAttribute('role', 'progressbar');
+    prog.setAttribute('aria-valuemin', '0');
+    prog.setAttribute('aria-valuemax', '100');
+    var fill = el('div', 'lp-progress__fill');
+    prog.appendChild(fill);
+    screenEl.appendChild(prog);
+
+    if (fromCreate) {
+      screenEl.appendChild(el('p', 'lp-intro lp-intro--success', F.successIntro));
+    } else {
+      screenEl.appendChild(el('p', 'lp-section-label', F.sectionLabel));
+    }
+
+    var form = el('form', 'lp-form');
+    form.noValidate = true;
+    var n = 1;
+
+    FIELDS.forEach(function (f) {
+      var card = cardShell(n++, f.label);
+      var input = el('input', 'lp-input');
+      input.type = f.type;
+      input.name = f.id;
+      input.placeholder = f.placeholder || '';
+      if (f.autocomplete) input.autocomplete = f.autocomplete;
+      if (f.inputmode) input.setAttribute('inputmode', f.inputmode);
+      input.value = state.data[f.id] || '';
+      input.addEventListener('input', function () {
+        state.data[f.id] = input.value;
+        card.classList.remove('is-pending');
+        updateProgress(fill, prog);
+      });
+      card.appendChild(input);
+      card.dataset.field = f.id;
+      form.appendChild(card);
+    });
+
+    var betCard = cardShell(n++, BET.label);
+    betCard.dataset.field = BET.id;
+    var chips = el('div', 'lp-chips');
+    BET.options.forEach(function (opt) {
+      var chip = el('button', 'chip', opt.label);
+      chip.type = 'button';
+      if (state.bet === opt.value) chip.classList.add('is-selected');
+      chip.addEventListener('click', function () {
+        state.bet = opt.value;
+        chips.querySelectorAll('.chip').forEach(function (cc) { cc.classList.remove('is-selected'); });
+        chip.classList.add('is-selected');
+        betCard.classList.remove('is-pending');
+        updateProgress(fill, prog);
+      });
+      chips.appendChild(chip);
+    });
+    betCard.appendChild(chips);
+    form.appendChild(betCard);
+
+    var consent = el('p', 'lp-consent');
+    consent.appendChild(document.createTextNode(F.consentText));
+    var termsLink = el('button', 'lp-terms-link', F.termsLink);
+    termsLink.type = 'button';
+    termsLink.addEventListener('click', openTerms);
+    consent.appendChild(termsLink);
+    consent.appendChild(document.createTextNode('.'));
+    form.appendChild(consent);
+
+    var cta = el('button', 'lp-cta', F.cta);
+    cta.type = 'submit';
+    form.appendChild(cta);
+
+    form.addEventListener('submit', function (e) { e.preventDefault(); handleSubmit(cta); });
+
+    screenEl.appendChild(form);
+    updateProgress(fill, prog);
+  }
+
+  /* ----------------------- Validação ----------------------- */
+  function fieldFilled(id) {
+    if (id === BET.id) return state.bet != null;
+    return (state.data[id] || '').trim().length > 0;
+  }
+  function requiredIds() {
+    return FIELDS.map(function (f) { return f.id; }).concat([BET.id]);
+  }
+  function updateProgress(fill, prog) {
+    var ids = requiredIds();
+    var done = ids.filter(fieldFilled).length;
+    var pct = Math.round((done / ids.length) * 100);
+    fill.style.width = pct + '%';
+    if (prog) prog.setAttribute('aria-valuenow', String(pct));
+  }
+  function validateField(id) {
+    var v = (state.data[id] || '').trim();
+    if (id === BET.id) return state.bet != null;
+    if (!v) return false;
+    if (id === 'contato') {
+      var isEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
+      return isEmail || v.length >= 3;
+    }
+    if (id === 'telefone') return v.replace(/\D/g, '').length >= 10;
+    return v.length >= 2;
+  }
+  function highlightInvalid() {
+    var first = null;
+    requiredIds().forEach(function (id) {
+      var card = screenEl.querySelector('[data-field="' + id + '"]');
+      if (!card) return;
+      if (!validateField(id)) { card.classList.add('is-pending'); if (!first) first = card; }
+      else card.classList.remove('is-pending');
+    });
+    if (first) {
+      first.classList.add('shake');
+      setTimeout(function () { first.classList.remove('shake'); }, 400);
+      first.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      var inp = first.querySelector('input');
+      if (inp) inp.focus({ preventScroll: true });
+    }
+  }
+
+  /* ----------------------- Payload (linha do banco) ----------------------- */
+  function betMeta(value) {
+    return BET.options.filter(function (x) { return x.value === value; })[0] || {};
+  }
+  function buildRow() {
+    var utm = getTracking();
+    var bm = betMeta(state.bet);
+    var tier = bm.tier === 'vip' ? 'vip' : 'standard';
+    var row = {
+      brand: B.brand,
+      source: B.source,
+      faixa_aposta: state.bet,
+      faixa_aposta_label: bm.label || '',
+      tier: tier,
+      vip_candidate: tier === 'vip',
+      ja_tinha_conta: state.hasAccount === 'sim' ? 'sim' : 'criou_agora',
+      consentimento: true,
+      utm_source: utm.utm_source,
+      utm_medium: utm.utm_medium,
+      utm_campaign: utm.utm_campaign,
+      utm_content: utm.utm_content,
+      utm_term: utm.utm_term,
+      referrer: document.referrer || '',
+      landing_url: window.location.href,
+      user_agent: navigator.userAgent
+    };
+    FIELDS.forEach(function (f) { row[f.id] = (state.data[f.id] || '').trim(); });
+    return row;
+  }
+
+  /* ----------------------- Submit -> Supabase ----------------------- */
+  async function submitLead(row) {
+    var sb = B.supabase || {};
+    if (sb.url && sb.anonKey) {
+      var endpoint = sb.url.replace(/\/+$/, '') + '/rest/v1/' + (sb.table || 'lp_leads');
+      var res = await fetch(endpoint, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'apikey': sb.anonKey,
+          'Authorization': 'Bearer ' + sb.anonKey,
+          'Prefer': 'return=minimal'
+        },
+        body: JSON.stringify(row)
+      });
+      if (!res.ok) throw new Error('Supabase insert ' + res.status + ': ' + (await res.text()));
+      return;
+    }
+    console.log('[submitLead] (Supabase não configurado) row:', row);
+    return new Promise(function (r) { setTimeout(r, 400); });
+  }
+
+  function handleSubmit(cta) {
+    if (!requiredIds().every(validateField)) { highlightInvalid(); return; }
+    var row = buildRow();
+    cta.classList.add('is-loading');
+    cta.disabled = true;
+    cta.textContent = 'Enviando...';
+    submitLead(row)
+      .then(function () { goToGroup(row); })
+      .catch(function (err) {
+        console.error('[submitLead] erro:', err);
+        cta.classList.remove('is-loading');
+        cta.disabled = false;
+        cta.textContent = 'Tentar de novo';
+      });
+  }
+
+  function goToGroup(row) {
+    var L = B.links || {};
+    var url = (row.tier === 'vip' && L.whatsappVip) ? L.whatsappVip : L.whatsapp;
+    if (url) { window.location.href = url; return; }
+    renderDone(row);
+  }
+
+  /* ----------------------- TELA: done ----------------------- */
+  function renderDone(row) {
+    screenEl.innerHTML = '';
+    var d = B.done;
+    var box = el('div', 'lp-done');
+    box.appendChild(el('div', 'lp-done__check', '✓'));
+    if (row.vip_candidate && d.vipBadge) box.appendChild(el('div', 'lp-done__badge', d.vipBadge));
+    box.appendChild(el('h2', 'lp-done__title', d.title));
+    box.appendChild(el('p', 'lp-done__text', d.text));
+    screenEl.appendChild(box);
+  }
+
+  /* ----------------------- Rodapé / selo ----------------------- */
+  function renderFooter() {
+    var foot = document.getElementById('lpFoot');
+    if (!foot) return;
+    foot.innerHTML = '';
+    foot.appendChild(buildSeal());
+    foot.appendChild(el('span', null, B.seal.text));
+  }
+  function buildSeal() {
+    if (B.seal && B.seal.imageUrl) {
+      var img = el('img', 'lp-seal-img');
+      img.src = B.seal.imageUrl;
+      img.alt = (B.seal.age || '18+') + ' Jogue com responsabilidade';
+      return img;
+    }
+    return el('span', 'lp-seal', (B.seal && B.seal.age) || '18+');
+  }
+  function paintHeroSeal() {
+    document.querySelectorAll('[data-seal]').forEach(function (node) { node.replaceWith(buildSeal()); });
+  }
+
+  /* ----------------------- Modal de Termos ----------------------- */
+  var modal = document.getElementById('termsModal');
+  var termsBody = document.getElementById('termsBody');
+  function openTerms() {
+    termsBody.innerHTML = '';
+    (B.terms || []).forEach(function (p) { termsBody.appendChild(el('p', null, p)); });
+    modal.hidden = false;
+    document.body.style.overflow = 'hidden';
+  }
+  function closeTerms() { modal.hidden = true; document.body.style.overflow = ''; }
+  if (modal) {
+    modal.addEventListener('click', function (e) { if (e.target.hasAttribute('data-close')) closeTerms(); });
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !modal.hidden) closeTerms(); });
+  }
+
+  /* ----------------------- Init ----------------------- */
+  applyBranding();
+  paintHeroSeal();
+  renderFooter();
+  renderGate();
+})();

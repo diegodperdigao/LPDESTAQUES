@@ -1,79 +1,80 @@
-# SuperJon — LP de Conversão
+# LP de Conversão — Engine multi-marca
 
-Landing page mobile-first + desktop (Jon Vlogs × Superbet). Captura o lead,
-qualifica e encaminha pro grupo de WhatsApp. Stack: **HTML + CSS + JS puro**
-(sem build, sem dependências).
+Landing page de captação de leads (mobile-first + desktop). **Núcleo genérico
+(engine) + configuração por marca** — replicar para outra marca = nova pasta de
+config + assets. Sem framework, sem build obrigatório (HTML/CSS/JS puro).
 
-## Fluxo
+## Estrutura
 
 ```
-[gate]  "Você já tem conta na Superbet?"
-   ├─ Sim  ───────────────► [form]
-   └─ Não  ─► [create] ─ "Crie sua conta agora"
-                 │  (abre cadastro em NOVA aba)
-                 └─ esta aba já vai pro [form] com a chamada
-                    "Agora que deu tudo certo com o cadastro..."
-[form]  Nome · E-mail/ID Superbet · Telefone · Faixa de aposta · consentimento
-   └─ CTA "Quero entrar no grupo agora"
-        → submitLead(payload) → redireciona pro grupo de WhatsApp
+engine/
+  engine.js        # núcleo: fluxo, validação, submit (lê window.BRAND)
+  engine.css       # estilos (tokens via CSS vars, sobrescritos pela marca)
+brands/
+  superjon/
+    config.js      # TUDO da marca: tokens, textos, perguntas, links, supabase
+    assets/        # logos/imagens da marca
+index.html         # shell genérico (carrega config + engine)
+supabase/
+  migrations/0001_lp_leads.sql   # tabela de leads (rodar no projeto Supabase)
+apps-script/Code.gs              # receptor opcional p/ sync Supabase -> Sheets
+preview.html       # build self-contained (gerado) p/ preview rápido
 ```
 
-## Arquivos
+## Fluxo da LP
 
-| Arquivo | Papel |
+```
+gate ("Já tem conta?")
+  ├─ Sim ─────────────► form
+  └─ Não ─► create ("Criar conta", abre cadastro em nova aba) ─► form
+form (nome, e-mail/ID, telefone, faixa de aposta, consentimento)
+  └─ CTA ─► submitLead() ─► INSERT no Supabase ─► redireciona p/ WhatsApp
+```
+
+## Replicar para uma nova marca
+
+1. `cp -r brands/superjon brands/<nova>` e ajuste `config.js` (tokens, textos,
+   perguntas, `links`, `supabase`, `brand`, `source`) + troque os `assets/`.
+2. Aponte o `index.html` para `./brands/<nova>/config.js` (ou faça um deploy
+   separado dessa marca no Cloudflare Pages — recomendado, 1 projeto por marca/domínio).
+3. No banco, os leads já vêm separados pela coluna `brand` / `source`.
+
+## Backend (Supabase) — escalável
+
+Os leads são gravados via **PostgREST** (`/rest/v1/lp_leads`) com a chave
+**publishable/anon** e RLS **insert-only** (a página grava, mas ninguém lê os
+leads pela chave pública). Estático no CDN + insert direto no Postgres aguenta
+alto volume.
+
+Setup:
+1. Crie um projeto Supabase dedicado a leads (sa-east-1).
+2. Rode `supabase/migrations/0001_lp_leads.sql` no SQL Editor.
+3. Em `brands/superjon/config.js` → `supabase`: preencha `url` e `anonKey`.
+
+### Sync com Google Sheets (para o marketing)
+
+A fonte da verdade é o Supabase. O Sheets recebe uma cópia via job que lê os
+leads com `synced_to_sheets = false`, faz `appendRow` (Apps Script em
+`apps-script/Code.gs`) e marca como sincronizado. Agendar via cron (a combinar).
+
+## Deploy (Cloudflare Pages)
+
+- Output: site estático (raiz do repo). Sem build command (ou apenas gerar
+  `preview.html` se quiser servir o single-file).
+- Conecte o repo no Cloudflare Pages, defina o domínio, pronto — CDN global
+  aguenta os picos.
+
+## Config — campos a preencher antes de ir ao ar (`brands/superjon/config.js`)
+
+| Campo | O que é |
 |---|---|
-| `index.html` | Hero, container de telas (`#screen`), modal de termos |
-| `styles.css` | Tokens + estilos responsivos (mobile / desktop split-screen) |
-| `app.js` | Máquina de telas, validação, payload, integrações |
-| `lp_jon_spec.md` | Spec visual de referência |
+| `links.registration` | Link de cadastro da Superbet |
+| `links.whatsapp` / `whatsappVip` | Grupo de WhatsApp (e VIP opcional) |
+| `supabase.url` / `anonKey` | Projeto Supabase de leads |
+| `seal.imageUrl` | (opcional) selo +18 oficial |
+| `terms` | Texto oficial dos Termos (hoje rascunho — revisão jurídica) |
 
-## Configuração — plugar no topo do `app.js`
-
-| Constante | O que é |
-|---|---|
-| `REGISTRATION_URL` | Link de cadastro da Superbet (botão "Crie sua conta agora") |
-| `WHATSAPP_GROUP_URL` | Grupo de WhatsApp (destino final) |
-| `WHATSAPP_GROUP_URL_VIP` | Opcional — grupo VIP (faixa R$ 5.000+) |
-| `SEAL_URL` | Imagem do selo +18 oficial (fallback: badge estilizado) |
-| `SHEETS_WEBHOOK_URL` | Webhook da planilha (Google Apps Script `doPost`) |
-| `TERMS_TEXT` | Texto do modal de Termos (placeholder → revisão jurídica) |
-
-### Planilha (Google Sheets)
-
-`submitLead()` faz `POST` do payload pra `SHEETS_WEBHOOK_URL`. O caminho mais
-simples sem backend: um **Google Apps Script** publicado como Web App que recebe
-o JSON e dá `appendRow`. Exemplo de `doPost`:
-
-```js
-function doPost(e) {
-  var d = JSON.parse(e.postData.contents);
-  var sh = SpreadsheetApp.getActiveSheet();
-  sh.appendRow([
-    d.submitted_at, d.nome, d.contato_superbet, d.telefone,
-    d.faixa_aposta_label, d.tier, d.ja_tinha_conta,
-    d.utm_source, d.utm_campaign, d.landing_url
-  ]);
-  return ContentService.createTextOutput('ok');
-}
-```
-
-### Payload (flat — uma linha por lead)
-
-```json
-{
-  "nome": "...", "contato_superbet": "...", "telefone": "...",
-  "faixa_aposta": "5000_mais", "faixa_aposta_label": "R$ 5.000+",
-  "ja_tinha_conta": "criou_agora", "tier": "vip", "vip_candidate": true,
-  "consentimento": true, "consentimento_texto": "...",
-  "origem": "lp_superjon",
-  "utm_source": "", "utm_medium": "", "utm_campaign": "",
-  "utm_content": "", "utm_term": "",
-  "referrer": "", "landing_url": "...", "user_agent": "...",
-  "submitted_at": "2026-06-12T21:00:00.000Z"
-}
-```
-
-## Rodar localmente
+## Rodar local
 
 ```bash
 python3 -m http.server 8000   # http://localhost:8000
@@ -81,6 +82,5 @@ python3 -m http.server 8000   # http://localhost:8000
 
 ## Conformidade
 
-- Selo **+18** e jogo responsável sempre visível.
-- Não prometer prêmio/bônus por cadastro. Dinâmicas são comunicadas no grupo.
-- `TERMS_TEXT` é rascunho — **revisão jurídica obrigatória** antes de ir ao ar.
+Selo 18+ e jogo responsável sempre visível; não prometer prêmio/bônus por
+cadastro; `terms` precisa de revisão jurídica antes do ar.

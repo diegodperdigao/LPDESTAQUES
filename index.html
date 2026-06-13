@@ -4,10 +4,9 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <meta name="theme-color" content="#FD0104" />
-  <title>SuperJon — Entre no grupo</title>
-  <meta name="description" content="Responda as perguntas rápidas e a equipe te direciona pro grupo. Conteúdo para maiores de 18 anos." />
+  <title>LP</title>
+  <meta name="description" content="" />
 
-  <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link
@@ -15,46 +14,30 @@
     rel="stylesheet"
   />
 
-  <link rel="stylesheet" href="./styles.css" />
+  <link rel="stylesheet" href="./engine/engine.css" />
 </head>
 <body>
   <main class="lp" id="lp">
-    <!-- Hero (esquerda no desktop, topo no mobile) -->
+    <!-- Hero (preenchido pelo engine a partir da config da marca) -->
     <header class="lp-hero">
       <div class="lp-hero__inner">
         <div class="lp-hero__top">
-          <!-- Logo Superbet (vermelha → branca via filtro). Fallback: wordmark -->
           <span class="lp-logo-wrap">
-            <img
-              src="https://i.ibb.co/YBhrn1zz/Superbet-Logo-svg.png"
-              alt="Superbet"
-              class="lp-logo-img"
-              onerror="this.style.display='none';this.nextElementSibling.style.display='inline-block';"
-            />
-            <span class="lp-logo" aria-label="Superbet" style="display:none">superbet<span class="lp-logo__dot">.</span></span>
+            <img class="lp-logo-img" alt="" />
+            <span class="lp-logo" style="display:none"></span>
           </span>
-          <!-- Logo Jon Vlogs (estático, branco) sobre o vermelho do hero -->
-          <img class="lp-jon-motion" src="./assets/jonvlogs.png" alt="Jon Vlogs" />
+          <img class="lp-jon-motion" alt="" />
         </div>
-
         <div class="lp-hero__headline">
-          <h1 class="lp-hero__title">SuperJon</h1>
-          <p class="lp-hero__subtitle">
-            Responda <span class="u-only-mobile">abaixo</span><span class="u-only-desktop">ao lado</span> e garanta sua vaga no grupo do Jon Vlogs.
-          </p>
-        </div>
-
-        <div class="lp-hero__foot">
-          <span class="lp-seal" data-seal>18+</span>
-          <span>Jogue com responsabilidade. Portaria SPA/MF Nº 2.090.</span>
+          <h1 class="lp-hero__title"></h1>
+          <p class="lp-hero__subtitle"></p>
         </div>
       </div>
     </header>
 
-    <!-- Corpo (direita no desktop, abaixo no mobile) — telas renderizadas via JS -->
+    <!-- Corpo: telas renderizadas pelo engine + rodapé persistente -->
     <section class="lp-body">
       <div class="lp-body__inner" id="screen"></div>
-      <!-- Rodapé persistente: selo +18 fixo no fim da página (mobile) -->
       <footer class="lp-foot" id="lpFoot"></footer>
     </section>
   </main>
@@ -65,12 +48,12 @@
     <div class="lp-modal__panel" role="dialog" aria-modal="true" aria-labelledby="termsTitle">
       <button class="lp-modal__close" type="button" data-close aria-label="Fechar">&times;</button>
       <h2 class="lp-modal__title" id="termsTitle">Termos e Condições</h2>
-      <div class="lp-modal__body" id="termsBody">
-        <!-- Texto preenchido via JS (placeholder até o texto jurídico final) -->
-      </div>
+      <div class="lp-modal__body" id="termsBody"></div>
     </div>
   </div>
 
-  <script src="./app.js" defer></script>
+  <!-- Config da marca primeiro, depois o engine -->
+  <script src="./brands/superjon/config.js"></script>
+  <script src="./engine/engine.js" defer></script>
 </body>
 </html>
