@@ -196,18 +196,23 @@ body {
 }
 
 /* ===================== Corpo ===================== */
+/* Mobile em 3 zonas: hero (topo) / conteúdo (centro) / selo (rodapé) */
 .lp-body {
-  padding: 24px 18px 20px;
   flex: 1 1 auto;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  padding: 0 18px;
 }
 
 .lp-body__inner {
   width: 100%;
   max-width: 480px;
   margin: 0 auto;
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 24px 0;
 }
 
 /* Barra de progresso */
@@ -588,15 +593,18 @@ body {
   100% { left: 150%; }
 }
 
-/* Rodapé de responsabilidade — selo +18 + texto */
+/* Rodapé de responsabilidade — selo +18 + texto, fixo no fim da página */
 .lp-foot {
+  flex: 0 0 auto;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 9px;
   font-size: 9.5px;
   color: var(--ink-faint);
-  padding: 16px 18px 18px;
+  padding: 14px 0 18px;
+  margin-top: 12px;
+  border-top: 1px solid var(--line);
   line-height: 1.45;
   text-align: left;
 }
@@ -928,17 +936,12 @@ body {
             />
             <span class="lp-logo" aria-label="Superbet" style="display:none">superbet<span class="lp-logo__dot">.</span></span>
           </span>
-          <!-- Motion do Jon Vlogs (webm cortado, com alpha) direto no vermelho.
-               poster/img = fallback estático p/ iOS/Safari (não tocam VP9-alpha). -->
-          <video
-            class="lp-jon-motion"
-            autoplay muted loop playsinline
-            poster="./assets/jonvlogs.png"
-            aria-label="Jon Vlogs"
-          >
-            <source src="./assets/jonvlogs.webm" type="video/webm" />
+          <!-- Motion do Jon Vlogs: WebP animado (toca 1x e para no último frame),
+               com transparência. Funciona em iOS e desktop. Fallback: PNG estático. -->
+          <picture>
+            <source srcset="./assets/jonvlogs-anim.webp" type="image/webp" />
             <img class="lp-jon-motion" src="./assets/jonvlogs.png" alt="Jon Vlogs" />
-          </video>
+          </picture>
         </div>
 
         <div class="lp-hero__headline">
@@ -958,6 +961,8 @@ body {
     <!-- Corpo (direita no desktop, abaixo no mobile) — telas renderizadas via JS -->
     <section class="lp-body">
       <div class="lp-body__inner" id="screen"></div>
+      <!-- Rodapé persistente: selo +18 fixo no fim da página (mobile) -->
+      <footer class="lp-foot" id="lpFoot"></footer>
     </section>
   </main>
 
@@ -1146,9 +1151,7 @@ body {
     });
     gate.appendChild(opts);
 
-    screenEl.appendChild(gate);
-    appendFooter();
-  }
+    screenEl.appendChild(gate);  }
 
   /* ===========================================================
      TELA: create — "Crie sua conta agora"
@@ -1189,8 +1192,6 @@ body {
       renderForm(false);
     });
     screenEl.appendChild(back);
-
-    appendFooter();
   }
 
   /* ===========================================================
@@ -1282,9 +1283,7 @@ body {
       handleSubmit(cta);
     });
 
-    screenEl.appendChild(form);
-    appendFooter();
-    updateProgress(fill, prog);
+    screenEl.appendChild(form);    updateProgress(fill, prog);
   }
 
   /* ===========================================================
@@ -1441,19 +1440,19 @@ body {
     box.appendChild(el('p', 'lp-done__text',
       'Recebemos seus dados. Em instantes você entra no grupo do SuperJon. ' +
       'Fica de olho no WhatsApp informado.'));
-    screenEl.appendChild(box);
-    appendFooter();
-  }
+    screenEl.appendChild(box);  }
 
   /* ===========================================================
      Rodapé + selo +18
      =========================================================== */
-  function appendFooter() {
-    var foot = el('div', 'lp-foot');
+  // Rodapé persistente (selo +18), renderizado uma vez no fim da página.
+  function renderFooter() {
+    var foot = document.getElementById('lpFoot');
+    if (!foot) return;
+    foot.innerHTML = '';
     foot.appendChild(buildSeal());
     foot.appendChild(el('span', null,
       'Jogue com responsabilidade. Portaria SPA/MF Nº 2.090.'));
-    screenEl.appendChild(foot);
   }
 
   // Selo +18 — círculo simples. Se SEAL_URL for definido, usa a imagem oficial.
@@ -1502,46 +1501,8 @@ body {
   /* ===========================================================
      Init
      =========================================================== */
-  /* ===========================================================
-     Motion do Jon Vlogs — velocidade + fallback p/ iOS/Safari
-     (que não tocam VP9 com alpha: troca o vídeo por imagem estática)
-     =========================================================== */
-  (function setupMotion() {
-    var v = document.querySelector('video.lp-jon-motion');
-    if (!v) return;
-    var RATE = 0.85; // meio-termo (1 = normal)
-    var apply = function () { try { v.playbackRate = RATE; } catch (e) {} };
-    v.addEventListener('loadedmetadata', apply);
-    v.addEventListener('playing', apply);
-    apply();
-
-    var fellBack = false;
-    var fallback = function () {
-      if (fellBack) return;
-      fellBack = true;
-      var img = document.createElement('img');
-      img.className = 'lp-jon-motion';
-      img.src = './assets/jonvlogs.png';
-      img.alt = 'Jon Vlogs';
-      v.replaceWith(img);
-    };
-
-    // Decide pela capacidade do browser, não por timeout (evita congelar
-    // no desktop quando o vídeo demora a carregar do CDN).
-    var canWebm = v.canPlayType &&
-      v.canPlayType('video/webm; codecs="vp9"') !== '';
-    if (!canWebm) {
-      // iOS/Safari não tocam VP9-alpha -> imagem estática direto.
-      fallback();
-      return;
-    }
-    // Se o arquivo falhar ao carregar (404/codec), cai pra imagem.
-    v.addEventListener('error', fallback, true);
-    var src = v.querySelector('source');
-    if (src) src.addEventListener('error', fallback);
-  })();
-
   paintHeroSeal();
+  renderFooter();
   renderGate();
 })();
 

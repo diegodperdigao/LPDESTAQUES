@@ -178,18 +178,23 @@ body {
 }
 
 /* ===================== Corpo ===================== */
+/* Mobile em 3 zonas: hero (topo) / conteúdo (centro) / selo (rodapé) */
 .lp-body {
-  padding: 24px 18px 20px;
   flex: 1 1 auto;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  padding: 0 18px;
 }
 
 .lp-body__inner {
   width: 100%;
   max-width: 480px;
   margin: 0 auto;
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 24px 0;
 }
 
 /* Barra de progresso */
@@ -570,15 +575,18 @@ body {
   100% { left: 150%; }
 }
 
-/* Rodapé de responsabilidade — selo +18 + texto */
+/* Rodapé de responsabilidade — selo +18 + texto, fixo no fim da página */
 .lp-foot {
+  flex: 0 0 auto;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 9px;
   font-size: 9.5px;
   color: var(--ink-faint);
-  padding: 16px 18px 18px;
+  padding: 14px 0 18px;
+  margin-top: 12px;
+  border-top: 1px solid var(--line);
   line-height: 1.45;
   text-align: left;
 }

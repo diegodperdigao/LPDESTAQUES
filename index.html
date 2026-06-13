@@ -33,17 +33,12 @@
             />
             <span class="lp-logo" aria-label="Superbet" style="display:none">superbet<span class="lp-logo__dot">.</span></span>
           </span>
-          <!-- Motion do Jon Vlogs (webm cortado, com alpha) direto no vermelho.
-               poster/img = fallback estático p/ iOS/Safari (não tocam VP9-alpha). -->
-          <video
-            class="lp-jon-motion"
-            autoplay muted loop playsinline
-            poster="./assets/jonvlogs.png"
-            aria-label="Jon Vlogs"
-          >
-            <source src="./assets/jonvlogs.webm" type="video/webm" />
+          <!-- Motion do Jon Vlogs: WebP animado (toca 1x e para no último frame),
+               com transparência. Funciona em iOS e desktop. Fallback: PNG estático. -->
+          <picture>
+            <source srcset="./assets/jonvlogs-anim.webp" type="image/webp" />
             <img class="lp-jon-motion" src="./assets/jonvlogs.png" alt="Jon Vlogs" />
-          </video>
+          </picture>
         </div>
 
         <div class="lp-hero__headline">
@@ -63,6 +58,8 @@
     <!-- Corpo (direita no desktop, abaixo no mobile) — telas renderizadas via JS -->
     <section class="lp-body">
       <div class="lp-body__inner" id="screen"></div>
+      <!-- Rodapé persistente: selo +18 fixo no fim da página (mobile) -->
+      <footer class="lp-foot" id="lpFoot"></footer>
     </section>
   </main>
 

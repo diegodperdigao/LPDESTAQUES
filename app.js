@@ -170,9 +170,7 @@
     });
     gate.appendChild(opts);
 
-    screenEl.appendChild(gate);
-    appendFooter();
-  }
+    screenEl.appendChild(gate);  }
 
   /* ===========================================================
      TELA: create — "Crie sua conta agora"
@@ -213,8 +211,6 @@
       renderForm(false);
     });
     screenEl.appendChild(back);
-
-    appendFooter();
   }
 
   /* ===========================================================
@@ -306,9 +302,7 @@
       handleSubmit(cta);
     });
 
-    screenEl.appendChild(form);
-    appendFooter();
-    updateProgress(fill, prog);
+    screenEl.appendChild(form);    updateProgress(fill, prog);
   }
 
   /* ===========================================================
@@ -465,19 +459,19 @@
     box.appendChild(el('p', 'lp-done__text',
       'Recebemos seus dados. Em instantes você entra no grupo do SuperJon. ' +
       'Fica de olho no WhatsApp informado.'));
-    screenEl.appendChild(box);
-    appendFooter();
-  }
+    screenEl.appendChild(box);  }
 
   /* ===========================================================
      Rodapé + selo +18
      =========================================================== */
-  function appendFooter() {
-    var foot = el('div', 'lp-foot');
+  // Rodapé persistente (selo +18), renderizado uma vez no fim da página.
+  function renderFooter() {
+    var foot = document.getElementById('lpFoot');
+    if (!foot) return;
+    foot.innerHTML = '';
     foot.appendChild(buildSeal());
     foot.appendChild(el('span', null,
       'Jogue com responsabilidade. Portaria SPA/MF Nº 2.090.'));
-    screenEl.appendChild(foot);
   }
 
   // Selo +18 — círculo simples. Se SEAL_URL for definido, usa a imagem oficial.
@@ -526,45 +520,7 @@
   /* ===========================================================
      Init
      =========================================================== */
-  /* ===========================================================
-     Motion do Jon Vlogs — velocidade + fallback p/ iOS/Safari
-     (que não tocam VP9 com alpha: troca o vídeo por imagem estática)
-     =========================================================== */
-  (function setupMotion() {
-    var v = document.querySelector('video.lp-jon-motion');
-    if (!v) return;
-    var RATE = 0.85; // meio-termo (1 = normal)
-    var apply = function () { try { v.playbackRate = RATE; } catch (e) {} };
-    v.addEventListener('loadedmetadata', apply);
-    v.addEventListener('playing', apply);
-    apply();
-
-    var fellBack = false;
-    var fallback = function () {
-      if (fellBack) return;
-      fellBack = true;
-      var img = document.createElement('img');
-      img.className = 'lp-jon-motion';
-      img.src = './assets/jonvlogs.png';
-      img.alt = 'Jon Vlogs';
-      v.replaceWith(img);
-    };
-
-    // Decide pela capacidade do browser, não por timeout (evita congelar
-    // no desktop quando o vídeo demora a carregar do CDN).
-    var canWebm = v.canPlayType &&
-      v.canPlayType('video/webm; codecs="vp9"') !== '';
-    if (!canWebm) {
-      // iOS/Safari não tocam VP9-alpha -> imagem estática direto.
-      fallback();
-      return;
-    }
-    // Se o arquivo falhar ao carregar (404/codec), cai pra imagem.
-    v.addEventListener('error', fallback, true);
-    var src = v.querySelector('source');
-    if (src) src.addEventListener('error', fallback);
-  })();
-
   paintHeroSeal();
+  renderFooter();
   renderGate();
 })();
