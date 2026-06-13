@@ -520,6 +520,23 @@
   /* ===========================================================
      Init
      =========================================================== */
+  /* ===========================================================
+     Motion do Jon Vlogs — toca 1x e congela na imagem estática limpa.
+     (alguns browsers voltam o WebP ao 1º frame ao fim do loop; trocar
+      pelo PNG garante um fim bom em qualquer dispositivo)
+     =========================================================== */
+  (function settleMotion() {
+    var img = document.querySelector('img.lp-jon-motion');
+    if (!img) return;
+    var STATIC = './assets/jonvlogs.png';
+    var DURATION = 3700; // ms — duração da animação (~3,46s) + folga
+    var pre = new Image();
+    pre.src = STATIC; // pré-carrega p/ troca instantânea
+    setTimeout(function () {
+      if (img.src.indexOf('jonvlogs.png') === -1) img.src = STATIC;
+    }, DURATION);
+  })();
+
   paintHeroSeal();
   renderFooter();
   renderGate();

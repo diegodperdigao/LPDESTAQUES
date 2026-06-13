@@ -33,12 +33,15 @@
             />
             <span class="lp-logo" aria-label="Superbet" style="display:none">superbet<span class="lp-logo__dot">.</span></span>
           </span>
-          <!-- Motion do Jon Vlogs: WebP animado (toca 1x e para no último frame),
-               com transparência. Funciona em iOS e desktop. Fallback: PNG estático. -->
-          <picture>
-            <source srcset="./assets/jonvlogs-anim.webp" type="image/webp" />
-            <img class="lp-jon-motion" src="./assets/jonvlogs.png" alt="Jon Vlogs" />
-          </picture>
+          <!-- Motion do Jon Vlogs: WebP animado (toca 1x); ao terminar, o JS
+               troca pelo PNG estático limpo (fim garantido em qualquer browser).
+               onerror cobre navegadores sem suporte a WebP. -->
+          <img
+            class="lp-jon-motion"
+            src="./assets/jonvlogs-anim.webp"
+            alt="Jon Vlogs"
+            onerror="this.onerror=null;this.src='./assets/jonvlogs.png';"
+          />
         </div>
 
         <div class="lp-hero__headline">

@@ -936,12 +936,15 @@ body {
             />
             <span class="lp-logo" aria-label="Superbet" style="display:none">superbet<span class="lp-logo__dot">.</span></span>
           </span>
-          <!-- Motion do Jon Vlogs: WebP animado (toca 1x e para no último frame),
-               com transparência. Funciona em iOS e desktop. Fallback: PNG estático. -->
-          <picture>
-            <source srcset="./assets/jonvlogs-anim.webp" type="image/webp" />
-            <img class="lp-jon-motion" src="./assets/jonvlogs.png" alt="Jon Vlogs" />
-          </picture>
+          <!-- Motion do Jon Vlogs: WebP animado (toca 1x); ao terminar, o JS
+               troca pelo PNG estático limpo (fim garantido em qualquer browser).
+               onerror cobre navegadores sem suporte a WebP. -->
+          <img
+            class="lp-jon-motion"
+            src="./assets/jonvlogs-anim.webp"
+            alt="Jon Vlogs"
+            onerror="this.onerror=null;this.src='./assets/jonvlogs.png';"
+          />
         </div>
 
         <div class="lp-hero__headline">
@@ -1501,6 +1504,23 @@ body {
   /* ===========================================================
      Init
      =========================================================== */
+  /* ===========================================================
+     Motion do Jon Vlogs — toca 1x e congela na imagem estática limpa.
+     (alguns browsers voltam o WebP ao 1º frame ao fim do loop; trocar
+      pelo PNG garante um fim bom em qualquer dispositivo)
+     =========================================================== */
+  (function settleMotion() {
+    var img = document.querySelector('img.lp-jon-motion');
+    if (!img) return;
+    var STATIC = './assets/jonvlogs.png';
+    var DURATION = 3700; // ms — duração da animação (~3,46s) + folga
+    var pre = new Image();
+    pre.src = STATIC; // pré-carrega p/ troca instantânea
+    setTimeout(function () {
+      if (img.src.indexOf('jonvlogs.png') === -1) img.src = STATIC;
+    }, DURATION);
+  })();
+
   paintHeroSeal();
   renderFooter();
   renderGate();
