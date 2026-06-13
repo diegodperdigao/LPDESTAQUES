@@ -104,8 +104,9 @@ body {
 .lp-hero__top {
   position: relative;
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: space-between;
+  padding-top: 18px;
 }
 
 /* Logo Superbet — imagem oficial (vermelha → branca via filtro).
@@ -113,7 +114,6 @@ body {
 .lp-logo-wrap {
   display: inline-flex;
   align-items: center;
-  margin-top: 18px;
 }
 
 .lp-logo-img {
@@ -157,15 +157,15 @@ body {
 }
 
 /* Motion do Jon Vlogs — direto sobre o vermelho, sem caixa/forma.
-   Altura proporcional à logo da Superbet (sem borda nem fundo). */
+   filter deixa o motion branco preservando a transparência (igual à logo). */
 .lp-jon-motion {
   display: block;
-  height: 22px;
+  height: 40px;
   width: auto;
-  margin-top: 15px;
   background: transparent;
   border: none;
   object-fit: contain;
+  filter: brightness(0) invert(1);
 }
 
 .lp-hero__headline {
@@ -792,9 +792,12 @@ body {
     font-size: 24px;
   }
 
+  .lp-hero__top {
+    padding-top: 0;
+  }
+
   .lp-jon-motion {
-    height: 32px;
-    margin-top: -6px;
+    height: 56px;
   }
 
   /* headline centralizada no espaço entre o topo e a base */
