@@ -92,6 +92,9 @@
         '<span class="u-only-mobile">' + escapeHtml(h.subtitleMobile || '') + '</span>' +
         '<span class="u-only-desktop">' + escapeHtml(h.subtitleDesktop || '') + '</span>';
     }
+
+    var hfText = document.querySelector('.lp-hero__foot-text');
+    if (hfText && B.seal) hfText.textContent = B.seal.text;
   }
 
   function escapeHtml(s) {

@@ -1034,6 +1034,12 @@ body {
           <h1 class="lp-hero__title"></h1>
           <p class="lp-hero__subtitle"></p>
         </div>
+
+        <!-- Selo +18 no rodapé do hero (visível no desktop) -->
+        <div class="lp-hero__foot">
+          <span data-seal></span>
+          <span class="lp-hero__foot-text"></span>
+        </div>
       </div>
     </header>
 
@@ -1271,6 +1277,9 @@ window.BRAND = {
         '<span class="u-only-mobile">' + escapeHtml(h.subtitleMobile || '') + '</span>' +
         '<span class="u-only-desktop">' + escapeHtml(h.subtitleDesktop || '') + '</span>';
     }
+
+    var hfText = document.querySelector('.lp-hero__foot-text');
+    if (hfText && B.seal) hfText.textContent = B.seal.text;
   }
 
   function escapeHtml(s) {
