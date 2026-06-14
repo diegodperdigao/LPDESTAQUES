@@ -235,8 +235,10 @@ body {
   text-transform: uppercase;
   letter-spacing: 1.4px;
   color: var(--red);
-  margin-bottom: 12px;
+  margin-bottom: 18px;
 }
+/* respiro extra entre o eyebrow e o título (acento não cola) */
+.lp-gate__title { padding-top: 2px; }
 .lp-gate__title {
   font-family: var(--font-hero);
   font-weight: 800;
