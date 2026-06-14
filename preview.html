@@ -9,6 +9,14 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+  <!-- Logos críticas: preconnect + preload p/ baixarem já no parse (antes do JS).
+       Brand-specific: ao replicar, troque pelas URLs/assets da nova marca. -->
+  <link rel="preconnect" href="https://i.ibb.co" crossorigin />
+  <link rel="preload" as="image" fetchpriority="high"
+        href="https://i.ibb.co/YBhrn1zz/Superbet-Logo-svg.png" />
+  <link rel="preload" as="image" fetchpriority="high"
+        href="./brands/superjon/assets/jonvlogs.png" />
   <!-- Fontes carregadas de forma NÃO-bloqueante (não trava render nem scripts) -->
   <link
     rel="preload" as="style"
@@ -1027,10 +1035,10 @@ body {
       <div class="lp-hero__inner">
         <div class="lp-hero__top">
           <span class="lp-logo-wrap">
-            <img class="lp-logo-img" alt="" />
+            <img class="lp-logo-img" alt="" fetchpriority="high" decoding="async" />
             <span class="lp-logo" style="display:none"></span>
           </span>
-          <img class="lp-jon-motion" alt="" />
+          <img class="lp-jon-motion" alt="" fetchpriority="high" decoding="async" />
         </div>
         <div class="lp-hero__headline">
           <h1 class="lp-hero__title"></h1>
