@@ -1,69 +1,52 @@
 /**
- * SuperJon — coletor de leads para Google Sheets.
+ * SuperJon — Sync Supabase -> Google Sheets (receptor)
  *
- * Como usar:
- *  1. Crie uma planilha no Google Sheets.
- *  2. Menu  Extensões → Apps Script.  Cole este arquivo (substitua o conteúdo).
- *  3. Implantar → Nova implantação → tipo "App da Web".
- *       - Executar como: Eu
- *       - Quem tem acesso: Qualquer pessoa
- *  4. Copie a URL do app da Web e cole em SHEETS_WEBHOOK_URL no app.js.
+ * Fluxo recomendado: Database Webhook no Supabase (na tabela lp_leads, evento
+ * INSERT) faz POST deste Web App, que dá appendRow na planilha. Near-real-time,
+ * sem backend. (Para picos muito altos, dá pra trocar por um pull em lote
+ * agendado lendo synced_to_sheets = false.)
  *
- * A primeira linha vira o cabeçalho automaticamente, na ordem de COLUMNS,
- * mantendo a planilha organizada para as próximas campanhas.
+ * Setup:
+ *  1. Crie a planilha -> Extensões -> Apps Script -> cole este arquivo.
+ *  2. Implantar -> Novo -> App da Web -> Executar como: Eu / Acesso: Qualquer um.
+ *  3. No Supabase: Database -> Webhooks -> Create -> tabela lp_leads, evento
+ *     INSERT, tipo HTTP POST, URL = a URL do Web App.
  */
 
-// Ordem das colunas (chaves do payload enviado pela LP).
+// Colunas exportadas (na ordem da planilha) — espelham a tabela lp_leads.
 var COLUMNS = [
-  'submitted_at',
-  'nome',
-  'contato_superbet',
-  'telefone',
-  'faixa_aposta_label',
-  'faixa_aposta',
-  'tier',
-  'vip_candidate',
-  'ja_tinha_conta',
-  'consentimento',
-  'origem',
-  'utm_source',
-  'utm_medium',
-  'utm_campaign',
-  'utm_content',
-  'utm_term',
-  'referrer',
-  'landing_url',
-  'user_agent'
+  'created_at', 'brand', 'source',
+  'nome', 'contato', 'telefone',
+  'faixa_aposta_label', 'tier', 'vip_candidate', 'ja_tinha_conta',
+  'utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term',
+  'referrer', 'landing_url'
 ];
 
-// Rótulos amigáveis do cabeçalho (mesma ordem de COLUMNS).
 var HEADERS = [
-  'Data/Hora', 'Nome', 'E-mail ou ID', 'Telefone',
-  'Faixa de aposta', 'Faixa (cod)', 'Tier', 'VIP?',
-  'Já tinha conta', 'Consentimento', 'Origem',
+  'Data/Hora', 'Marca', 'Origem',
+  'Nome', 'E-mail/ID', 'Telefone',
+  'Faixa de aposta', 'Tier', 'VIP?', 'Já tinha conta',
   'utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term',
-  'Referrer', 'Landing URL', 'User Agent'
+  'Referrer', 'Landing URL'
 ];
 
 function doPost(e) {
   var lock = LockService.getScriptLock();
-  lock.waitLock(30000); // evita corrida em envios simultâneos
+  lock.waitLock(30000);
   try {
-    var data = JSON.parse(e.postData.contents);
-    var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheets()[0];
+    var body = JSON.parse(e.postData.contents);
+    // Webhook do Supabase manda { type, record, ... }; aceita também row direta.
+    var row = body.record || body;
 
-    // Cabeçalho na primeira execução
+    var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheets()[0];
     if (sheet.getLastRow() === 0) {
       sheet.appendRow(HEADERS);
       sheet.setFrozenRows(1);
     }
-
-    var row = COLUMNS.map(function (key) {
-      var v = data[key];
+    sheet.appendRow(COLUMNS.map(function (k) {
+      var v = row[k];
       return v === undefined || v === null ? '' : v;
-    });
-    sheet.appendRow(row);
-
+    }));
     return json({ ok: true });
   } catch (err) {
     return json({ ok: false, error: String(err) });
@@ -72,13 +55,9 @@ function doPost(e) {
   }
 }
 
-// Healthcheck simples ao abrir a URL no navegador.
-function doGet() {
-  return json({ ok: true, service: 'superjon-leads' });
-}
+function doGet() { return json({ ok: true, service: 'superjon-leads-sync' }); }
 
 function json(obj) {
-  return ContentService
-    .createTextOutput(JSON.stringify(obj))
+  return ContentService.createTextOutput(JSON.stringify(obj))
     .setMimeType(ContentService.MimeType.JSON);
 }
