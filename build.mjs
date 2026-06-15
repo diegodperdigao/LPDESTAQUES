@@ -1,24 +1,55 @@
 /**
- * build.mjs — gera a LP de uma marca a partir do template + config.
+ * build.mjs — gera a LP de uma marca (e variante) a partir do template + config.
  *
- *   node build.mjs <marca>        # ex.: node build.mjs superjon
+ *   node build.mjs <marca>            # ex.: node build.mjs superjon
+ *   node build.mjs <marca> <variante> # ex.: node build.mjs betano direta
  *
  * Saídas:
- *   dist/<marca>/                 -> deploy (index.html + engine/ + brands/<marca>/)
- *   preview[-<marca>].html        -> arquivo único (CSS+JS+config inline) p/ preview
+ *   dist/<nome>/                  -> deploy (index.html + engine/ + brands/<marca>/)
+ *   preview[-<nome>].html         -> arquivo único (CSS+JS+config inline) p/ preview
  *
- * Tudo específico da marca (cores, fontes, textos, assets) vem de
- * brands/<marca>/config.js. O engine é compartilhado.
+ * Variante: herda TUDO da base (assets, link de cadastro, Supabase/DB) e
+ * sobrescreve só o que B.variants[variante] define (ex.: flow, source).
  */
 import { readFileSync, writeFileSync, mkdirSync, cpSync, rmSync, existsSync } from 'fs';
 
 const brand = process.argv[2] || process.env.BRAND || 'superjon';
+const variant = process.argv[3] || process.env.VARIANT || '';
 const cfgCode = readFileSync(`brands/${brand}/config.js`, 'utf8');
+
+// merge recursivo simples (objetos puros); arrays/escalares sobrescrevem
+function deepMerge(base, over) {
+  if (Array.isArray(over) || typeof over !== 'object' || over === null) return over;
+  const out = Object.assign({}, base);
+  for (const k of Object.keys(over)) {
+    const bv = base ? base[k] : undefined;
+    const ov = over[k];
+    out[k] = (bv && typeof bv === 'object' && !Array.isArray(bv) &&
+              ov && typeof ov === 'object' && !Array.isArray(ov))
+      ? deepMerge(bv, ov) : ov;
+  }
+  return out;
+}
 
 const win = {};
 new Function('window', cfgCode)(win);
-const B = win.BRAND;
+let B = win.BRAND;
 if (!B) throw new Error(`brands/${brand}/config.js não define window.BRAND`);
+
+let outName = brand;
+if (variant) {
+  const ov = (B.variants || {})[variant];
+  if (!ov) throw new Error(`variante "${variant}" não existe em brands/${brand}/config.js (B.variants)`);
+  B = deepMerge(B, ov);
+  outName = `${brand}-${variant}`;
+}
+delete B.variants; // não vai pro cliente
+
+// config p/ o cliente: base usa o arquivo linkado; variante injeta o objeto
+// já mesclado inline (o config.js linkado não tem o merge da variante).
+const configTag = variant
+  ? `<script>window.BRAND = ${JSON.stringify(B)};</script>`
+  : `<script src="./brands/${brand}/config.js"></script>`;
 
 const esc = (s) => String(s || '').replace(/[&<>"]/g, (c) =>
   ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
@@ -63,10 +94,10 @@ const template = readFileSync('index.template.html', 'utf8');
 const html = template
   .replace('<!--BRAND_HEAD-->', head)
   .replace('<!--BRAND_STYLE-->', brandStyle)
-  .replace('<!--BRAND_CONFIG-->', `<script src="./brands/${brand}/config.js"></script>`);
+  .replace('<!--BRAND_CONFIG-->', configTag);
 
-// 1) dist/<marca> — deploy (arquivos linkados)
-const dist = `dist/${brand}`;
+// 1) dist/<nome> — deploy (arquivos linkados; assets sempre em brands/<marca>/)
+const dist = `dist/${outName}`;
 rmSync(dist, { recursive: true, force: true });
 mkdirSync(dist, { recursive: true });
 writeFileSync(`${dist}/index.html`, html);
@@ -74,14 +105,17 @@ cpSync('engine', `${dist}/engine`, { recursive: true });
 cpSync(`brands/${brand}`, `${dist}/brands/${brand}`, { recursive: true });
 
 // 2) preview self-contained (CSS+JS+config inline) p/ abrir direto / githack
-const preview = html
+let preview = html
   .replace('<link rel="stylesheet" href="./engine/engine.css" />',
     `<style>\n${readFileSync('engine/engine.css', 'utf8')}\n</style>`)
-  .replace(`<script src="./brands/${brand}/config.js"></script>`,
-    `<script>\n${cfgCode}\n</script>`)
   .replace('<script src="./engine/engine.js" defer></script>',
     `<script>\n${readFileSync('engine/engine.js', 'utf8')}\n</script>`);
-const previewName = brand === 'superjon' ? 'preview.html' : `preview-${brand}.html`;
+if (!variant) {
+  // base: troca o config linkado pelo inline; variante já está inline
+  preview = preview.replace(`<script src="./brands/${brand}/config.js"></script>`,
+    `<script>\n${cfgCode}\n</script>`);
+}
+const previewName = outName === 'superjon' ? 'preview.html' : `preview-${outName}.html`;
 writeFileSync(previewName, preview);
 
-console.log(`✓ build ${brand} -> dist/${brand}/ + ${previewName}`);
+console.log(`✓ build ${outName} -> dist/${outName}/ + ${previewName}`);

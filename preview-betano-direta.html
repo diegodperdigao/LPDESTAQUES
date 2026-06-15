@@ -4,18 +4,18 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
 
-  <title>SuperJon — Entre no grupo</title>
+  <title>Betano — Entrar no grupo (direto)</title>
   <meta name="description" content="Responda as perguntas rápidas e a equipe te direciona pro grupo. Conteúdo para maiores de 18 anos." />
-  <meta name="theme-color" content="#FD0104" />
-  <link rel="icon" href="https://play-lh.googleusercontent.com/Q6uqNf1b4k7h4peN2r7jX1ok-Ur5l28cjm9qUb02Te2fyvo7iQRI09ReCZOQM26FSw=s256-c" />
-  <link rel="apple-touch-icon" href="https://play-lh.googleusercontent.com/Q6uqNf1b4k7h4peN2r7jX1ok-Ur5l28cjm9qUb02Te2fyvo7iQRI09ReCZOQM26FSw=s256-c" />
+  <meta name="theme-color" content="#FF3C00" />
+  <link rel="icon" href="./brands/betano/assets/favicon.png" />
+  <link rel="apple-touch-icon" href="./brands/betano/assets/favicon.png" />
   <link rel="preconnect" href="https://i.ibb.co" crossorigin />
-  <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link rel="preload" as="image" fetchpriority="high" href="https://i.ibb.co/YBhrn1zz/Superbet-Logo-svg.png" />
-  <link rel="preload" as="image" fetchpriority="high" href="./brands/superjon/assets/jonvlogs.png" />
-  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Roboto+Flex:ital,opsz,wght@0,8..144,400..900;1,8..144,600..900&display=swap" onload="this.onload=null;this.rel='stylesheet'" />
-  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Roboto+Flex:ital,opsz,wght@0,8..144,400..900;1,8..144,600..900&display=swap" /></noscript>
+  <link rel="preload" as="image" fetchpriority="high" href="https://i.ibb.co/qMcDxty8/image.png" />
+  <link rel="preload" as="image" fetchpriority="high" href="./brands/betano/assets/influ-logo.png" />
+  <link rel="preload" as="font" type="font/woff2" href="./brands/betano/assets/fonts/BetanoNichromeBold.woff2" crossorigin />
+  <link rel="preload" as="font" type="font/woff2" href="./brands/betano/assets/fonts/HafferRegular.woff2" crossorigin />
+  <link rel="preload" as="font" type="font/woff2" href="./brands/betano/assets/fonts/HafferMedium.woff2" crossorigin />
+  <link rel="preload" as="font" type="font/woff2" href="./brands/betano/assets/fonts/HafferSemiBold.woff2" crossorigin />
 
   <style>
 /* ===========================================================
@@ -1082,8 +1082,28 @@ body {
 
 </style>
   <style>
+@font-face{font-family:'Betano Nichrome';src:url('./brands/betano/assets/fonts/BetanoNichromeBold.woff2') format('woff2');font-weight:100 900;font-style:normal;font-display:swap;}
+@font-face{font-family:'Haffer';src:url('./brands/betano/assets/fonts/HafferRegular.woff2') format('woff2');font-weight:400;font-style:normal;font-display:swap;}
+@font-face{font-family:'Haffer';src:url('./brands/betano/assets/fonts/HafferMedium.woff2') format('woff2');font-weight:500;font-style:normal;font-display:swap;}
+@font-face{font-family:'Haffer';src:url('./brands/betano/assets/fonts/HafferSemiBold.woff2') format('woff2');font-weight:600 700;font-style:normal;font-display:swap;}
+:root{--red:#FF3C00;--red-rgb:255, 60, 0;--red-deep:#e63600;--burgundy:#7a1d00;--dark-purple:#191932;--yellow:#FF3C00;--yellow-text:#ffffff;--white:#FAF5F0;--ink:#141414;--ink-soft:#4a4a4a;--ink-faint:#8a8a8a;--bg-2:#FFFFFF;--line:rgba(0, 0, 0, 0.12);--line-strong:rgba(0, 0, 0, 0.22);--font-hero:'Betano Nichrome', system-ui, sans-serif;--font-body:'Haffer', system-ui, sans-serif;--font-cta:'Haffer', system-ui, sans-serif;--cta-weight:600;--hero-style:normal;}
+/* ===========================================================
+   Betano — CSS específico da marca (carregado pelo build).
+   Só o que é exclusivo da Betano: a textura tonal laranja no hero.
+   O layout das imagens do influenciador (foto vertical no desktop +
+   banner horizontal no mobile) vive no engine compartilhado.
+   =========================================================== */
 
-:root{--red:#FD0104;--red-deep:#d10003;--burgundy:#540031;--dark-purple:#181020;--yellow:#FFE200;--yellow-text:#7a5c00;}
+/* Hero com a textura tonal — sem o radial decorativo da SuperJon */
+.lp-hero {
+  background: var(--red) url('./brands/betano/assets/hero-tonal-orange.png') center / cover no-repeat;
+}
+.lp-hero::after { display: none; }
+
+/* Logo do influenciador (marca alta/quadrada): um pouco maior que o slot
+   padrão de wordmark, pra ficar visível ao lado da logo Betano. */
+.lp-jon-motion { height: 40px; }
+@media (min-width: 880px) { .lp-jon-motion { height: 48px; } }
 
 </style>
 </head>
@@ -1138,161 +1158,7 @@ body {
     </div>
   </div>
 
-  <script>
-/* ===========================================================
-   CONFIG DA MARCA — SuperJon (Jon Vlogs × Superbet)
-   Tudo que muda por marca/criador fica AQUI. O engine é genérico.
-   Para replicar: copie esta pasta (brands/<nova>/), troque os valores
-   e os assets, e aponte o index.html para o novo config.js.
-   =========================================================== */
-window.BRAND = {
-  id: 'superjon',
-  brand: 'superbet',        // vai na coluna `brand` do banco
-  source: 'lp_superjon',    // vai na coluna `source` (criador/campanha)
-
-  meta: {
-    title: 'SuperJon — Entre no grupo',
-    description: 'Responda as perguntas rápidas e a equipe te direciona pro grupo. Conteúdo para maiores de 18 anos.',
-    themeColor: '#FD0104',
-    favicon: 'https://play-lh.googleusercontent.com/Q6uqNf1b4k7h4peN2r7jX1ok-Ur5l28cjm9qUb02Te2fyvo7iQRI09ReCZOQM26FSw=s256-c'
-  },
-
-  // Tokens de cor (sobrescrevem os defaults do engine.css em :root)
-  tokens: {
-    '--red': '#FD0104',
-    '--red-deep': '#d10003',
-    '--burgundy': '#540031',
-    '--dark-purple': '#181020',
-    '--yellow': '#FFE200',
-    '--yellow-text': '#7a5c00'
-  },
-
-  // Tipografia (Google Fonts). hero = Roboto Flex (bold itálico), corpo = Inter.
-  fonts: {
-    google: 'Inter:wght@400;500;600;700&family=Roboto+Flex:ital,opsz,wght@0,8..144,400..900;1,8..144,600..900',
-    faces: []
-  },
-
-  hero: {
-    brandLogo: 'https://i.ibb.co/YBhrn1zz/Superbet-Logo-svg.png',
-    brandLogoWhite: true,        // aplica filtro p/ deixar a logo branca
-    brandWordmark: 'superbet',   // fallback se a imagem falhar
-    creatorLogo: './brands/superjon/assets/jonvlogs.png',
-    creatorAlt: 'Jon Vlogs',
-    // Influenciador (PLACEHOLDERS p/ planejar — trocar pelas fotos do Jon):
-    creatorPhoto: './brands/superjon/assets/_placeholder-influencer.png', // desktop: vertical
-    creatorBanner: './brands/superjon/assets/_placeholder-banner.png',    // mobile: horizontal
-    creatorPhotoAlt: 'Jon Vlogs',
-    title: 'SuperJon',
-    subtitleMobile: 'Responda abaixo e garanta sua vaga no grupo do Jon Vlogs.',
-    subtitleDesktop: 'Responda ao lado e garanta sua vaga no grupo do Jon Vlogs.',
-    // Headline do desktop (parte branca) — foco no influenciador.
-    headlineHTML: 'Faça parte do grupo do <span class="lp-gate__hl">Jon Vlogs</span>',
-    subheadline: 'Acesso gratuito e direto pra quem é da comunidade. Responda abaixo e garanta sua vaga no grupo.'
-  },
-
-  gate: {
-    eyebrow: 'Comece por aqui',
-    questionHTML: 'Você já tem conta na <span class="lp-gate__hl">Superbet</span>?',
-    sub: 'Em 1 toque a gente te leva pro caminho certo.',
-    yes: 'Sim, já tenho',
-    no: 'Ainda não tenho'
-  },
-
-  create: {
-    eyebrow: 'Falta pouco',
-    titleHTML: 'Crie sua conta na <span class="lp-gate__hl">Superbet</span>',
-    sub: 'É rápido e gratuito. Assim que criar, volte aqui pra liberar seu acesso ao grupo.',
-    steps: [
-      'Crie sua conta na Superbet',
-      'Volte para esta página',
-      'Responda e entre no grupo'
-    ],
-    cta: 'Criar conta agora',
-    back: 'Já tenho conta'
-  },
-
-  form: {
-    sectionLabel: 'Seus dados',
-    successIntro: 'Agora que deu tudo certo com o cadastro, responde essas perguntas pra liberar o seu acesso:',
-    fields: [
-      { id: 'nome', label: 'Nome', type: 'text', autocomplete: 'name',
-        placeholder: 'Seu nome completo' },
-      { id: 'contato', label: 'E-mail ou ID Superbet', type: 'text',
-        autocomplete: 'email', placeholder: 'email@exemplo.com ou seu ID' },
-      { id: 'telefone', label: 'Telefone', type: 'tel', autocomplete: 'tel',
-        inputmode: 'tel', placeholder: '(11) 99999-9999' }
-    ],
-    bet: {
-      id: 'faixa_aposta',
-      label: 'Sobre quanto você aposta?',
-      options: [
-        { value: 'ate_1000', label: 'Até R$ 1.000' },
-        { value: '1000_3000', label: 'R$ 1.000 a 3.000' },
-        { value: '3000_5000', label: 'R$ 3.000 a 5.000' },
-        { value: '5000_mais', label: 'R$ 5.000+', tier: 'vip' }
-      ]
-    },
-    consentText: 'Ao enviar, você concorda com os ',
-    termsLink: 'Termos e Condições',
-    cta: 'Quero entrar no grupo agora'
-  },
-
-  done: {
-    title: 'Tudo certo!',
-    text: 'Recebemos seus dados. Em instantes você entra no grupo do SuperJon. Fica de olho no WhatsApp informado.',
-    vipBadge: 'Fila VIP'
-  },
-
-  seal: {
-    age: '18+',
-    imageUrl: '',   // se preenchido, usa a imagem oficial no lugar do círculo
-    text: 'Jogue com responsabilidade. Portaria SPA/MF Nº 2.090.'
-  },
-
-  terms: [
-    'Ao enviar seus dados nesta página, você declara ter no mínimo 18 anos e concorda em receber comunicações do grupo do SuperJon na Superbet pelos contatos informados (WhatsApp, e-mail e/ou telefone).',
-    'Seus dados são tratados conforme a Lei Geral de Proteção de Dados (LGPD) e utilizados para qualificação, comunicação e ações de marketing relacionadas à Superbet. Você pode solicitar a remoção a qualquer momento.',
-    'Esta página não promete prêmios, bônus ou aumento de chance de ganho como recompensa por cadastro ou depósito. Promoções, quando existirem, são comunicadas dentro do grupo e seguem regras próprias.',
-    'Conteúdo destinado a maiores de 18 anos. Aposte com responsabilidade. Este texto é um rascunho e deve passar por revisão jurídica.'
-  ],
-
-  // Fluxo direto (usado pela variante "direta"): "Não possui cadastro?" + pop-up.
-  direct: {
-    noAccountLabel: 'Não possui cadastro?',
-    popup: {
-      title: 'Você ainda não tem conta?',
-      text: 'Crie sua conta na Superbet (abre em nova aba), volte aqui e finalize pra entrar no grupo do Jon Vlogs.',
-      cta: 'Clique aqui e se cadastre'
-    }
-  },
-
-  // Variantes — herdam TUDO e mudam só o necessário.
-  // Build: node build.mjs superjon direta  -> dist/superjon-direta
-  variants: {
-    direta: {
-      flow: 'direct',
-      source: 'lp_superjon_direta',
-      meta: { title: 'SuperJon — Entrar no grupo (direto)' }
-    }
-  },
-
-  // ---- Integrações (preencher para ir ao ar) ----
-  links: {
-    registration: '',      // link de cadastro da Superbet (botão "Criar conta")
-    whatsapp: '',          // grupo de WhatsApp (destino final)
-    whatsappVip: ''        // opcional: grupo VIP (faixa 5.000+)
-  },
-
-  // Destino dos leads — projeto Supabase dedicado (REST/PostgREST).
-  supabase: {
-    url: '',               // ex.: https://xxxx.supabase.co
-    anonKey: '',           // chave publishable/anon (pode ser pública)
-    table: 'lp_leads'
-  }
-};
-
-</script>
+  <script>window.BRAND = {"id":"betano","brand":"betano","source":"lp_betano_direta","meta":{"title":"Betano — Entrar no grupo (direto)","description":"Responda as perguntas rápidas e a equipe te direciona pro grupo. Conteúdo para maiores de 18 anos.","themeColor":"#FF3C00","favicon":"./brands/betano/assets/favicon.png"},"tokens":{"--red":"#FF3C00","--red-rgb":"255, 60, 0","--red-deep":"#e63600","--burgundy":"#7a1d00","--dark-purple":"#191932","--yellow":"#FF3C00","--yellow-text":"#ffffff","--white":"#FAF5F0","--ink":"#141414","--ink-soft":"#4a4a4a","--ink-faint":"#8a8a8a","--bg-2":"#FFFFFF","--line":"rgba(0, 0, 0, 0.12)","--line-strong":"rgba(0, 0, 0, 0.22)","--font-hero":"'Betano Nichrome', system-ui, sans-serif","--font-body":"'Haffer', system-ui, sans-serif","--font-cta":"'Haffer', system-ui, sans-serif","--cta-weight":"600","--hero-style":"normal"},"fonts":{"google":"","faces":[{"family":"Betano Nichrome","src":"./brands/betano/assets/fonts/BetanoNichromeBold.woff2","weight":"100 900","style":"normal","format":"woff2"},{"family":"Haffer","src":"./brands/betano/assets/fonts/HafferRegular.woff2","weight":"400","style":"normal","format":"woff2"},{"family":"Haffer","src":"./brands/betano/assets/fonts/HafferMedium.woff2","weight":"500","style":"normal","format":"woff2"},{"family":"Haffer","src":"./brands/betano/assets/fonts/HafferSemiBold.woff2","weight":"600 700","style":"normal","format":"woff2"}]},"hero":{"brandLogo":"https://i.ibb.co/qMcDxty8/image.png","brandLogoWhite":true,"brandWordmark":"betano","creatorLogo":"./brands/betano/assets/influ-logo.png","creatorAlt":"Influenciador Betano","creatorPhoto":"./brands/betano/assets/_placeholder-influencer.png","creatorBanner":"./brands/betano/assets/_placeholder-banner.png","creatorPhotoAlt":"Influenciador Betano","title":"Betano","subtitleMobile":"Responda abaixo e garanta sua vaga no grupo.","subtitleDesktop":"Responda ao lado e garanta sua vaga no grupo.","headlineHTML":"Faça parte do grupo do <span class=\"lp-gate__hl\">[nome do influenciador]</span>","subheadline":"Acesso gratuito e direto pra quem é da comunidade. Responda abaixo e garanta sua vaga no grupo."},"gate":{"eyebrow":"Comece por aqui","questionHTML":"Você já tem conta na <span class=\"lp-gate__hl\">Betano</span>?","sub":"Em 1 toque a gente te leva pro caminho certo.","yes":"Sim, já tenho","no":"Ainda não tenho"},"create":{"eyebrow":"Falta pouco","titleHTML":"Crie sua conta na <span class=\"lp-gate__hl\">Betano</span>","sub":"É rápido e gratuito. Assim que criar, volte aqui pra liberar seu acesso ao grupo.","steps":["Crie sua conta na Betano","Volte para esta página","Responda e entre no grupo"],"cta":"Criar conta agora","back":"Já tenho conta"},"form":{"sectionLabel":"Seus dados","successIntro":"Agora que deu tudo certo com o cadastro, responde essas perguntas pra liberar o seu acesso:","fields":[{"id":"nome","label":"Nome","type":"text","autocomplete":"name","placeholder":"Seu nome completo"},{"id":"contato","label":"E-mail ou ID Betano","type":"text","autocomplete":"email","placeholder":"email@exemplo.com ou seu ID"},{"id":"telefone","label":"Telefone","type":"tel","autocomplete":"tel","inputmode":"tel","placeholder":"(11) 99999-9999"}],"bet":{"id":"faixa_aposta","label":"Sobre quanto você aposta?","options":[{"value":"ate_1000","label":"Até R$ 1.000"},{"value":"1000_3000","label":"R$ 1.000 a 3.000"},{"value":"3000_5000","label":"R$ 3.000 a 5.000"},{"value":"5000_mais","label":"R$ 5.000+","tier":"vip"}]},"consentText":"Ao enviar, você concorda com os ","termsLink":"Termos e Condições","cta":"Quero entrar no grupo agora"},"done":{"title":"Tudo certo!","text":"Recebemos seus dados. Em instantes você entra no grupo. Fica de olho no WhatsApp informado.","vipBadge":"Fila VIP"},"seal":{"age":"18+","imageUrl":"","text":"Jogue com responsabilidade. O jogo pode causar dependência. Autorizado pela Portaria SPA/MF n°.246/2025"},"terms":["Ao enviar seus dados nesta página, você declara ter no mínimo 18 anos e concorda em receber comunicações do grupo pelos contatos informados (WhatsApp, e-mail e/ou telefone).","Seus dados são tratados conforme a LGPD e utilizados para qualificação, comunicação e ações de marketing. Você pode solicitar a remoção a qualquer momento.","Esta página não promete prêmios, bônus ou aumento de chance de ganho como recompensa por cadastro ou depósito. Promoções, quando existirem, são comunicadas dentro do grupo.","Conteúdo destinado a maiores de 18 anos. Aposte com responsabilidade. Texto rascunho — revisão jurídica obrigatória."],"direct":{"noAccountLabel":"Não possui cadastro?","popup":{"title":"Você ainda não tem conta?","text":"Crie sua conta na Betano (abre em nova aba), volte aqui e finalize pra entrar no grupo.","cta":"Clique aqui e se cadastre"}},"links":{"registration":"","whatsapp":"","whatsappVip":""},"supabase":{"url":"","anonKey":"","table":"lp_leads"},"flow":"direct"};</script>
   <script>
 /* ===========================================================
    LP Engine — núcleo genérico (multi-marca)

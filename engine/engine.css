@@ -822,6 +822,28 @@ body {
 }
 .lp-modal__body p:last-child { margin-bottom: 0; }
 
+/* Pop-up de cadastro (fluxo direto) */
+.lp-modal__lead {
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--ink-soft);
+  margin-bottom: 18px;
+}
+.lp-modal__panel--reg #regCta { width: 100%; text-decoration: none; }
+
+/* "Não possui cadastro?" — checkbox abaixo da faixa de aposta (fluxo direto) */
+.lp-noacc {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 14px;
+  cursor: pointer;
+  font-size: 14px;
+  color: var(--ink-soft);
+}
+.lp-noacc__cb { width: 18px; height: 18px; accent-color: var(--red); flex: 0 0 auto; }
+.lp-noacc__txt { text-decoration: underline; text-underline-offset: 2px; font-weight: 600; }
+
 /* =====================================================
    DESKTOP / TABLET LARGO — split-screen
    ===================================================== */

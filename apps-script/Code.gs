@@ -15,7 +15,7 @@
 
 // Colunas exportadas (na ordem da planilha) — espelham a tabela lp_leads.
 var COLUMNS = [
-  'created_at', 'brand', 'source',
+  'created_at', 'brand', 'source', 'flow', 'status', 'client_id',
   'nome', 'contato', 'telefone',
   'faixa_aposta_label', 'tier', 'vip_candidate', 'ja_tinha_conta',
   'utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term',
@@ -23,7 +23,7 @@ var COLUMNS = [
 ];
 
 var HEADERS = [
-  'Data/Hora', 'Marca', 'Origem',
+  'Data/Hora', 'Marca', 'Origem', 'Fluxo', 'Status', 'Client ID',
   'Nome', 'E-mail/ID', 'Telefone',
   'Faixa de aposta', 'Tier', 'VIP?', 'Já tinha conta',
   'utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term',

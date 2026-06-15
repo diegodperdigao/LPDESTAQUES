@@ -49,6 +49,17 @@
     </div>
   </div>
 
+  <!-- Pop-up: cadastro (fluxo direto — "Não possui cadastro?") -->
+  <div class="lp-modal" id="regModal" hidden>
+    <div class="lp-modal__backdrop" data-close></div>
+    <div class="lp-modal__panel lp-modal__panel--reg" role="dialog" aria-modal="true" aria-labelledby="regTitle">
+      <button class="lp-modal__close" type="button" data-close aria-label="Fechar">&times;</button>
+      <h2 class="lp-modal__title" id="regTitle"></h2>
+      <p class="lp-modal__lead" id="regText"></p>
+      <a class="lp-cta lp-cta--pulse" id="regCta" target="_blank" rel="noopener noreferrer" role="button"></a>
+    </div>
+  </div>
+
   <!--BRAND_CONFIG-->
   <script src="./engine/engine.js" defer></script>
 </body>

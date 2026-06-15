@@ -18,8 +18,11 @@ create table if not exists public.lp_leads (
   faixa_aposta_label  text,
   tier                text not null default 'standard',
   vip_candidate       boolean not null default false,
-  ja_tinha_conta      text,
+  ja_tinha_conta      text,            -- 'sim' | 'nao' | 'criou_agora'
   consentimento       boolean not null default true,
+  flow                text not null default 'full',     -- 'full' (com gate) | 'direct'
+  status              text not null default 'completo', -- 'completo' | 'parcial' (early-save)
+  client_id           text,            -- mesma sessão: casa o parcial com o envio final
   utm_source          text,
   utm_medium          text,
   utm_campaign        text,
@@ -33,6 +36,7 @@ create table if not exists public.lp_leads (
 
 create index if not exists lp_leads_created_at_idx on public.lp_leads (created_at desc);
 create index if not exists lp_leads_brand_source_idx on public.lp_leads (brand, source);
+create index if not exists lp_leads_client_id_idx on public.lp_leads (client_id);
 create index if not exists lp_leads_unsynced_idx on public.lp_leads (created_at) where synced_to_sheets = false;
 
 -- RLS: a LP grava com a chave pública (anon), mas ninguém LÊ os leads por ela.

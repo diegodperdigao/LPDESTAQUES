@@ -116,6 +116,26 @@ window.BRAND = {
     'Conteúdo destinado a maiores de 18 anos. Aposte com responsabilidade. Este texto é um rascunho e deve passar por revisão jurídica.'
   ],
 
+  // Fluxo direto (usado pela variante "direta"): "Não possui cadastro?" + pop-up.
+  direct: {
+    noAccountLabel: 'Não possui cadastro?',
+    popup: {
+      title: 'Você ainda não tem conta?',
+      text: 'Crie sua conta na Superbet (abre em nova aba), volte aqui e finalize pra entrar no grupo do Jon Vlogs.',
+      cta: 'Clique aqui e se cadastre'
+    }
+  },
+
+  // Variantes — herdam TUDO e mudam só o necessário.
+  // Build: node build.mjs superjon direta  -> dist/superjon-direta
+  variants: {
+    direta: {
+      flow: 'direct',
+      source: 'lp_superjon_direta',
+      meta: { title: 'SuperJon — Entrar no grupo (direto)' }
+    }
+  },
+
   // ---- Integrações (preencher para ir ao ar) ----
   links: {
     registration: '',      // link de cadastro da Superbet (botão "Criar conta")

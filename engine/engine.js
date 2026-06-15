@@ -36,7 +36,11 @@
   }
 
   /* ----------------------- Estado ----------------------- */
-  var state = { hasAccount: null, data: {}, bet: null };
+  function uuid() {
+    try { if (window.crypto && crypto.randomUUID) return crypto.randomUUID(); } catch (e) {}
+    return 'lp-' + Date.now() + '-' + Math.random().toString(16).slice(2);
+  }
+  var state = { hasAccount: null, data: {}, bet: null, clientId: uuid(), partialSent: false };
   var FIELDS = B.form.fields;
   var BET = B.form.bet;
   var screenEl = document.getElementById('screen');
@@ -253,6 +257,22 @@
     betCard.appendChild(chips);
     form.appendChild(betCard);
 
+    // Fluxo direto: "Não possui cadastro?" abre o pop-up de cadastro e
+    // salva o lead parcial (early-save).
+    if (B.flow === 'direct') {
+      var D = B.direct || {};
+      var na = el('label', 'lp-noacc');
+      var cb = el('input', 'lp-noacc__cb');
+      cb.type = 'checkbox';
+      na.appendChild(cb);
+      na.appendChild(el('span', 'lp-noacc__txt', D.noAccountLabel || 'Não possui cadastro?'));
+      cb.addEventListener('change', function () {
+        if (cb.checked) { state.hasAccount = 'nao'; sendPartial(); openReg(); }
+        else { state.hasAccount = 'sim'; }
+      });
+      form.appendChild(na);
+    }
+
     var consent = el('p', 'lp-consent');
     consent.appendChild(document.createTextNode(F.consentText));
     var termsLink = el('button', 'lp-terms-link', F.termsLink);
@@ -308,19 +328,25 @@
   function betMeta(value) {
     return BET.options.filter(function (x) { return x.value === value; })[0] || {};
   }
-  function buildRow() {
+  function buildRow(opts) {
+    opts = opts || {};
     var utm = getTracking();
     var bm = betMeta(state.bet);
     var tier = bm.tier === 'vip' ? 'vip' : 'standard';
+    var jtc = state.hasAccount === 'sim' ? 'sim'
+      : (state.hasAccount === 'nao' ? 'nao' : 'criou_agora');
     var row = {
       brand: B.brand,
       source: B.source,
+      flow: B.flow || 'full',
+      client_id: state.clientId,
+      status: opts.partial ? 'parcial' : 'completo',
       faixa_aposta: state.bet,
       faixa_aposta_label: bm.label || '',
       tier: tier,
       vip_candidate: tier === 'vip',
-      ja_tinha_conta: state.hasAccount === 'sim' ? 'sim' : 'criou_agora',
-      consentimento: true,
+      ja_tinha_conta: jtc,
+      consentimento: !opts.partial,
       utm_source: utm.utm_source,
       utm_medium: utm.utm_medium,
       utm_campaign: utm.utm_campaign,
@@ -354,6 +380,19 @@
     }
     console.log('[submitLead] (Supabase não configurado) row:', row);
     return new Promise(function (r) { setTimeout(r, 400); });
+  }
+
+  // Salva o lead PARCIAL (fluxo direto): dispara quando a pessoa marca
+  // "Não possui cadastro?" — captura o que já preencheu antes de sair pro
+  // cadastro (pode não voltar). Mesmo client_id do envio final p/ casar depois.
+  function sendPartial() {
+    if (state.partialSent) return;
+    state.partialSent = true;
+    try {
+      submitLead(buildRow({ partial: true })).catch(function (err) {
+        console.warn('[sendPartial] falhou (segue o fluxo):', err);
+      });
+    } catch (e) { console.warn('[sendPartial] erro:', e); }
   }
 
   function handleSubmit(cta) {
@@ -429,9 +468,37 @@
     document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !modal.hidden) closeTerms(); });
   }
 
+  /* ----------------------- Pop-up de cadastro (fluxo direto) ----------------------- */
+  var regModal = document.getElementById('regModal');
+  function openReg() {
+    if (!regModal) return;
+    var D = (B.direct && B.direct.popup) || {};
+    var reg = (B.links && B.links.registration) || '';
+    var t = regModal.querySelector('#regTitle');
+    var x = regModal.querySelector('#regText');
+    var cta = regModal.querySelector('#regCta');
+    if (t) t.textContent = D.title || 'Crie sua conta';
+    if (x) x.textContent = D.text || '';
+    if (cta) {
+      cta.textContent = D.cta || 'Clique aqui e se cadastre';
+      cta.href = reg || '#';
+      cta.onclick = function (e) {
+        if (!reg) { e.preventDefault(); console.warn('[reg] links.registration não configurado.'); }
+        sendPartial(); // garante o early-save mesmo se o change não disparou
+      };
+    }
+    regModal.hidden = false;
+    document.body.style.overflow = 'hidden';
+  }
+  function closeReg() { if (regModal) { regModal.hidden = true; document.body.style.overflow = ''; } }
+  if (regModal) {
+    regModal.addEventListener('click', function (e) { if (e.target.hasAttribute('data-close')) closeReg(); });
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !regModal.hidden) closeReg(); });
+  }
+
   /* ----------------------- Init ----------------------- */
   applyBranding();
   paintHeroSeal();
   renderFooter();
-  renderGate();
+  if (B.flow === 'direct') renderForm(false); else renderGate();
 })();

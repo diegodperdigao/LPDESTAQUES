@@ -138,6 +138,27 @@ window.BRAND = {
     'Conteúdo destinado a maiores de 18 anos. Aposte com responsabilidade. Texto rascunho — revisão jurídica obrigatória.'
   ],
 
+  // Fluxo direto (usado pela variante "direta"): textos do "Não possui
+  // cadastro?" e do pop-up de cadastro.
+  direct: {
+    noAccountLabel: 'Não possui cadastro?',
+    popup: {
+      title: 'Você ainda não tem conta?',
+      text: 'Crie sua conta na Betano (abre em nova aba), volte aqui e finalize pra entrar no grupo.',
+      cta: 'Clique aqui e se cadastre'
+    }
+  },
+
+  // Variantes da marca — herdam TUDO (assets, link, Supabase/DB) e mudam só
+  // o necessário. Build: node build.mjs betano direta  -> dist/betano-direta
+  variants: {
+    direta: {
+      flow: 'direct',                 // abre direto nas perguntas
+      source: 'lp_betano_direta',     // distingue a origem na MESMA tabela
+      meta: { title: 'Betano — Entrar no grupo (direto)' }
+    }
+  },
+
   // ---- Integrações (preencher) ----
   links: {
     registration: '',   // TODO: link de cadastro da Betano
