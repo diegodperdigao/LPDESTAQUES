@@ -1,0 +1,28 @@
+/* ===========================================================
+   Betano — CSS específico da marca (carregado pelo build).
+   Enriquecimento visual: textura tonal no hero + bolt divider.
+   Não afeta outras marcas (cada uma tem seu style.css opcional).
+   =========================================================== */
+
+/* Hero com a textura tonal laranja da marca (no lugar do gradiente liso) */
+.lp-hero {
+  background: var(--red) url('./brands/betano/assets/hero-tonal-orange.png') center / cover no-repeat;
+}
+
+/* Bolt divider: a transição hero -> corpo vira um corte em raio (assinatura
+   Betano). Só no mobile (no desktop o hero é painel lateral). */
+@media (max-width: 879px) {
+  .lp-body { position: relative; }
+  .lp-body::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: -42px;            /* sobe pro hero pra cortar o laranja */
+    height: 84px;
+    background: url('./brands/betano/assets/bolt-divider-offwhite.png') no-repeat top center;
+    background-size: 100% auto;
+    z-index: 1;
+    pointer-events: none;
+  }
+}

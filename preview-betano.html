@@ -7,8 +7,8 @@
   <title>Betano — Entre no grupo</title>
   <meta name="description" content="Responda as perguntas rápidas e a equipe te direciona pro grupo. Conteúdo para maiores de 18 anos." />
   <meta name="theme-color" content="#FF3C00" />
-  <link rel="icon" href="https://i.ibb.co/BV5D6FRY/BETANO-SYMBOL-ORANGE-RGB.png" />
-  <link rel="apple-touch-icon" href="https://i.ibb.co/BV5D6FRY/BETANO-SYMBOL-ORANGE-RGB.png" />
+  <link rel="icon" href="./brands/betano/assets/favicon.png" />
+  <link rel="apple-touch-icon" href="./brands/betano/assets/favicon.png" />
   <link rel="preconnect" href="https://i.ibb.co" crossorigin />
   <link rel="preload" as="image" fetchpriority="high" href="https://i.ibb.co/qMcDxty8/image.png" />
   <link rel="preload" as="font" type="font/woff2" href="./brands/betano/assets/fonts/BetanoNichromeBold.woff2" crossorigin />
@@ -1022,7 +1022,36 @@ body {
 @font-face{font-family:'Haffer';src:url('./brands/betano/assets/fonts/HafferRegular.woff2') format('woff2');font-weight:400;font-style:normal;font-display:swap;}
 @font-face{font-family:'Haffer';src:url('./brands/betano/assets/fonts/HafferMedium.woff2') format('woff2');font-weight:500;font-style:normal;font-display:swap;}
 @font-face{font-family:'Haffer';src:url('./brands/betano/assets/fonts/HafferSemiBold.woff2') format('woff2');font-weight:600 700;font-style:normal;font-display:swap;}
-:root{--red:#FF3C00;--red-rgb:255, 60, 0;--red-deep:#e63600;--burgundy:#7a1d00;--dark-purple:#191932;--yellow:#FF3C00;--yellow-text:#ffffff;--ink:#141414;--ink-soft:#4a4a4a;--ink-faint:#8a8a8a;--bg-2:#FAF5F0;--line:rgba(0, 0, 0, 0.12);--line-strong:rgba(0, 0, 0, 0.22);--font-hero:'Betano Nichrome', system-ui, sans-serif;--font-body:'Haffer', system-ui, sans-serif;--font-cta:'Haffer', system-ui, sans-serif;--cta-weight:600;--hero-style:normal;}
+:root{--red:#FF3C00;--red-rgb:255, 60, 0;--red-deep:#e63600;--burgundy:#7a1d00;--dark-purple:#191932;--yellow:#FF3C00;--yellow-text:#ffffff;--white:#FAF5F0;--ink:#141414;--ink-soft:#4a4a4a;--ink-faint:#8a8a8a;--bg-2:#FFFFFF;--line:rgba(0, 0, 0, 0.12);--line-strong:rgba(0, 0, 0, 0.22);--font-hero:'Betano Nichrome', system-ui, sans-serif;--font-body:'Haffer', system-ui, sans-serif;--font-cta:'Haffer', system-ui, sans-serif;--cta-weight:600;--hero-style:normal;}
+/* ===========================================================
+   Betano — CSS específico da marca (carregado pelo build).
+   Enriquecimento visual: textura tonal no hero + bolt divider.
+   Não afeta outras marcas (cada uma tem seu style.css opcional).
+   =========================================================== */
+
+/* Hero com a textura tonal laranja da marca (no lugar do gradiente liso) */
+.lp-hero {
+  background: var(--red) url('./brands/betano/assets/hero-tonal-orange.png') center / cover no-repeat;
+}
+
+/* Bolt divider: a transição hero -> corpo vira um corte em raio (assinatura
+   Betano). Só no mobile (no desktop o hero é painel lateral). */
+@media (max-width: 879px) {
+  .lp-body { position: relative; }
+  .lp-body::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: -42px;            /* sobe pro hero pra cortar o laranja */
+    height: 84px;
+    background: url('./brands/betano/assets/bolt-divider-offwhite.png') no-repeat top center;
+    background-size: 100% auto;
+    z-index: 1;
+    pointer-events: none;
+  }
+}
+
 </style>
 </head>
 <body>
@@ -1081,7 +1110,7 @@ window.BRAND = {
     title: 'Betano — Entre no grupo',
     description: 'Responda as perguntas rápidas e a equipe te direciona pro grupo. Conteúdo para maiores de 18 anos.',
     themeColor: '#FF3C00',
-    favicon: 'https://i.ibb.co/BV5D6FRY/BETANO-SYMBOL-ORANGE-RGB.png'
+    favicon: './brands/betano/assets/favicon.png'
   },
 
   // Cores da Betano: branco + laranja, texto preto. (sobrescrevem o engine)
@@ -1093,10 +1122,11 @@ window.BRAND = {
     '--dark-purple': '#191932',  // azul tonal da marca (fundos escuros pontuais)
     '--yellow': '#FF3C00',       // sem chip amarelo na Betano: alias do laranja
     '--yellow-text': '#ffffff',
+    '--white': '#FAF5F0',        // off-white da marca (fundo do corpo / casa com o divider)
     '--ink': '#141414',          // texto preto
     '--ink-soft': '#4a4a4a',
     '--ink-faint': '#8a8a8a',
-    '--bg-2': '#FAF5F0',         // off-white (fundo dos cards)
+    '--bg-2': '#FFFFFF',         // cards brancos (destacam no off-white)
     '--line': 'rgba(0, 0, 0, 0.12)',
     '--line-strong': 'rgba(0, 0, 0, 0.22)',
     '--font-hero': "'Betano Nichrome', system-ui, sans-serif",

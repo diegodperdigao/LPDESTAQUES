@@ -12,7 +12,7 @@ window.BRAND = {
     title: 'Betano — Entre no grupo',
     description: 'Responda as perguntas rápidas e a equipe te direciona pro grupo. Conteúdo para maiores de 18 anos.',
     themeColor: '#FF3C00',
-    favicon: 'https://i.ibb.co/BV5D6FRY/BETANO-SYMBOL-ORANGE-RGB.png'
+    favicon: './brands/betano/assets/favicon.png'
   },
 
   // Cores da Betano: branco + laranja, texto preto. (sobrescrevem o engine)
@@ -24,10 +24,11 @@ window.BRAND = {
     '--dark-purple': '#191932',  // azul tonal da marca (fundos escuros pontuais)
     '--yellow': '#FF3C00',       // sem chip amarelo na Betano: alias do laranja
     '--yellow-text': '#ffffff',
+    '--white': '#FAF5F0',        // off-white da marca (fundo do corpo / casa com o divider)
     '--ink': '#141414',          // texto preto
     '--ink-soft': '#4a4a4a',
     '--ink-faint': '#8a8a8a',
-    '--bg-2': '#FAF5F0',         // off-white (fundo dos cards)
+    '--bg-2': '#FFFFFF',         // cards brancos (destacam no off-white)
     '--line': 'rgba(0, 0, 0, 0.12)',
     '--line-strong': 'rgba(0, 0, 0, 0.22)',
     '--font-hero': "'Betano Nichrome', system-ui, sans-serif",

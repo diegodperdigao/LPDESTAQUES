@@ -10,7 +10,7 @@
  * Tudo específico da marca (cores, fontes, textos, assets) vem de
  * brands/<marca>/config.js. O engine é compartilhado.
  */
-import { readFileSync, writeFileSync, mkdirSync, cpSync, rmSync } from 'fs';
+import { readFileSync, writeFileSync, mkdirSync, cpSync, rmSync, existsSync } from 'fs';
 
 const brand = process.argv[2] || process.env.BRAND || 'superjon';
 const cfgCode = readFileSync(`brands/${brand}/config.js`, 'utf8');
@@ -53,7 +53,11 @@ const head = [
 // ---- <style> da marca (@font-face + tokens) ----
 const faceCss = faces.map((f) => `@font-face{font-family:'${f.family}';src:url('${f.src}') format('${f.format || 'woff2'}');font-weight:${f.weight || '400 900'};font-style:${f.style || 'normal'};font-display:swap;}`).join('\n');
 const tokenCss = B.tokens ? ':root{' + Object.entries(B.tokens).map(([k, v]) => `${k}:${v};`).join('') + '}' : '';
-const brandStyle = (faceCss || tokenCss) ? `<style>\n${faceCss}\n${tokenCss}\n</style>` : '';
+// CSS customizado opcional por marca (brands/<marca>/style.css)
+const brandCssPath = `brands/${brand}/style.css`;
+const brandCss = existsSync(brandCssPath) ? readFileSync(brandCssPath, 'utf8') : '';
+const brandStyle = (faceCss || tokenCss || brandCss)
+  ? `<style>\n${faceCss}\n${tokenCss}\n${brandCss}\n</style>` : '';
 
 const template = readFileSync('index.template.html', 'utf8');
 const html = template
