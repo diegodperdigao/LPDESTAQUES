@@ -1065,25 +1065,18 @@ body {
   /* hero mantém o padrão tonal laranja da Betano (igual ao desktop) —
      herda do .lp-hero base; sem override sólido aqui. */
 
-  /* a foto do hero é só desktop — no mobile usamos o banner do corpo */
-  .lp-hero__photo { display: none; }
-
-  /* foto do influenciador: banner PEQUENO entre o header e o conteúdo
-     (empurra os botões pra altura do dedo) */
-  .lp-body__banner {
+  /* UMA imagem só no mobile: a do header (a "de cima"), como banner
+     menor e horizontal, logo abaixo do título, dentro do laranja. */
+  .lp-hero__photo {
     display: block;
-    text-align: center;
-    margin: 8px auto 4px;
-  }
-  .lp-banner__img {
-    display: block;
-    margin: 0 auto;
-    width: auto;
-    height: auto;
-    max-width: 62%;
-    max-height: 120px;
+    width: 100%;
+    max-height: 128px;
+    margin: 14px 0 2px;
     object-fit: contain;
+    object-position: center;
   }
+  /* sem a segunda imagem (banner do corpo) no mobile */
+  .lp-body__banner { display: none; }
 }
 
 </style>
