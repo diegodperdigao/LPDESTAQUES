@@ -1056,6 +1056,34 @@ body {
 /* O banner do corpo é só mobile — escondido no desktop */
 .lp-body__banner { display: none; }
 
+/* Desktop: bolt diagonal grande dividindo a tela (hero -> conteúdo).
+   O hero (laranja) é recortado num gume de raio; o corpo passa por baixo
+   pra preencher o vão, formando a divisão diagonal — como no modelo Betano. */
+@media (min-width: 880px) {
+  .lp-hero {
+    flex-basis: 46%;
+    padding-right: 86px;
+    -webkit-clip-path: polygon(
+      0 0, 100% 0,
+      calc(100% - 30px) 34%, calc(100% - 4px) 44%,
+      calc(100% - 132px) 100%, 0 100%);
+    clip-path: polygon(
+      0 0, 100% 0,
+      calc(100% - 30px) 34%, calc(100% - 4px) 44%,
+      calc(100% - 132px) 100%, 0 100%);
+  }
+  /* o corpo entra por baixo do gume diagonal do hero */
+  .lp-body {
+    margin-left: -120px;
+    padding-left: 132px;
+  }
+  /* a foto acompanha o recorte — encostada no gume, sem vazar */
+  .lp-hero__photo {
+    max-width: 64%;
+    height: 72%;
+  }
+}
+
 @media (max-width: 879px) {
   /* Mobile: hero em cor sólida, sem a foto grande dentro do header */
   .lp-hero {
