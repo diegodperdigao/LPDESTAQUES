@@ -12,7 +12,7 @@ window.BRAND = {
     title: 'Betano — Entre no grupo',
     description: 'Responda as perguntas rápidas e a equipe te direciona pro grupo. Conteúdo para maiores de 18 anos.',
     themeColor: '#FF3C00',
-    favicon: 'https://i.ibb.co/gbH2XF7Q/image.png'
+    favicon: 'https://i.ibb.co/BV5D6FRY/BETANO-SYMBOL-ORANGE-RGB.png'
   },
 
   // Cores da Betano: branco + laranja, texto preto. (sobrescrevem o engine)
