@@ -1026,20 +1026,22 @@ body {
 .lp-hero__photo { display: none; }              /* só desktop */
 .lp-hero__banner { display: none; }             /* base oculto */
 
-/* Mobile: banner horizontal SÓ na primeira tela (gate). Ao avançar pras
-   perguntas ele some, pra não empurrar o conteúdo. */
-[data-screen="gate"] .lp-hero__banner {
+/* Mobile: banner horizontal nas telas iniciais (gate e "criar conta").
+   Some só quando aparece o formulário inteiro de perguntas. */
+[data-screen="gate"] .lp-hero__banner,
+[data-screen="create"] .lp-hero__banner {
   display: block;
   width: 100%;
-  max-height: 132px;
-  margin: 14px 0 2px;
+  max-height: 230px;
+  margin: 16px 0 4px;
   object-fit: contain;
   object-position: center;
 }
 
 @media (min-width: 880px) {
   /* desktop nunca usa o banner (usa a foto vertical, sempre visível) */
-  [data-screen="gate"] .lp-hero__banner { display: none; }
+  [data-screen="gate"] .lp-hero__banner,
+  [data-screen="create"] .lp-hero__banner { display: none; }
   .lp-hero__photo {                             /* desktop: foto vertical */
     display: block;
     flex: 1 1 auto;
