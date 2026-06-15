@@ -30,16 +30,24 @@ window.BRAND = {
     '--line': 'rgba(0, 0, 0, 0.12)',
     '--line-strong': 'rgba(0, 0, 0, 0.22)',
     '--font-hero': "'Betano Nichrome', system-ui, sans-serif",
-    '--font-body': "'Inter', system-ui, sans-serif",
+    '--font-body': "'Haffer', system-ui, sans-serif",
+    '--font-cta': "'Haffer', system-ui, sans-serif",   // CTAs em Haffer SemiBold
+    '--cta-weight': '600',
     '--hero-style': 'normal'     // Nichrome upright (sem itálico)
   },
 
-  // Tipografia própria da marca (Nichrome Bold) + Inter (corpo).
+  // Tipografia 100% da marca: Nichrome (display) + Haffer (corpo/CTA). Sem Google.
   fonts: {
-    google: 'Inter:wght@400;500;600;700',
+    google: '',
     faces: [
       { family: 'Betano Nichrome', src: './brands/betano/assets/fonts/BetanoNichromeBold.woff2',
-        weight: '100 900', style: 'normal', format: 'woff2' }
+        weight: '100 900', style: 'normal', format: 'woff2' },
+      { family: 'Haffer', src: './brands/betano/assets/fonts/HafferRegular.woff2',
+        weight: '400', style: 'normal', format: 'woff2' },
+      { family: 'Haffer', src: './brands/betano/assets/fonts/HafferMedium.woff2',
+        weight: '500', style: 'normal', format: 'woff2' },
+      { family: 'Haffer', src: './brands/betano/assets/fonts/HafferSemiBold.woff2',
+        weight: '600 700', style: 'normal', format: 'woff2' }
     ]
   },
 

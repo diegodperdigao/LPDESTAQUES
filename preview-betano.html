@@ -10,12 +10,11 @@
   <link rel="icon" href="https://i.ibb.co/gbH2XF7Q/image.png" />
   <link rel="apple-touch-icon" href="https://i.ibb.co/gbH2XF7Q/image.png" />
   <link rel="preconnect" href="https://i.ibb.co" crossorigin />
-  <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link rel="preload" as="image" fetchpriority="high" href="https://i.ibb.co/qMcDxty8/image.png" />
   <link rel="preload" as="font" type="font/woff2" href="./brands/betano/assets/fonts/BetanoNichromeBold.woff2" crossorigin />
-  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" onload="this.onload=null;this.rel='stylesheet'" />
-  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" /></noscript>
+  <link rel="preload" as="font" type="font/woff2" href="./brands/betano/assets/fonts/HafferRegular.woff2" crossorigin />
+  <link rel="preload" as="font" type="font/woff2" href="./brands/betano/assets/fonts/HafferMedium.woff2" crossorigin />
+  <link rel="preload" as="font" type="font/woff2" href="./brands/betano/assets/fonts/HafferSemiBold.woff2" crossorigin />
 
   <style>
 /* ===========================================================
@@ -559,8 +558,8 @@ body {
   margin-top: 14px;
   background: var(--red);
   color: var(--white);
-  font-family: var(--font-hero);
-  font-weight: 800;
+  font-family: var(--font-cta, var(--font-hero));
+  font-weight: var(--cta-weight, 800);
   font-style: var(--hero-style);
   text-transform: uppercase;
   font-size: 14px;
@@ -1019,7 +1018,10 @@ body {
 </style>
   <style>
 @font-face{font-family:'Betano Nichrome';src:url('./brands/betano/assets/fonts/BetanoNichromeBold.woff2') format('woff2');font-weight:100 900;font-style:normal;font-display:swap;}
-:root{--red:#FF3C00;--red-deep:#e63600;--burgundy:#7a1d00;--dark-purple:#191932;--yellow:#FF3C00;--yellow-text:#ffffff;--ink:#141414;--ink-soft:#4a4a4a;--ink-faint:#8a8a8a;--bg-2:#FAF5F0;--line:rgba(0, 0, 0, 0.12);--line-strong:rgba(0, 0, 0, 0.22);--font-hero:'Betano Nichrome', system-ui, sans-serif;--font-body:'Inter', system-ui, sans-serif;--hero-style:normal;}
+@font-face{font-family:'Haffer';src:url('./brands/betano/assets/fonts/HafferRegular.woff2') format('woff2');font-weight:400;font-style:normal;font-display:swap;}
+@font-face{font-family:'Haffer';src:url('./brands/betano/assets/fonts/HafferMedium.woff2') format('woff2');font-weight:500;font-style:normal;font-display:swap;}
+@font-face{font-family:'Haffer';src:url('./brands/betano/assets/fonts/HafferSemiBold.woff2') format('woff2');font-weight:600 700;font-style:normal;font-display:swap;}
+:root{--red:#FF3C00;--red-deep:#e63600;--burgundy:#7a1d00;--dark-purple:#191932;--yellow:#FF3C00;--yellow-text:#ffffff;--ink:#141414;--ink-soft:#4a4a4a;--ink-faint:#8a8a8a;--bg-2:#FAF5F0;--line:rgba(0, 0, 0, 0.12);--line-strong:rgba(0, 0, 0, 0.22);--font-hero:'Betano Nichrome', system-ui, sans-serif;--font-body:'Haffer', system-ui, sans-serif;--font-cta:'Haffer', system-ui, sans-serif;--cta-weight:600;--hero-style:normal;}
 </style>
 </head>
 <body>
@@ -1096,16 +1098,24 @@ window.BRAND = {
     '--line': 'rgba(0, 0, 0, 0.12)',
     '--line-strong': 'rgba(0, 0, 0, 0.22)',
     '--font-hero': "'Betano Nichrome', system-ui, sans-serif",
-    '--font-body': "'Inter', system-ui, sans-serif",
+    '--font-body': "'Haffer', system-ui, sans-serif",
+    '--font-cta': "'Haffer', system-ui, sans-serif",   // CTAs em Haffer SemiBold
+    '--cta-weight': '600',
     '--hero-style': 'normal'     // Nichrome upright (sem itálico)
   },
 
-  // Tipografia própria da marca (Nichrome Bold) + Inter (corpo).
+  // Tipografia 100% da marca: Nichrome (display) + Haffer (corpo/CTA). Sem Google.
   fonts: {
-    google: 'Inter:wght@400;500;600;700',
+    google: '',
     faces: [
       { family: 'Betano Nichrome', src: './brands/betano/assets/fonts/BetanoNichromeBold.woff2',
-        weight: '100 900', style: 'normal', format: 'woff2' }
+        weight: '100 900', style: 'normal', format: 'woff2' },
+      { family: 'Haffer', src: './brands/betano/assets/fonts/HafferRegular.woff2',
+        weight: '400', style: 'normal', format: 'woff2' },
+      { family: 'Haffer', src: './brands/betano/assets/fonts/HafferMedium.woff2',
+        weight: '500', style: 'normal', format: 'woff2' },
+      { family: 'Haffer', src: './brands/betano/assets/fonts/HafferSemiBold.woff2',
+        weight: '600 700', style: 'normal', format: 'woff2' }
     ]
   },
 
