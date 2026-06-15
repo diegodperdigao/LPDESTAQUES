@@ -91,16 +91,18 @@
       else { jon.style.display = 'none'; }   // sem logo do criador -> não mostra img quebrada
     }
 
-    var photo = document.querySelector('.lp-hero__photo');
-    if (photo) {
+    // Foto do influenciador: painel hero (desktop) + banner do corpo (mobile)
+    var photos = document.querySelectorAll('.lp-hero__photo, .lp-banner__img');
+    Array.prototype.forEach.call(photos, function (img) {
       if (h.creatorPhoto) {
-        photo.src = h.creatorPhoto;
-        photo.alt = h.creatorPhotoAlt || '';
-        document.documentElement.classList.add('has-hero-photo');
+        img.src = h.creatorPhoto;
+        img.alt = h.creatorPhotoAlt || '';
       } else {
-        photo.style.display = 'none'; // sem foto -> não mostra img quebrada
+        var box = img.closest('.lp-body__banner') || img;
+        box.style.display = 'none'; // sem foto -> não mostra img quebrada
       }
-    }
+    });
+    if (h.creatorPhoto) document.documentElement.classList.add('has-hero-photo');
 
     var title = document.querySelector('.lp-hero__title');
     if (title) title.textContent = h.title || '';

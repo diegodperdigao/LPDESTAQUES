@@ -1027,8 +1027,9 @@ body {
    Betano — CSS específico da marca (carregado pelo build).
    Desktop: foto do influenciador encaixada no painel hero atual
    (canto inferior direito), layout do desktop inalterado.
-   Mobile: hero em cor sólida -> foto -> bolt divider -> conteúdo
-   (o bolt é a transição foto -> conteúdo, conforme o guia da marca).
+   Mobile: hero sólido -> bolt divider INVADINDO o header ->
+   banner menor do influenciador -> conteúdo.
+   (o bolt é a transição header -> conteúdo, conforme o guia.)
    =========================================================== */
 
 /* Hero com a textura tonal (desktop) — sem o radial da SuperJon */
@@ -1038,7 +1039,7 @@ body {
 .lp-hero::after { display: none; }
 
 /* Foto do influenciador — encaixada no canto inferior direito do
-   painel hero, atrás do conteúdo (logos/título/selo ficam na frente). */
+   painel hero (desktop), atrás do conteúdo. */
 .lp-hero__photo {
   position: absolute;
   right: 0;
@@ -1052,28 +1053,19 @@ body {
   pointer-events: none;
 }
 
+/* O banner do corpo é só mobile — escondido no desktop */
+.lp-body__banner { display: none; }
+
 @media (max-width: 879px) {
-  /* Mobile: hero em cor sólida (sem textura), foto no fim do hero */
+  /* Mobile: hero em cor sólida, sem a foto grande dentro do header */
   .lp-hero {
     background: var(--red);
-    padding-bottom: 0;
     overflow: visible;
   }
+  .lp-hero__photo { display: none; }
 
-  /* Foto em fluxo, centralizada na base do hero laranja */
-  .lp-hero__photo {
-    position: static;
-    display: block;
-    height: auto;
-    width: auto;
-    max-width: 76%;
-    max-height: 280px;
-    margin: 14px auto 0;
-    object-position: bottom center;
-  }
-
-  /* Bolt divider: faixa que transiciona da foto (laranja) p/ o conteúdo.
-     O raio laranja vaza sobre o off-white do corpo. */
+  /* Bolt divider invade o header: margem negativa puxa o raio
+     pra cima, sobrepondo a base do hero laranja. */
   .lp-body {
     position: relative;
     padding-top: 0;
@@ -1085,11 +1077,28 @@ body {
     aspect-ratio: 1440 / 465;
     background: url('./brands/betano/assets/EXPRESSIVE_BOLT_DIVIDER_HORIZONTAL_ORANGE.svg')
       top center / 100% auto no-repeat;
-    margin: 0 0 6px;
+    margin-top: -9%;        /* invade o header */
+    position: relative;
+    z-index: 1;
   }
-  .lp-body__inner {
-    padding-top: 4px;
+
+  /* Banner menor do influenciador: depois do divider, antes do conteúdo */
+  .lp-body__banner {
+    display: block;
+    text-align: center;
+    margin: 2px auto 10px;
   }
+  .lp-banner__img {
+    display: block;
+    margin: 0 auto;
+    width: auto;
+    height: auto;
+    max-width: 52%;
+    max-height: 110px;
+    object-fit: contain;
+  }
+
+  .lp-body__inner { padding-top: 2px; }
 }
 
 </style>
@@ -1122,6 +1131,8 @@ body {
 
     <!-- Corpo: telas renderizadas pelo engine + rodapé persistente -->
     <section class="lp-body">
+      <!-- Banner do influenciador (mobile): entra depois do divider, antes do conteúdo -->
+      <div class="lp-body__banner"><img class="lp-banner__img" alt="" decoding="async" /></div>
       <div class="lp-body__inner" id="screen"></div>
       <footer class="lp-foot" id="lpFoot"></footer>
     </section>
@@ -1383,16 +1394,18 @@ window.BRAND = {
       else { jon.style.display = 'none'; }   // sem logo do criador -> não mostra img quebrada
     }
 
-    var photo = document.querySelector('.lp-hero__photo');
-    if (photo) {
+    // Foto do influenciador: painel hero (desktop) + banner do corpo (mobile)
+    var photos = document.querySelectorAll('.lp-hero__photo, .lp-banner__img');
+    Array.prototype.forEach.call(photos, function (img) {
       if (h.creatorPhoto) {
-        photo.src = h.creatorPhoto;
-        photo.alt = h.creatorPhotoAlt || '';
-        document.documentElement.classList.add('has-hero-photo');
+        img.src = h.creatorPhoto;
+        img.alt = h.creatorPhotoAlt || '';
       } else {
-        photo.style.display = 'none'; // sem foto -> não mostra img quebrada
+        var box = img.closest('.lp-body__banner') || img;
+        box.style.display = 'none'; // sem foto -> não mostra img quebrada
       }
-    }
+    });
+    if (h.creatorPhoto) document.documentElement.classList.add('has-hero-photo');
 
     var title = document.querySelector('.lp-hero__title');
     if (title) title.textContent = h.title || '';
