@@ -1065,26 +1065,28 @@ body {
   .lp { background: var(--white); }
 
   .lp-hero {
-    flex: 0 0 52%;
-    max-width: 760px;
-    margin-right: -8%;            /* hero avança sobre o corpo */
+    flex: 0 0 46%;
+    max-width: 740px;
+    background: var(--red);      /* laranja SÓLIDO quando o bolt entra (sem tonal) */
+    /* proporção preservada (auto 100%) p/ a forma do raio ficar idêntica ao SVG */
     -webkit-mask: url('./brands/betano/assets/CORE_BOLT_DIVIDER_VERTICAL_ORANGE_1.svg')
-      left center / 100% 100% no-repeat;
+      left top / auto 100% no-repeat;
     mask: url('./brands/betano/assets/CORE_BOLT_DIVIDER_VERTICAL_ORANGE_1.svg')
-      left center / 100% 100% no-repeat;
+      left top / auto 100% no-repeat;
   }
+  .lp-hero::after { display: none; }
 
   /* título encosta no topo (logo abaixo da logo) */
   .lp-hero__headline { margin: 22px 0 0; }
 
-  /* foto do streamer centralizada no painel esquerdo */
+  /* foto do streamer centralizada na faixa laranja do raio */
   .lp-hero__photo {
     position: absolute;
-    left: 42%;
+    left: 40%;
     transform: translateX(-50%);
     bottom: 0;
-    height: 60%;
-    max-width: 72%;
+    height: 58%;
+    max-width: 64%;
     width: auto;
     object-fit: contain;
     object-position: bottom center;
@@ -1094,8 +1096,8 @@ body {
   /* selo fica na base, acima da foto */
   .lp-hero__foot { margin-top: auto; position: relative; z-index: 1; }
 
-  /* corpo: form afastado do gume do raio */
-  .lp-body { padding-left: 11%; }
+  /* corpo: pequeno respiro do gume do raio */
+  .lp-body { padding-left: 4%; }
 }
 
 @media (max-width: 879px) {
