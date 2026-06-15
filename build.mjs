@@ -7,15 +7,14 @@
  *   dist/<marca>/                 -> deploy (index.html + engine/ + brands/<marca>/)
  *   preview[-<marca>].html        -> arquivo único (CSS+JS+config inline) p/ preview
  *
- * Cloudflare Pages: build command "node build.mjs <marca>", output "dist/<marca>".
- * Multi-marca: tudo específico fica em brands/<marca>/; o engine é compartilhado.
+ * Tudo específico da marca (cores, fontes, textos, assets) vem de
+ * brands/<marca>/config.js. O engine é compartilhado.
  */
 import { readFileSync, writeFileSync, mkdirSync, cpSync, rmSync } from 'fs';
 
 const brand = process.argv[2] || process.env.BRAND || 'superjon';
 const cfgCode = readFileSync(`brands/${brand}/config.js`, 'utf8');
 
-// Lê a config (window.BRAND) num sandbox p/ montar o <head> da marca.
 const win = {};
 new Function('window', cfgCode)(win);
 const B = win.BRAND;
@@ -24,9 +23,19 @@ if (!B) throw new Error(`brands/${brand}/config.js não define window.BRAND`);
 const esc = (s) => String(s || '').replace(/[&<>"]/g, (c) =>
   ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 
+const fonts = B.fonts || {};
+const faces = fonts.faces || [];
 const logos = [B.hero?.brandLogo, B.hero?.creatorLogo].filter(Boolean);
-const origins = [...new Set(logos.filter((u) => /^https?:/.test(u)).map((u) => new URL(u).origin))];
 const fav = B.meta?.favicon || '';
+
+// origens p/ preconnect (logos externas + google fonts)
+const origins = new Set(logos.filter((u) => /^https?:/.test(u)).map((u) => new URL(u).origin));
+if (fonts.google) { origins.add('https://fonts.googleapis.com'); origins.add('https://fonts.gstatic.com'); }
+
+// ---- <head> da marca ----
+const googleUrl = fonts.google
+  ? `https://fonts.googleapis.com/css2?family=${fonts.google}&display=swap`
+  : null;
 
 const head = [
   `<title>${esc(B.meta?.title)}</title>`,
@@ -34,13 +43,22 @@ const head = [
   `<meta name="theme-color" content="${B.meta?.themeColor || '#000000'}" />`,
   fav && `<link rel="icon" href="${fav}" />`,
   fav && `<link rel="apple-touch-icon" href="${fav}" />`,
-  ...origins.map((o) => `<link rel="preconnect" href="${o}" crossorigin />`),
-  ...logos.map((u) => `<link rel="preload" as="image" fetchpriority="high" href="${u}" />`)
+  ...[...origins].map((o) => `<link rel="preconnect" href="${o}" crossorigin />`),
+  ...logos.map((u) => `<link rel="preload" as="image" fetchpriority="high" href="${u}" />`),
+  ...faces.map((f) => `<link rel="preload" as="font" type="font/woff2" href="${f.src}" crossorigin />`),
+  googleUrl && `<link rel="preload" as="style" href="${googleUrl}" onload="this.onload=null;this.rel='stylesheet'" />`,
+  googleUrl && `<noscript><link rel="stylesheet" href="${googleUrl}" /></noscript>`
 ].filter(Boolean).join('\n  ');
+
+// ---- <style> da marca (@font-face + tokens) ----
+const faceCss = faces.map((f) => `@font-face{font-family:'${f.family}';src:url('${f.src}') format('${f.format || 'woff2'}');font-weight:${f.weight || '400 900'};font-style:${f.style || 'normal'};font-display:swap;}`).join('\n');
+const tokenCss = B.tokens ? ':root{' + Object.entries(B.tokens).map(([k, v]) => `${k}:${v};`).join('') + '}' : '';
+const brandStyle = (faceCss || tokenCss) ? `<style>\n${faceCss}\n${tokenCss}\n</style>` : '';
 
 const template = readFileSync('index.template.html', 'utf8');
 const html = template
   .replace('<!--BRAND_HEAD-->', head)
+  .replace('<!--BRAND_STYLE-->', brandStyle)
   .replace('<!--BRAND_CONFIG-->', `<script src="./brands/${brand}/config.js"></script>`);
 
 // 1) dist/<marca> — deploy (arquivos linkados)
@@ -51,7 +69,7 @@ writeFileSync(`${dist}/index.html`, html);
 cpSync('engine', `${dist}/engine`, { recursive: true });
 cpSync(`brands/${brand}`, `${dist}/brands/${brand}`, { recursive: true });
 
-// 2) preview self-contained (tudo inline) p/ abrir direto / githack
+// 2) preview self-contained (CSS+JS+config inline) p/ abrir direto / githack
 const preview = html
   .replace('<link rel="stylesheet" href="./engine/engine.css" />',
     `<style>\n${readFileSync('engine/engine.css', 'utf8')}\n</style>`)

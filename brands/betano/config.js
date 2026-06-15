@@ -11,18 +11,36 @@ window.BRAND = {
   meta: {
     title: 'Betano — Entre no grupo',
     description: 'Responda as perguntas rápidas e a equipe te direciona pro grupo. Conteúdo para maiores de 18 anos.',
-    themeColor: '#FF6900',
+    themeColor: '#FF3C00',
     favicon: ''             // TODO: favicon da Betano
   },
 
-  // Cores da Betano (laranja). Sobrescrevem os tokens do engine.
+  // Cores da Betano: branco + laranja, texto preto. (sobrescrevem o engine)
   tokens: {
-    '--red': '#FF6900',
-    '--red-deep': '#d35400',
-    '--burgundy': '#3a2400',
-    '--dark-purple': '#14110d',
-    '--yellow': '#FFD400',
-    '--yellow-text': '#6b5600'
+    '--red': '#FF3C00',          // laranja — primária/CTA/hero/acentos
+    '--red-deep': '#e63600',     // fim do gradiente da hero
+    '--burgundy': '#7a1d00',
+    '--dark-purple': '#191932',  // azul tonal da marca (fundos escuros pontuais)
+    '--yellow': '#FF3C00',       // sem chip amarelo na Betano: alias do laranja
+    '--yellow-text': '#ffffff',
+    '--ink': '#141414',          // texto preto
+    '--ink-soft': '#4a4a4a',
+    '--ink-faint': '#8a8a8a',
+    '--bg-2': '#FAF5F0',         // off-white (fundo dos cards)
+    '--line': 'rgba(0, 0, 0, 0.12)',
+    '--line-strong': 'rgba(0, 0, 0, 0.22)',
+    '--font-hero': "'Betano Nichrome', system-ui, sans-serif",
+    '--font-body': "'Inter', system-ui, sans-serif",
+    '--hero-style': 'normal'     // Nichrome upright (sem itálico)
+  },
+
+  // Tipografia própria da marca (Nichrome Bold) + Inter (corpo).
+  fonts: {
+    google: 'Inter:wght@400;500;600;700',
+    faces: [
+      { family: 'Betano Nichrome', src: './brands/betano/assets/fonts/BetanoNichromeBold.woff2',
+        weight: '100 900', style: 'normal', format: 'woff2' }
+    ]
   },
 
   hero: {

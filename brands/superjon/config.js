@@ -26,6 +26,12 @@ window.BRAND = {
     '--yellow-text': '#7a5c00'
   },
 
+  // Tipografia (Google Fonts). hero = Roboto Flex (bold itálico), corpo = Inter.
+  fonts: {
+    google: 'Inter:wght@400;500;600;700&family=Roboto+Flex:ital,opsz,wght@0,8..144,400..900;1,8..144,600..900',
+    faces: []
+  },
+
   hero: {
     brandLogo: 'https://i.ibb.co/YBhrn1zz/Superbet-Logo-svg.png',
     brandLogoWhite: true,        // aplica filtro p/ deixar a logo branca

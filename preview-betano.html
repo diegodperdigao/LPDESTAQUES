@@ -6,19 +6,12 @@
 
   <title>Betano — Entre no grupo</title>
   <meta name="description" content="Responda as perguntas rápidas e a equipe te direciona pro grupo. Conteúdo para maiores de 18 anos." />
-  <meta name="theme-color" content="#FF6900" />
-
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <meta name="theme-color" content="#FF3C00" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link
-    rel="preload" as="style"
-    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Roboto+Flex:ital,opsz,wght@0,8..144,400..900;1,8..144,600..900&display=swap"
-    onload="this.onload=null;this.rel='stylesheet'"
-  />
-  <noscript>
-    <link rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Roboto+Flex:ital,opsz,wght@0,8..144,400..900;1,8..144,600..900&display=swap" />
-  </noscript>
+  <link rel="preload" as="font" type="font/woff2" href="./brands/betano/assets/fonts/BetanoNichromeBold.woff2" crossorigin />
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" onload="this.onload=null;this.rel='stylesheet'" />
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" /></noscript>
 
   <style>
 /* ===========================================================
@@ -46,6 +39,7 @@
 
   --font-hero: 'Roboto Flex', system-ui, sans-serif;
   --font-body: 'Inter', system-ui, -apple-system, sans-serif;
+  --hero-style: italic; /* normal em marcas sem itálico (ex.: Betano) */
 }
 
 * {
@@ -132,7 +126,7 @@ body {
   display: inline-block;
   font-family: var(--font-hero);
   font-weight: 800;
-  font-style: italic;
+  font-style: var(--hero-style);
   font-size: 18px;
   letter-spacing: -0.5px;
   color: var(--white);
@@ -184,7 +178,7 @@ body {
 .lp-hero__title {
   font-family: var(--font-hero);
   font-weight: 800;
-  font-style: italic;
+  font-style: var(--hero-style);
   text-transform: uppercase;
   font-size: 26px;
   line-height: 1;
@@ -265,7 +259,7 @@ body {
 .lp-gate__title {
   font-family: var(--font-hero);
   font-weight: 800;
-  font-style: italic;
+  font-style: var(--hero-style);
   text-transform: uppercase;
   font-size: clamp(24px, 7vw, 34px);
   line-height: 1.02;
@@ -305,7 +299,7 @@ body {
 }
 .lp-gate__opt-arrow {
   font-family: var(--font-hero);
-  font-style: italic;
+  font-style: var(--hero-style);
   font-weight: 800;
   color: var(--ink-faint);
   transition: transform 0.16s ease, color 0.16s ease;
@@ -363,7 +357,7 @@ body {
   justify-content: center;
   font-family: var(--font-hero);
   font-weight: 800;
-  font-style: italic;
+  font-style: var(--hero-style);
   font-size: 12px;
 }
 
@@ -494,7 +488,7 @@ body {
   justify-content: center;
   font-family: var(--font-hero);
   font-weight: 800;
-  font-style: italic;
+  font-style: var(--hero-style);
   font-size: 12px;
 }
 
@@ -563,7 +557,7 @@ body {
   color: var(--white);
   font-family: var(--font-hero);
   font-weight: 800;
-  font-style: italic;
+  font-style: var(--hero-style);
   text-transform: uppercase;
   font-size: 14px;
   letter-spacing: 0.3px;
@@ -750,7 +744,7 @@ body {
 .lp-done__title {
   font-family: var(--font-hero);
   font-weight: 800;
-  font-style: italic;
+  font-style: var(--hero-style);
   text-transform: uppercase;
   font-size: 22px;
   letter-spacing: -0.5px;
@@ -830,7 +824,7 @@ body {
 .lp-modal__title {
   font-family: var(--font-hero);
   font-weight: 800;
-  font-style: italic;
+  font-style: var(--hero-style);
   text-transform: uppercase;
   font-size: 18px;
   letter-spacing: -0.5px;
@@ -1019,6 +1013,10 @@ body {
 }
 
 </style>
+  <style>
+@font-face{font-family:'Betano Nichrome';src:url('./brands/betano/assets/fonts/BetanoNichromeBold.woff2') format('woff2');font-weight:100 900;font-style:normal;font-display:swap;}
+:root{--red:#FF3C00;--red-deep:#e63600;--burgundy:#7a1d00;--dark-purple:#191932;--yellow:#FF3C00;--yellow-text:#ffffff;--ink:#141414;--ink-soft:#4a4a4a;--ink-faint:#8a8a8a;--bg-2:#FAF5F0;--line:rgba(0, 0, 0, 0.12);--line-strong:rgba(0, 0, 0, 0.22);--font-hero:'Betano Nichrome', system-ui, sans-serif;--font-body:'Inter', system-ui, sans-serif;--hero-style:normal;}
+</style>
 </head>
 <body>
   <main class="lp" id="lp">
@@ -1075,18 +1073,36 @@ window.BRAND = {
   meta: {
     title: 'Betano — Entre no grupo',
     description: 'Responda as perguntas rápidas e a equipe te direciona pro grupo. Conteúdo para maiores de 18 anos.',
-    themeColor: '#FF6900',
+    themeColor: '#FF3C00',
     favicon: ''             // TODO: favicon da Betano
   },
 
-  // Cores da Betano (laranja). Sobrescrevem os tokens do engine.
+  // Cores da Betano: branco + laranja, texto preto. (sobrescrevem o engine)
   tokens: {
-    '--red': '#FF6900',
-    '--red-deep': '#d35400',
-    '--burgundy': '#3a2400',
-    '--dark-purple': '#14110d',
-    '--yellow': '#FFD400',
-    '--yellow-text': '#6b5600'
+    '--red': '#FF3C00',          // laranja — primária/CTA/hero/acentos
+    '--red-deep': '#e63600',     // fim do gradiente da hero
+    '--burgundy': '#7a1d00',
+    '--dark-purple': '#191932',  // azul tonal da marca (fundos escuros pontuais)
+    '--yellow': '#FF3C00',       // sem chip amarelo na Betano: alias do laranja
+    '--yellow-text': '#ffffff',
+    '--ink': '#141414',          // texto preto
+    '--ink-soft': '#4a4a4a',
+    '--ink-faint': '#8a8a8a',
+    '--bg-2': '#FAF5F0',         // off-white (fundo dos cards)
+    '--line': 'rgba(0, 0, 0, 0.12)',
+    '--line-strong': 'rgba(0, 0, 0, 0.22)',
+    '--font-hero': "'Betano Nichrome', system-ui, sans-serif",
+    '--font-body': "'Inter', system-ui, sans-serif",
+    '--hero-style': 'normal'     // Nichrome upright (sem itálico)
+  },
+
+  // Tipografia própria da marca (Nichrome Bold) + Inter (corpo).
+  fonts: {
+    google: 'Inter:wght@400;500;600;700',
+    faces: [
+      { family: 'Betano Nichrome', src: './brands/betano/assets/fonts/BetanoNichromeBold.woff2',
+        weight: '100 900', style: 'normal', format: 'woff2' }
+    ]
   },
 
   hero: {
