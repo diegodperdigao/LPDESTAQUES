@@ -68,17 +68,22 @@
     var h = B.hero || {};
     var logo = document.querySelector('.lp-logo-img');
     var word = document.querySelector('.lp-logo');
+    var showWordmark = function () {
+      if (logo) logo.style.display = 'none';
+      if (word) {
+        word.innerHTML = (h.brandWordmark || '') + '<span class="lp-logo__dot">.</span>';
+        word.style.display = 'inline-block';
+      }
+    };
     if (logo) {
-      logo.src = h.brandLogo || '';
-      logo.alt = h.brandWordmark || '';
-      if (h.brandLogoWhite === false) logo.style.filter = 'none';
-      logo.onerror = function () {
-        logo.style.display = 'none';
-        if (word) {
-          word.innerHTML = (h.brandWordmark || '') + '<span class="lp-logo__dot">.</span>';
-          word.style.display = 'inline-block';
-        }
-      };
+      if (!h.brandLogo) {
+        showWordmark();              // marca sem imagem de logo -> wordmark
+      } else {
+        logo.src = h.brandLogo;
+        logo.alt = h.brandWordmark || '';
+        if (h.brandLogoWhite === false) logo.style.filter = 'none';
+        logo.onerror = showWordmark; // se a imagem falhar -> wordmark
+      }
     }
     var jon = document.querySelector('.lp-jon-motion');
     if (jon) { jon.src = h.creatorLogo || ''; jon.alt = h.creatorAlt || ''; }

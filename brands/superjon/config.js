@@ -12,7 +12,8 @@ window.BRAND = {
   meta: {
     title: 'SuperJon — Entre no grupo',
     description: 'Responda as perguntas rápidas e a equipe te direciona pro grupo. Conteúdo para maiores de 18 anos.',
-    themeColor: '#FD0104'
+    themeColor: '#FD0104',
+    favicon: 'https://play-lh.googleusercontent.com/Q6uqNf1b4k7h4peN2r7jX1ok-Ur5l28cjm9qUb02Te2fyvo7iQRI09ReCZOQM26FSw=s256-c'
   },
 
   // Tokens de cor (sobrescrevem os defaults do engine.css em :root)

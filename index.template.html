@@ -3,27 +3,11 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <meta name="theme-color" content="#FD0104" />
-  <title>LP</title>
-  <meta name="description" content="" />
 
-  <!-- Favicon (brand-specific). =s256-c entrega ícone quadrado recortado. -->
-  <link rel="icon" type="image/png"
-        href="https://play-lh.googleusercontent.com/Q6uqNf1b4k7h4peN2r7jX1ok-Ur5l28cjm9qUb02Te2fyvo7iQRI09ReCZOQM26FSw=s256-c" />
-  <link rel="apple-touch-icon"
-        href="https://play-lh.googleusercontent.com/Q6uqNf1b4k7h4peN2r7jX1ok-Ur5l28cjm9qUb02Te2fyvo7iQRI09ReCZOQM26FSw=s180-c" />
+  <!--BRAND_HEAD-->
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-
-  <!-- Logos críticas: preconnect + preload p/ baixarem já no parse (antes do JS).
-       Brand-specific: ao replicar, troque pelas URLs/assets da nova marca. -->
-  <link rel="preconnect" href="https://i.ibb.co" crossorigin />
-  <link rel="preload" as="image" fetchpriority="high"
-        href="https://i.ibb.co/YBhrn1zz/Superbet-Logo-svg.png" />
-  <link rel="preload" as="image" fetchpriority="high"
-        href="./brands/superjon/assets/jonvlogs.png" />
-  <!-- Fontes carregadas de forma NÃO-bloqueante (não trava render nem scripts) -->
   <link
     rel="preload" as="style"
     href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Roboto+Flex:ital,opsz,wght@0,8..144,400..900;1,8..144,600..900&display=swap"
@@ -52,7 +36,6 @@
           <h1 class="lp-hero__title"></h1>
           <p class="lp-hero__subtitle"></p>
         </div>
-
         <!-- Selo +18 no rodapé do hero (visível no desktop) -->
         <div class="lp-hero__foot">
           <span data-seal></span>
@@ -78,8 +61,7 @@
     </div>
   </div>
 
-  <!-- Config da marca primeiro, depois o engine -->
-  <script src="./brands/superjon/config.js"></script>
+  <!--BRAND_CONFIG-->
   <script src="./engine/engine.js" defer></script>
 </body>
 </html>
