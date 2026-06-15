@@ -1088,11 +1088,13 @@ body {
    O selo +18 pode ficar abaixo da dobra (ok scrollar só p/ ele).
    =========================================================== */
 @media (max-width: 879px) {
+  /* "Seus dados" some no mobile (otimiza espaço, ajuda a caber numa tela) */
+  .lp-section-label { display: none; }
+
   [data-flow="direct"] .lp-hero { padding-bottom: 8px; }
   /* form encosta no header (não centraliza), empurrando o +18 p/ baixo da dobra */
   [data-flow="direct"] .lp-body { padding-top: 10px; }
   [data-flow="direct"] .lp-body__inner { justify-content: flex-start; padding: 6px 0 14px; }
-  [data-flow="direct"] .lp-section-label { display: none; }   /* economiza linha */
   [data-flow="direct"] .lp-q { padding: 8px 11px; margin-bottom: 7px; }
   [data-flow="direct"] .lp-q__head { margin-bottom: 7px; }
   [data-flow="direct"] .lp-q__num { width: 21px; height: 21px; font-size: 11px; }
