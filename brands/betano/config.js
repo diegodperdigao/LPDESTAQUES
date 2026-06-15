@@ -18,6 +18,7 @@ window.BRAND = {
   // Cores da Betano: branco + laranja, texto preto. (sobrescrevem o engine)
   tokens: {
     '--red': '#FF3C00',          // laranja — primária/CTA/hero/acentos
+    '--red-rgb': '255, 60, 0',   // mesmo laranja em rgb (glows com alpha)
     '--red-deep': '#e63600',     // fim do gradiente da hero
     '--burgundy': '#7a1d00',
     '--dark-purple': '#191932',  // azul tonal da marca (fundos escuros pontuais)

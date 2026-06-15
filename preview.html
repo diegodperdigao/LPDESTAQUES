@@ -27,6 +27,7 @@
 :root {
   /* Cores */
   --red: #FD0104;          /* Super Red — principal */
+  --red-rgb: 253, 1, 4;    /* mesmo vermelho em rgb p/ glows com alpha */
   --red-deep: #d10003;     /* gradiente do hero */
   --burgundy: #540031;     /* acento secundário */
   --dark-purple: #181020;  /* fundos escuros pontuais */
@@ -419,7 +420,7 @@ body {
 .lp-input:focus {
   outline: none;
   border-color: var(--red);
-  box-shadow: 0 0 0 3px rgba(253, 1, 4, 0.10);
+  box-shadow: 0 0 0 3px rgba(var(--red-rgb), 0.10);
 }
 
 /* Linha de consentimento + link dos termos */
@@ -470,7 +471,7 @@ body {
 /* Destaque de pendência ao tentar enviar incompleto */
 .lp-q.is-pending {
   border-color: var(--red);
-  box-shadow: 0 0 0 3px rgba(253, 1, 4, 0.10);
+  box-shadow: 0 0 0 3px rgba(var(--red-rgb), 0.10);
 }
 
 .lp-q__head {
@@ -624,7 +625,7 @@ body {
     transform: translateY(0) scale(1);
   }
   50% {
-    box-shadow: 0 18px 36px -10px var(--red), 0 0 0 5px rgba(253, 1, 4, 0.16);
+    box-shadow: 0 18px 36px -10px var(--red), 0 0 0 5px rgba(var(--red-rgb), 0.16);
     transform: translateY(-2px) scale(1.015);
   }
 }
