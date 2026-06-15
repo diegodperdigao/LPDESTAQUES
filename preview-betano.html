@@ -1016,6 +1016,43 @@ body {
   }
 }
 
+/* ===========================================================
+   Influenciador no hero (compartilhado por todas as marcas).
+   Foto VERTICAL no desktop (entre o título e o selo) + BANNER
+   HORIZONTAL no mobile (logo abaixo do título). As imagens vêm da
+   config (hero.creatorPhoto / hero.creatorBanner); se uma marca não
+   tiver a imagem, o engine oculta o <img> via inline style.
+   =========================================================== */
+.lp-hero__photo { display: none; }              /* só desktop */
+.lp-hero__banner { display: none; }             /* base oculto */
+
+/* Mobile: banner horizontal SÓ na primeira tela (gate). Ao avançar pras
+   perguntas ele some, pra não empurrar o conteúdo. */
+[data-screen="gate"] .lp-hero__banner {
+  display: block;
+  width: 100%;
+  max-height: 132px;
+  margin: 14px 0 2px;
+  object-fit: contain;
+  object-position: center;
+}
+
+@media (min-width: 880px) {
+  /* desktop nunca usa o banner (usa a foto vertical, sempre visível) */
+  [data-screen="gate"] .lp-hero__banner { display: none; }
+  .lp-hero__photo {                             /* desktop: foto vertical */
+    display: block;
+    flex: 1 1 auto;
+    min-height: 0;
+    width: 100%;
+    margin: 10px 0;
+    object-fit: contain;
+    object-position: center bottom;
+  }
+  .lp-hero__headline { margin: 26px 0 0; }       /* título sobe p/ caber a foto */
+  .lp-hero__foot { margin-top: 0; }
+}
+
 </style>
   <style>
 @font-face{font-family:'Betano Nichrome';src:url('./brands/betano/assets/fonts/BetanoNichromeBold.woff2') format('woff2');font-weight:100 900;font-style:normal;font-display:swap;}
@@ -1025,59 +1062,16 @@ body {
 :root{--red:#FF3C00;--red-rgb:255, 60, 0;--red-deep:#e63600;--burgundy:#7a1d00;--dark-purple:#191932;--yellow:#FF3C00;--yellow-text:#ffffff;--white:#FAF5F0;--ink:#141414;--ink-soft:#4a4a4a;--ink-faint:#8a8a8a;--bg-2:#FFFFFF;--line:rgba(0, 0, 0, 0.12);--line-strong:rgba(0, 0, 0, 0.22);--font-hero:'Betano Nichrome', system-ui, sans-serif;--font-body:'Haffer', system-ui, sans-serif;--font-cta:'Haffer', system-ui, sans-serif;--cta-weight:600;--hero-style:normal;}
 /* ===========================================================
    Betano — CSS específico da marca (carregado pelo build).
-   Desktop: hero com o padrão tonal laranja + divisor reto (2 painéis).
-            Foto do influenciador na coluna esquerda, ENTRE o título
-            e o selo +18.
-   Mobile:  hero sólido (sem bolt) -> conteúdo -> foto -> +18.
+   Só o que é exclusivo da Betano: a textura tonal laranja no hero.
+   O layout das imagens do influenciador (foto vertical no desktop +
+   banner horizontal no mobile) vive no engine compartilhado.
    =========================================================== */
 
-/* Hero com a textura tonal (desktop) — sem o radial da SuperJon */
+/* Hero com a textura tonal — sem o radial decorativo da SuperJon */
 .lp-hero {
   background: var(--red) url('./brands/betano/assets/hero-tonal-orange.png') center / cover no-repeat;
 }
 .lp-hero::after { display: none; }
-
-/* A foto do corpo (banner) é só mobile — escondida no desktop */
-.lp-body__banner { display: none; }
-
-/* ---------------- Desktop ---------------- */
-@media (min-width: 880px) {
-  /* título encosta mais no topo (logo abaixo da linha das logos) */
-  .lp-hero__headline { margin: 26px 0 0; }
-
-  /* foto do influenciador ocupa o espaço entre o título e o selo */
-  .lp-hero__photo {
-    flex: 1 1 auto;
-    min-height: 0;
-    width: 100%;
-    margin: 10px 0;
-    object-fit: contain;
-    object-position: center bottom;
-    z-index: 0;
-  }
-
-  /* selo fixado na base do painel */
-  .lp-hero__foot { margin-top: 0; }
-}
-
-/* ---------------- Mobile ---------------- */
-@media (max-width: 879px) {
-  /* hero mantém o padrão tonal laranja da Betano (igual ao desktop) —
-     herda do .lp-hero base; sem override sólido aqui. */
-
-  /* UMA imagem só no mobile: a do header (a "de cima"), como banner
-     menor e horizontal, logo abaixo do título, dentro do laranja. */
-  .lp-hero__photo {
-    display: block;
-    width: 100%;
-    max-height: 128px;
-    margin: 14px 0 2px;
-    object-fit: contain;
-    object-position: center;
-  }
-  /* sem a segunda imagem (banner do corpo) no mobile */
-  .lp-body__banner { display: none; }
-}
 
 </style>
 </head>
@@ -1097,8 +1091,9 @@ body {
           <h1 class="lp-hero__title"></h1>
           <p class="lp-hero__subtitle"></p>
         </div>
-        <!-- Foto do influenciador (desktop): entre o título e o selo +18 -->
+        <!-- Influenciador no hero: foto vertical (desktop) + banner horizontal (mobile) -->
         <img class="lp-hero__photo" alt="" fetchpriority="high" decoding="async" />
+        <img class="lp-hero__banner" alt="" fetchpriority="high" decoding="async" />
         <!-- Selo +18 no rodapé do hero (visível no desktop) -->
         <div class="lp-hero__foot">
           <span data-seal></span>
@@ -1109,8 +1104,6 @@ body {
 
     <!-- Corpo: telas renderizadas pelo engine + rodapé persistente -->
     <section class="lp-body">
-      <!-- Foto do influenciador (mobile): banner pequeno entre o header e o conteúdo -->
-      <div class="lp-body__banner"><img class="lp-banner__img" alt="" decoding="async" /></div>
       <div class="lp-body__inner" id="screen"></div>
       <footer class="lp-foot" id="lpFoot"></footer>
     </section>
@@ -1188,8 +1181,9 @@ window.BRAND = {
     brandWordmark: 'betano',
     creatorLogo: '',          // TODO: logo do criador/influencer da Betano
     creatorAlt: 'Criador',
-    // Foto do influenciador (PLACEHOLDER p/ planejar posição — trocar pela final)
-    creatorPhoto: './brands/betano/assets/_placeholder-influencer.png',
+    // Influenciador (PLACEHOLDERS p/ planejar — trocar pelos finais):
+    creatorPhoto: './brands/betano/assets/_placeholder-influencer.png', // desktop: vertical
+    creatorBanner: './brands/betano/assets/_placeholder-banner.png',    // mobile: horizontal
     creatorPhotoAlt: 'Influenciador Betano',
     title: 'Betano',          // TODO: nome da campanha/LP
     subtitleMobile: 'Responda abaixo e garanta sua vaga no grupo.',
@@ -1372,18 +1366,10 @@ window.BRAND = {
       else { jon.style.display = 'none'; }   // sem logo do criador -> não mostra img quebrada
     }
 
-    // Foto do influenciador: painel hero (desktop) + banner do corpo (mobile)
-    var photos = document.querySelectorAll('.lp-hero__photo, .lp-banner__img');
-    Array.prototype.forEach.call(photos, function (img) {
-      if (h.creatorPhoto) {
-        img.src = h.creatorPhoto;
-        img.alt = h.creatorPhotoAlt || '';
-      } else {
-        var box = img.closest('.lp-body__banner') || img;
-        box.style.display = 'none'; // sem foto -> não mostra img quebrada
-      }
-    });
-    if (h.creatorPhoto) document.documentElement.classList.add('has-hero-photo');
+    // Influenciador: foto vertical (desktop) e banner horizontal (mobile).
+    // Cada um é exibido/ocultado por breakpoint no CSS da marca.
+    setHeroImg('.lp-hero__photo', h.creatorPhoto, h.creatorPhotoAlt);
+    setHeroImg('.lp-hero__banner', h.creatorBanner, h.creatorPhotoAlt);
 
     var title = document.querySelector('.lp-hero__title');
     if (title) title.textContent = h.title || '';
@@ -1399,6 +1385,14 @@ window.BRAND = {
     if (hfText && B.seal) hfText.textContent = B.seal.text;
   }
 
+  // define src/alt de uma imagem do influenciador; oculta se não houver src
+  function setHeroImg(sel, src, alt) {
+    var img = document.querySelector(sel);
+    if (!img) return;
+    if (src) { img.src = src; img.alt = alt || ''; }
+    else { img.style.display = 'none'; }
+  }
+
   function escapeHtml(s) {
     return String(s).replace(/[&<>"]/g, function (c) {
       return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c];
@@ -1408,7 +1402,14 @@ window.BRAND = {
   /* ===========================================================
      TELA: gate
      =========================================================== */
+  // marca a tela atual no <html> (data-screen) p/ o CSS reagir (ex.: banner
+  // do influenciador só na tela do gate no mobile)
+  function setScreen(name) {
+    document.documentElement.setAttribute('data-screen', name);
+  }
+
   function renderGate() {
+    setScreen('gate');
     screenEl.innerHTML = '';
     state.hasAccount = null;
     var g = B.gate;
@@ -1440,6 +1441,7 @@ window.BRAND = {
      TELA: create
      =========================================================== */
   function renderCreate() {
+    setScreen('create');
     screenEl.innerHTML = '';
     var c = B.create;
 
@@ -1486,6 +1488,7 @@ window.BRAND = {
      TELA: form
      =========================================================== */
   function renderForm(fromCreate) {
+    setScreen('form');
     screenEl.innerHTML = '';
     var F = B.form;
 
@@ -1664,6 +1667,7 @@ window.BRAND = {
 
   /* ----------------------- TELA: done ----------------------- */
   function renderDone(row) {
+    setScreen('done');
     screenEl.innerHTML = '';
     var d = B.done;
     var box = el('div', 'lp-done');

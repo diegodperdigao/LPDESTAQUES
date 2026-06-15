@@ -25,8 +25,9 @@
           <h1 class="lp-hero__title"></h1>
           <p class="lp-hero__subtitle"></p>
         </div>
-        <!-- Foto do influenciador (desktop): entre o título e o selo +18 -->
+        <!-- Influenciador no hero: foto vertical (desktop) + banner horizontal (mobile) -->
         <img class="lp-hero__photo" alt="" fetchpriority="high" decoding="async" />
+        <img class="lp-hero__banner" alt="" fetchpriority="high" decoding="async" />
         <!-- Selo +18 no rodapé do hero (visível no desktop) -->
         <div class="lp-hero__foot">
           <span data-seal></span>
@@ -37,8 +38,6 @@
 
     <!-- Corpo: telas renderizadas pelo engine + rodapé persistente -->
     <section class="lp-body">
-      <!-- Foto do influenciador (mobile): banner pequeno entre o header e o conteúdo -->
-      <div class="lp-body__banner"><img class="lp-banner__img" alt="" decoding="async" /></div>
       <div class="lp-body__inner" id="screen"></div>
       <footer class="lp-foot" id="lpFoot"></footer>
     </section>

@@ -1,55 +1,12 @@
 /* ===========================================================
    Betano — CSS específico da marca (carregado pelo build).
-   Desktop: hero com o padrão tonal laranja + divisor reto (2 painéis).
-            Foto do influenciador na coluna esquerda, ENTRE o título
-            e o selo +18.
-   Mobile:  hero sólido (sem bolt) -> conteúdo -> foto -> +18.
+   Só o que é exclusivo da Betano: a textura tonal laranja no hero.
+   O layout das imagens do influenciador (foto vertical no desktop +
+   banner horizontal no mobile) vive no engine compartilhado.
    =========================================================== */
 
-/* Hero com a textura tonal (desktop) — sem o radial da SuperJon */
+/* Hero com a textura tonal — sem o radial decorativo da SuperJon */
 .lp-hero {
   background: var(--red) url('./brands/betano/assets/hero-tonal-orange.png') center / cover no-repeat;
 }
 .lp-hero::after { display: none; }
-
-/* A foto do corpo (banner) é só mobile — escondida no desktop */
-.lp-body__banner { display: none; }
-
-/* ---------------- Desktop ---------------- */
-@media (min-width: 880px) {
-  /* título encosta mais no topo (logo abaixo da linha das logos) */
-  .lp-hero__headline { margin: 26px 0 0; }
-
-  /* foto do influenciador ocupa o espaço entre o título e o selo */
-  .lp-hero__photo {
-    flex: 1 1 auto;
-    min-height: 0;
-    width: 100%;
-    margin: 10px 0;
-    object-fit: contain;
-    object-position: center bottom;
-    z-index: 0;
-  }
-
-  /* selo fixado na base do painel */
-  .lp-hero__foot { margin-top: 0; }
-}
-
-/* ---------------- Mobile ---------------- */
-@media (max-width: 879px) {
-  /* hero mantém o padrão tonal laranja da Betano (igual ao desktop) —
-     herda do .lp-hero base; sem override sólido aqui. */
-
-  /* UMA imagem só no mobile: a do header (a "de cima"), como banner
-     menor e horizontal, logo abaixo do título, dentro do laranja. */
-  .lp-hero__photo {
-    display: block;
-    width: 100%;
-    max-height: 128px;
-    margin: 14px 0 2px;
-    object-fit: contain;
-    object-position: center;
-  }
-  /* sem a segunda imagem (banner do corpo) no mobile */
-  .lp-body__banner { display: none; }
-}

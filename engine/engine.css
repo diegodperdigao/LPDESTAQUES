@@ -996,3 +996,40 @@ body {
     transition-duration: 0.001ms !important;
   }
 }
+
+/* ===========================================================
+   Influenciador no hero (compartilhado por todas as marcas).
+   Foto VERTICAL no desktop (entre o título e o selo) + BANNER
+   HORIZONTAL no mobile (logo abaixo do título). As imagens vêm da
+   config (hero.creatorPhoto / hero.creatorBanner); se uma marca não
+   tiver a imagem, o engine oculta o <img> via inline style.
+   =========================================================== */
+.lp-hero__photo { display: none; }              /* só desktop */
+.lp-hero__banner { display: none; }             /* base oculto */
+
+/* Mobile: banner horizontal SÓ na primeira tela (gate). Ao avançar pras
+   perguntas ele some, pra não empurrar o conteúdo. */
+[data-screen="gate"] .lp-hero__banner {
+  display: block;
+  width: 100%;
+  max-height: 132px;
+  margin: 14px 0 2px;
+  object-fit: contain;
+  object-position: center;
+}
+
+@media (min-width: 880px) {
+  /* desktop nunca usa o banner (usa a foto vertical, sempre visível) */
+  [data-screen="gate"] .lp-hero__banner { display: none; }
+  .lp-hero__photo {                             /* desktop: foto vertical */
+    display: block;
+    flex: 1 1 auto;
+    min-height: 0;
+    width: 100%;
+    margin: 10px 0;
+    object-fit: contain;
+    object-position: center bottom;
+  }
+  .lp-hero__headline { margin: 26px 0 0; }       /* título sobe p/ caber a foto */
+  .lp-hero__foot { margin-top: 0; }
+}

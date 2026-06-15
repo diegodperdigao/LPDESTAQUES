@@ -91,18 +91,10 @@
       else { jon.style.display = 'none'; }   // sem logo do criador -> não mostra img quebrada
     }
 
-    // Foto do influenciador: painel hero (desktop) + banner do corpo (mobile)
-    var photos = document.querySelectorAll('.lp-hero__photo, .lp-banner__img');
-    Array.prototype.forEach.call(photos, function (img) {
-      if (h.creatorPhoto) {
-        img.src = h.creatorPhoto;
-        img.alt = h.creatorPhotoAlt || '';
-      } else {
-        var box = img.closest('.lp-body__banner') || img;
-        box.style.display = 'none'; // sem foto -> não mostra img quebrada
-      }
-    });
-    if (h.creatorPhoto) document.documentElement.classList.add('has-hero-photo');
+    // Influenciador: foto vertical (desktop) e banner horizontal (mobile).
+    // Cada um é exibido/ocultado por breakpoint no CSS da marca.
+    setHeroImg('.lp-hero__photo', h.creatorPhoto, h.creatorPhotoAlt);
+    setHeroImg('.lp-hero__banner', h.creatorBanner, h.creatorPhotoAlt);
 
     var title = document.querySelector('.lp-hero__title');
     if (title) title.textContent = h.title || '';
@@ -118,6 +110,14 @@
     if (hfText && B.seal) hfText.textContent = B.seal.text;
   }
 
+  // define src/alt de uma imagem do influenciador; oculta se não houver src
+  function setHeroImg(sel, src, alt) {
+    var img = document.querySelector(sel);
+    if (!img) return;
+    if (src) { img.src = src; img.alt = alt || ''; }
+    else { img.style.display = 'none'; }
+  }
+
   function escapeHtml(s) {
     return String(s).replace(/[&<>"]/g, function (c) {
       return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c];
@@ -127,7 +127,14 @@
   /* ===========================================================
      TELA: gate
      =========================================================== */
+  // marca a tela atual no <html> (data-screen) p/ o CSS reagir (ex.: banner
+  // do influenciador só na tela do gate no mobile)
+  function setScreen(name) {
+    document.documentElement.setAttribute('data-screen', name);
+  }
+
   function renderGate() {
+    setScreen('gate');
     screenEl.innerHTML = '';
     state.hasAccount = null;
     var g = B.gate;
@@ -159,6 +166,7 @@
      TELA: create
      =========================================================== */
   function renderCreate() {
+    setScreen('create');
     screenEl.innerHTML = '';
     var c = B.create;
 
@@ -205,6 +213,7 @@
      TELA: form
      =========================================================== */
   function renderForm(fromCreate) {
+    setScreen('form');
     screenEl.innerHTML = '';
     var F = B.form;
 
@@ -383,6 +392,7 @@
 
   /* ----------------------- TELA: done ----------------------- */
   function renderDone(row) {
+    setScreen('done');
     screenEl.innerHTML = '';
     var d = B.done;
     var box = el('div', 'lp-done');

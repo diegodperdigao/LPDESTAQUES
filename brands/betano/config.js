@@ -59,8 +59,9 @@ window.BRAND = {
     brandWordmark: 'betano',
     creatorLogo: '',          // TODO: logo do criador/influencer da Betano
     creatorAlt: 'Criador',
-    // Foto do influenciador (PLACEHOLDER p/ planejar posição — trocar pela final)
-    creatorPhoto: './brands/betano/assets/_placeholder-influencer.png',
+    // Influenciador (PLACEHOLDERS p/ planejar — trocar pelos finais):
+    creatorPhoto: './brands/betano/assets/_placeholder-influencer.png', // desktop: vertical
+    creatorBanner: './brands/betano/assets/_placeholder-banner.png',    // mobile: horizontal
     creatorPhotoAlt: 'Influenciador Betano',
     title: 'Betano',          // TODO: nome da campanha/LP
     subtitleMobile: 'Responda abaixo e garanta sua vaga no grupo.',
