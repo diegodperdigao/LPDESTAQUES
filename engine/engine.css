@@ -151,9 +151,6 @@ body {
   object-fit: contain;
 }
 
-.lp-hero__headline {
-  margin-top: 32px; /* respiro entre a linha das logos e o título SUPERJON */
-}
 
 /* No mobile o selo do hero some (aparece no rodapé do corpo) */
 .lp-hero__foot {
@@ -890,11 +887,6 @@ body {
     height: 34px;
   }
 
-  /* headline centralizada no espaço entre o topo e a base */
-  .lp-hero__headline {
-    margin: auto 0;
-  }
-
   .lp-hero__title {
     font-size: clamp(44px, 5vw, 64px);
     letter-spacing: -2px;
@@ -1006,7 +998,6 @@ body {
    =========================================================== */
 .lp-hero__photo { display: none; }              /* só desktop */
 .lp-hero__banner { display: none; }             /* base oculto */
-.lp-body__headline { display: none; }           /* título no corpo: só desktop */
 
 /* Mobile: banner horizontal nas telas iniciais (gate e "criar conta").
    Some só quando aparece o formulário inteiro de perguntas. */
@@ -1014,8 +1005,8 @@ body {
 [data-screen="create"] .lp-hero__banner {
   display: block;
   width: 100%;
-  max-height: 230px;
-  margin: 16px 0 4px;
+  max-height: 320px;          /* maior: o título saiu do hero, sobra espaço */
+  margin: 18px auto 6px;       /* recentralizado */
   object-fit: contain;
   object-position: center;
 }
@@ -1033,36 +1024,16 @@ body {
     object-fit: contain;
     object-position: center;       /* centralizada no painel (não colada na base) */
   }
-  /* título/subtítulo saem do hero e vão pra parte branca (corpo),
-     liberando o painel laranja inteiro p/ a imagem do influenciador */
-  .lp-hero__headline { display: none; }
   .lp-hero__foot { margin-top: 0; }
 
-  /* corpo empilha o título sobre o gate/formulário, centralizado */
-  .lp-body { flex-direction: column; }
-  .lp-body__headline {
-    display: block;
-    width: 100%;
-    max-width: 620px;
-    margin: 0 auto 26px;
-  }
-  .lp-body__title {
-    font-family: var(--font-hero);
-    font-weight: 800;
-    font-style: var(--hero-style);
-    text-transform: uppercase;
-    font-size: clamp(34px, 3.6vw, 52px);
-    line-height: 1.02;
-    letter-spacing: -1px;
-    color: var(--ink);
-  }
-  .lp-body__title .lp-gate__hl { color: var(--red); }
-  .lp-body__sub {
-    margin-top: 14px;
-    font-size: 16px;
-    line-height: 1.5;
-    color: var(--ink-soft);
-    max-width: 46ch;
-  }
-  .lp-body__inner { width: 100%; }
+  /* Sem título/subtítulo: o gate/formulário ocupa a parte branca inteira,
+     então damos mais largura e escala ao conteúdo no desktop. */
+  .lp-body__inner { width: 100%; max-width: 720px; }
+
+  .lp-gate__eyebrow { font-size: 12px; margin-bottom: 22px; }
+  .lp-gate__title { font-size: clamp(34px, 3.4vw, 48px); }
+  .lp-gate__sub { font-size: 15px; margin-top: 12px; }
+  .lp-gate__opts { gap: 12px; margin-top: 26px; }
+  .lp-gate__opt { padding: 20px 22px; font-size: 17px; border-radius: 15px; }
+  .lp-cta { font-size: 17px; padding: 18px; }
 }

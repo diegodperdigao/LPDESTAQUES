@@ -96,21 +96,6 @@
     setHeroImg('.lp-hero__photo', h.creatorPhoto, h.creatorPhotoAlt);
     setHeroImg('.lp-hero__banner', h.creatorBanner, h.creatorPhotoAlt);
 
-    // Hero (mobile): nome curto da marca + subtítulo direcional
-    var heroTitle = document.querySelector('.lp-hero__title');
-    if (heroTitle) heroTitle.textContent = h.title || '';
-    var heroSub = document.querySelector('.lp-hero__subtitle');
-    if (heroSub) {
-      heroSub.innerHTML =
-        '<span class="u-only-mobile">' + escapeHtml(h.subtitleMobile || '') + '</span>' +
-        '<span class="u-only-desktop">' + escapeHtml(h.subtitleDesktop || '') + '</span>';
-    }
-    // Corpo (desktop): headline de valor (mais espaço, foco no influenciador)
-    var bodyTitle = document.querySelector('.lp-body__title');
-    if (bodyTitle) bodyTitle.innerHTML = h.headlineHTML || escapeHtml(h.title || '');
-    var bodySub = document.querySelector('.lp-body__sub');
-    if (bodySub) bodySub.innerHTML = escapeHtml(h.subheadline || h.subtitleDesktop || '');
-
     var hfText = document.querySelector('.lp-hero__foot-text');
     if (hfText && B.seal) hfText.textContent = B.seal.text;
   }
