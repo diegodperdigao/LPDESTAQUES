@@ -142,6 +142,7 @@ window.BRAND = {
   // cadastro?" e do pop-up de cadastro.
   direct: {
     noAccountLabel: 'Não possui cadastro?',
+    noAccountCta: 'Cadastre-se aqui',
     popup: {
       title: 'Você ainda não tem conta?',
       text: 'Crie sua conta na Betano (abre em nova aba), volte aqui e finalize pra entrar no grupo.',

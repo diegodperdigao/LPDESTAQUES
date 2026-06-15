@@ -831,18 +831,41 @@ body {
 }
 .lp-modal__panel--reg #regCta { width: 100%; text-decoration: none; }
 
-/* "Não possui cadastro?" — checkbox abaixo da faixa de aposta (fluxo direto) */
+/* "Não possui cadastro?" — callout em destaque (não pode passar batido) */
 .lp-noacc {
   display: flex;
   align-items: center;
-  gap: 10px;
-  margin-top: 14px;
+  gap: 12px;
+  margin-top: 16px;
+  padding: 13px 15px;
+  background: rgba(var(--red-rgb), 0.08);
+  border: 1.5px solid var(--red);
+  border-radius: 12px;
   cursor: pointer;
-  font-size: 14px;
-  color: var(--ink-soft);
+  box-shadow: 0 8px 20px -14px var(--red);
+  transition: background 0.16s ease, box-shadow 0.16s ease;
 }
-.lp-noacc__cb { width: 18px; height: 18px; accent-color: var(--red); flex: 0 0 auto; }
-.lp-noacc__txt { text-decoration: underline; text-underline-offset: 2px; font-weight: 600; }
+.lp-noacc:hover { background: rgba(var(--red-rgb), 0.13); }
+.lp-noacc__cb {
+  width: 22px; height: 22px;
+  accent-color: var(--red);
+  flex: 0 0 auto;
+  cursor: pointer;
+}
+.lp-noacc__txt { display: flex; flex-direction: column; gap: 1px; line-height: 1.2; }
+.lp-noacc__q { font-size: 14px; font-weight: 700; color: var(--ink); }
+.lp-noacc__cta {
+  font-size: 12.5px; font-weight: 700; color: var(--red);
+  text-decoration: underline; text-underline-offset: 2px;
+}
+.lp-noacc__arrow {
+  margin-left: auto;
+  font-family: var(--font-hero);
+  font-style: var(--hero-style);
+  font-weight: 800;
+  font-size: 20px;
+  color: var(--red);
+}
 
 /* =====================================================
    DESKTOP / TABLET LARGO — split-screen
@@ -1033,10 +1056,22 @@ body {
   object-position: center;
 }
 
+/* Fluxo direto (mobile): a foto do influ entra como banner PEQUENO no header
+   (objetivo: caber tudo numa tela só, sem scroll). */
+[data-flow="direct"] .lp-hero__banner {
+  display: block;
+  width: 100%;
+  max-height: 92px;
+  margin: 8px auto 2px;
+  object-fit: contain;
+  object-position: center;
+}
+
 @media (min-width: 880px) {
   /* desktop nunca usa o banner (usa a foto vertical, sempre visível) */
   [data-screen="gate"] .lp-hero__banner,
-  [data-screen="create"] .lp-hero__banner { display: none; }
+  [data-screen="create"] .lp-hero__banner,
+  [data-flow="direct"] .lp-hero__banner { display: none; }
   .lp-hero__photo {                             /* desktop: foto vertical */
     display: block;
     flex: 1 1 auto;
@@ -1058,4 +1093,23 @@ body {
   .lp-gate__opts { gap: 12px; margin-top: 26px; }
   .lp-gate__opt { padding: 20px 22px; font-size: 17px; border-radius: 15px; }
   .lp-cta { font-size: 17px; padding: 18px; }
+}
+
+/* ===========================================================
+   Fluxo DIRETO no mobile — objetivo: caber tudo numa tela só
+   (sem scroll). Compacta espaçamentos do formulário e do hero.
+   O selo +18 pode ficar abaixo da dobra (ok scrollar só p/ ele).
+   =========================================================== */
+@media (max-width: 879px) {
+  [data-flow="direct"] .lp-hero { padding-bottom: 6px; }
+  [data-flow="direct"] .lp-section-label { display: none; }   /* economiza linha */
+  [data-flow="direct"] .lp-q { padding: 8px 11px; margin-bottom: 7px; }
+  [data-flow="direct"] .lp-q__head { margin-bottom: 7px; }
+  [data-flow="direct"] .lp-q__num { width: 21px; height: 21px; font-size: 11px; }
+  [data-flow="direct"] .lp-input { padding: 8px 11px; }
+  [data-flow="direct"] .lp-chips { gap: 5px; }
+  [data-flow="direct"] .chip { padding: 6px 10px; font-size: 11px; }
+  [data-flow="direct"] .lp-noacc { margin-top: 10px; padding: 10px 13px; }
+  [data-flow="direct"] .lp-consent { margin-top: 8px; font-size: 10px; }
+  [data-flow="direct"] .lp-cta { margin-top: 10px; padding: 12px; }
 }

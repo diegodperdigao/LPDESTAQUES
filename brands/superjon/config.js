@@ -119,6 +119,7 @@ window.BRAND = {
   // Fluxo direto (usado pela variante "direta"): "Não possui cadastro?" + pop-up.
   direct: {
     noAccountLabel: 'Não possui cadastro?',
+    noAccountCta: 'Cadastre-se aqui',
     popup: {
       title: 'Você ainda não tem conta?',
       text: 'Crie sua conta na Superbet (abre em nova aba), volte aqui e finalize pra entrar no grupo do Jon Vlogs.',

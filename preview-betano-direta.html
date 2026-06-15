@@ -851,18 +851,41 @@ body {
 }
 .lp-modal__panel--reg #regCta { width: 100%; text-decoration: none; }
 
-/* "Não possui cadastro?" — checkbox abaixo da faixa de aposta (fluxo direto) */
+/* "Não possui cadastro?" — callout em destaque (não pode passar batido) */
 .lp-noacc {
   display: flex;
   align-items: center;
-  gap: 10px;
-  margin-top: 14px;
+  gap: 12px;
+  margin-top: 16px;
+  padding: 13px 15px;
+  background: rgba(var(--red-rgb), 0.08);
+  border: 1.5px solid var(--red);
+  border-radius: 12px;
   cursor: pointer;
-  font-size: 14px;
-  color: var(--ink-soft);
+  box-shadow: 0 8px 20px -14px var(--red);
+  transition: background 0.16s ease, box-shadow 0.16s ease;
 }
-.lp-noacc__cb { width: 18px; height: 18px; accent-color: var(--red); flex: 0 0 auto; }
-.lp-noacc__txt { text-decoration: underline; text-underline-offset: 2px; font-weight: 600; }
+.lp-noacc:hover { background: rgba(var(--red-rgb), 0.13); }
+.lp-noacc__cb {
+  width: 22px; height: 22px;
+  accent-color: var(--red);
+  flex: 0 0 auto;
+  cursor: pointer;
+}
+.lp-noacc__txt { display: flex; flex-direction: column; gap: 1px; line-height: 1.2; }
+.lp-noacc__q { font-size: 14px; font-weight: 700; color: var(--ink); }
+.lp-noacc__cta {
+  font-size: 12.5px; font-weight: 700; color: var(--red);
+  text-decoration: underline; text-underline-offset: 2px;
+}
+.lp-noacc__arrow {
+  margin-left: auto;
+  font-family: var(--font-hero);
+  font-style: var(--hero-style);
+  font-weight: 800;
+  font-size: 20px;
+  color: var(--red);
+}
 
 /* =====================================================
    DESKTOP / TABLET LARGO — split-screen
@@ -1053,10 +1076,22 @@ body {
   object-position: center;
 }
 
+/* Fluxo direto (mobile): a foto do influ entra como banner PEQUENO no header
+   (objetivo: caber tudo numa tela só, sem scroll). */
+[data-flow="direct"] .lp-hero__banner {
+  display: block;
+  width: 100%;
+  max-height: 92px;
+  margin: 8px auto 2px;
+  object-fit: contain;
+  object-position: center;
+}
+
 @media (min-width: 880px) {
   /* desktop nunca usa o banner (usa a foto vertical, sempre visível) */
   [data-screen="gate"] .lp-hero__banner,
-  [data-screen="create"] .lp-hero__banner { display: none; }
+  [data-screen="create"] .lp-hero__banner,
+  [data-flow="direct"] .lp-hero__banner { display: none; }
   .lp-hero__photo {                             /* desktop: foto vertical */
     display: block;
     flex: 1 1 auto;
@@ -1078,6 +1113,25 @@ body {
   .lp-gate__opts { gap: 12px; margin-top: 26px; }
   .lp-gate__opt { padding: 20px 22px; font-size: 17px; border-radius: 15px; }
   .lp-cta { font-size: 17px; padding: 18px; }
+}
+
+/* ===========================================================
+   Fluxo DIRETO no mobile — objetivo: caber tudo numa tela só
+   (sem scroll). Compacta espaçamentos do formulário e do hero.
+   O selo +18 pode ficar abaixo da dobra (ok scrollar só p/ ele).
+   =========================================================== */
+@media (max-width: 879px) {
+  [data-flow="direct"] .lp-hero { padding-bottom: 6px; }
+  [data-flow="direct"] .lp-section-label { display: none; }   /* economiza linha */
+  [data-flow="direct"] .lp-q { padding: 8px 11px; margin-bottom: 7px; }
+  [data-flow="direct"] .lp-q__head { margin-bottom: 7px; }
+  [data-flow="direct"] .lp-q__num { width: 21px; height: 21px; font-size: 11px; }
+  [data-flow="direct"] .lp-input { padding: 8px 11px; }
+  [data-flow="direct"] .lp-chips { gap: 5px; }
+  [data-flow="direct"] .chip { padding: 6px 10px; font-size: 11px; }
+  [data-flow="direct"] .lp-noacc { margin-top: 10px; padding: 10px 13px; }
+  [data-flow="direct"] .lp-consent { margin-top: 8px; font-size: 10px; }
+  [data-flow="direct"] .lp-cta { margin-top: 10px; padding: 12px; }
 }
 
 </style>
@@ -1158,7 +1212,7 @@ body {
     </div>
   </div>
 
-  <script>window.BRAND = {"id":"betano","brand":"betano","source":"lp_betano_direta","meta":{"title":"Betano — Entrar no grupo (direto)","description":"Responda as perguntas rápidas e a equipe te direciona pro grupo. Conteúdo para maiores de 18 anos.","themeColor":"#FF3C00","favicon":"./brands/betano/assets/favicon.png"},"tokens":{"--red":"#FF3C00","--red-rgb":"255, 60, 0","--red-deep":"#e63600","--burgundy":"#7a1d00","--dark-purple":"#191932","--yellow":"#FF3C00","--yellow-text":"#ffffff","--white":"#FAF5F0","--ink":"#141414","--ink-soft":"#4a4a4a","--ink-faint":"#8a8a8a","--bg-2":"#FFFFFF","--line":"rgba(0, 0, 0, 0.12)","--line-strong":"rgba(0, 0, 0, 0.22)","--font-hero":"'Betano Nichrome', system-ui, sans-serif","--font-body":"'Haffer', system-ui, sans-serif","--font-cta":"'Haffer', system-ui, sans-serif","--cta-weight":"600","--hero-style":"normal"},"fonts":{"google":"","faces":[{"family":"Betano Nichrome","src":"./brands/betano/assets/fonts/BetanoNichromeBold.woff2","weight":"100 900","style":"normal","format":"woff2"},{"family":"Haffer","src":"./brands/betano/assets/fonts/HafferRegular.woff2","weight":"400","style":"normal","format":"woff2"},{"family":"Haffer","src":"./brands/betano/assets/fonts/HafferMedium.woff2","weight":"500","style":"normal","format":"woff2"},{"family":"Haffer","src":"./brands/betano/assets/fonts/HafferSemiBold.woff2","weight":"600 700","style":"normal","format":"woff2"}]},"hero":{"brandLogo":"https://i.ibb.co/qMcDxty8/image.png","brandLogoWhite":true,"brandWordmark":"betano","creatorLogo":"./brands/betano/assets/influ-logo.png","creatorAlt":"Influenciador Betano","creatorPhoto":"./brands/betano/assets/_placeholder-influencer.png","creatorBanner":"./brands/betano/assets/_placeholder-banner.png","creatorPhotoAlt":"Influenciador Betano","title":"Betano","subtitleMobile":"Responda abaixo e garanta sua vaga no grupo.","subtitleDesktop":"Responda ao lado e garanta sua vaga no grupo.","headlineHTML":"Faça parte do grupo do <span class=\"lp-gate__hl\">[nome do influenciador]</span>","subheadline":"Acesso gratuito e direto pra quem é da comunidade. Responda abaixo e garanta sua vaga no grupo."},"gate":{"eyebrow":"Comece por aqui","questionHTML":"Você já tem conta na <span class=\"lp-gate__hl\">Betano</span>?","sub":"Em 1 toque a gente te leva pro caminho certo.","yes":"Sim, já tenho","no":"Ainda não tenho"},"create":{"eyebrow":"Falta pouco","titleHTML":"Crie sua conta na <span class=\"lp-gate__hl\">Betano</span>","sub":"É rápido e gratuito. Assim que criar, volte aqui pra liberar seu acesso ao grupo.","steps":["Crie sua conta na Betano","Volte para esta página","Responda e entre no grupo"],"cta":"Criar conta agora","back":"Já tenho conta"},"form":{"sectionLabel":"Seus dados","successIntro":"Agora que deu tudo certo com o cadastro, responde essas perguntas pra liberar o seu acesso:","fields":[{"id":"nome","label":"Nome","type":"text","autocomplete":"name","placeholder":"Seu nome completo"},{"id":"contato","label":"E-mail ou ID Betano","type":"text","autocomplete":"email","placeholder":"email@exemplo.com ou seu ID"},{"id":"telefone","label":"Telefone","type":"tel","autocomplete":"tel","inputmode":"tel","placeholder":"(11) 99999-9999"}],"bet":{"id":"faixa_aposta","label":"Sobre quanto você aposta?","options":[{"value":"ate_1000","label":"Até R$ 1.000"},{"value":"1000_3000","label":"R$ 1.000 a 3.000"},{"value":"3000_5000","label":"R$ 3.000 a 5.000"},{"value":"5000_mais","label":"R$ 5.000+","tier":"vip"}]},"consentText":"Ao enviar, você concorda com os ","termsLink":"Termos e Condições","cta":"Quero entrar no grupo agora"},"done":{"title":"Tudo certo!","text":"Recebemos seus dados. Em instantes você entra no grupo. Fica de olho no WhatsApp informado.","vipBadge":"Fila VIP"},"seal":{"age":"18+","imageUrl":"","text":"Jogue com responsabilidade. O jogo pode causar dependência. Autorizado pela Portaria SPA/MF n°.246/2025"},"terms":["Ao enviar seus dados nesta página, você declara ter no mínimo 18 anos e concorda em receber comunicações do grupo pelos contatos informados (WhatsApp, e-mail e/ou telefone).","Seus dados são tratados conforme a LGPD e utilizados para qualificação, comunicação e ações de marketing. Você pode solicitar a remoção a qualquer momento.","Esta página não promete prêmios, bônus ou aumento de chance de ganho como recompensa por cadastro ou depósito. Promoções, quando existirem, são comunicadas dentro do grupo.","Conteúdo destinado a maiores de 18 anos. Aposte com responsabilidade. Texto rascunho — revisão jurídica obrigatória."],"direct":{"noAccountLabel":"Não possui cadastro?","popup":{"title":"Você ainda não tem conta?","text":"Crie sua conta na Betano (abre em nova aba), volte aqui e finalize pra entrar no grupo.","cta":"Clique aqui e se cadastre"}},"links":{"registration":"","whatsapp":"","whatsappVip":""},"supabase":{"url":"","anonKey":"","table":"lp_leads"},"flow":"direct"};</script>
+  <script>window.BRAND = {"id":"betano","brand":"betano","source":"lp_betano_direta","meta":{"title":"Betano — Entrar no grupo (direto)","description":"Responda as perguntas rápidas e a equipe te direciona pro grupo. Conteúdo para maiores de 18 anos.","themeColor":"#FF3C00","favicon":"./brands/betano/assets/favicon.png"},"tokens":{"--red":"#FF3C00","--red-rgb":"255, 60, 0","--red-deep":"#e63600","--burgundy":"#7a1d00","--dark-purple":"#191932","--yellow":"#FF3C00","--yellow-text":"#ffffff","--white":"#FAF5F0","--ink":"#141414","--ink-soft":"#4a4a4a","--ink-faint":"#8a8a8a","--bg-2":"#FFFFFF","--line":"rgba(0, 0, 0, 0.12)","--line-strong":"rgba(0, 0, 0, 0.22)","--font-hero":"'Betano Nichrome', system-ui, sans-serif","--font-body":"'Haffer', system-ui, sans-serif","--font-cta":"'Haffer', system-ui, sans-serif","--cta-weight":"600","--hero-style":"normal"},"fonts":{"google":"","faces":[{"family":"Betano Nichrome","src":"./brands/betano/assets/fonts/BetanoNichromeBold.woff2","weight":"100 900","style":"normal","format":"woff2"},{"family":"Haffer","src":"./brands/betano/assets/fonts/HafferRegular.woff2","weight":"400","style":"normal","format":"woff2"},{"family":"Haffer","src":"./brands/betano/assets/fonts/HafferMedium.woff2","weight":"500","style":"normal","format":"woff2"},{"family":"Haffer","src":"./brands/betano/assets/fonts/HafferSemiBold.woff2","weight":"600 700","style":"normal","format":"woff2"}]},"hero":{"brandLogo":"https://i.ibb.co/qMcDxty8/image.png","brandLogoWhite":true,"brandWordmark":"betano","creatorLogo":"./brands/betano/assets/influ-logo.png","creatorAlt":"Influenciador Betano","creatorPhoto":"./brands/betano/assets/_placeholder-influencer.png","creatorBanner":"./brands/betano/assets/_placeholder-banner.png","creatorPhotoAlt":"Influenciador Betano","title":"Betano","subtitleMobile":"Responda abaixo e garanta sua vaga no grupo.","subtitleDesktop":"Responda ao lado e garanta sua vaga no grupo.","headlineHTML":"Faça parte do grupo do <span class=\"lp-gate__hl\">[nome do influenciador]</span>","subheadline":"Acesso gratuito e direto pra quem é da comunidade. Responda abaixo e garanta sua vaga no grupo."},"gate":{"eyebrow":"Comece por aqui","questionHTML":"Você já tem conta na <span class=\"lp-gate__hl\">Betano</span>?","sub":"Em 1 toque a gente te leva pro caminho certo.","yes":"Sim, já tenho","no":"Ainda não tenho"},"create":{"eyebrow":"Falta pouco","titleHTML":"Crie sua conta na <span class=\"lp-gate__hl\">Betano</span>","sub":"É rápido e gratuito. Assim que criar, volte aqui pra liberar seu acesso ao grupo.","steps":["Crie sua conta na Betano","Volte para esta página","Responda e entre no grupo"],"cta":"Criar conta agora","back":"Já tenho conta"},"form":{"sectionLabel":"Seus dados","successIntro":"Agora que deu tudo certo com o cadastro, responde essas perguntas pra liberar o seu acesso:","fields":[{"id":"nome","label":"Nome","type":"text","autocomplete":"name","placeholder":"Seu nome completo"},{"id":"contato","label":"E-mail ou ID Betano","type":"text","autocomplete":"email","placeholder":"email@exemplo.com ou seu ID"},{"id":"telefone","label":"Telefone","type":"tel","autocomplete":"tel","inputmode":"tel","placeholder":"(11) 99999-9999"}],"bet":{"id":"faixa_aposta","label":"Sobre quanto você aposta?","options":[{"value":"ate_1000","label":"Até R$ 1.000"},{"value":"1000_3000","label":"R$ 1.000 a 3.000"},{"value":"3000_5000","label":"R$ 3.000 a 5.000"},{"value":"5000_mais","label":"R$ 5.000+","tier":"vip"}]},"consentText":"Ao enviar, você concorda com os ","termsLink":"Termos e Condições","cta":"Quero entrar no grupo agora"},"done":{"title":"Tudo certo!","text":"Recebemos seus dados. Em instantes você entra no grupo. Fica de olho no WhatsApp informado.","vipBadge":"Fila VIP"},"seal":{"age":"18+","imageUrl":"","text":"Jogue com responsabilidade. O jogo pode causar dependência. Autorizado pela Portaria SPA/MF n°.246/2025"},"terms":["Ao enviar seus dados nesta página, você declara ter no mínimo 18 anos e concorda em receber comunicações do grupo pelos contatos informados (WhatsApp, e-mail e/ou telefone).","Seus dados são tratados conforme a LGPD e utilizados para qualificação, comunicação e ações de marketing. Você pode solicitar a remoção a qualquer momento.","Esta página não promete prêmios, bônus ou aumento de chance de ganho como recompensa por cadastro ou depósito. Promoções, quando existirem, são comunicadas dentro do grupo.","Conteúdo destinado a maiores de 18 anos. Aposte com responsabilidade. Texto rascunho — revisão jurídica obrigatória."],"direct":{"noAccountLabel":"Não possui cadastro?","noAccountCta":"Cadastre-se aqui","popup":{"title":"Você ainda não tem conta?","text":"Crie sua conta na Betano (abre em nova aba), volte aqui e finalize pra entrar no grupo.","cta":"Clique aqui e se cadastre"}},"links":{"registration":"","whatsapp":"","whatsappVip":""},"supabase":{"url":"","anonKey":"","table":"lp_leads"},"flow":"direct"};</script>
   <script>
 /* ===========================================================
    LP Engine — núcleo genérico (multi-marca)
@@ -1211,6 +1265,7 @@ body {
      Branding: tokens, meta e hero (a partir da config)
      =========================================================== */
   function applyBranding() {
+    document.documentElement.setAttribute('data-flow', B.flow || 'full');
     if (B.meta) {
       if (B.meta.title) document.title = B.meta.title;
       setMeta('name', 'description', B.meta.description);
@@ -1427,7 +1482,11 @@ body {
       var cb = el('input', 'lp-noacc__cb');
       cb.type = 'checkbox';
       na.appendChild(cb);
-      na.appendChild(el('span', 'lp-noacc__txt', D.noAccountLabel || 'Não possui cadastro?'));
+      var txt = el('span', 'lp-noacc__txt');
+      txt.appendChild(el('span', 'lp-noacc__q', D.noAccountLabel || 'Não possui cadastro?'));
+      txt.appendChild(el('span', 'lp-noacc__cta', D.noAccountCta || 'Cadastre-se aqui'));
+      na.appendChild(txt);
+      na.appendChild(el('span', 'lp-noacc__arrow', '→'));
       cb.addEventListener('change', function () {
         if (cb.checked) { state.hasAccount = 'nao'; sendPartial(); openReg(); }
         else { state.hasAccount = 'sim'; }
@@ -1652,7 +1711,13 @@ body {
     regModal.hidden = false;
     document.body.style.overflow = 'hidden';
   }
-  function closeReg() { if (regModal) { regModal.hidden = true; document.body.style.overflow = ''; } }
+  function closeReg() {
+    if (regModal) { regModal.hidden = true; document.body.style.overflow = ''; }
+    // fechar o pop-up volta a checkbox p/ desmarcada (ela é só o gatilho)
+    var cb = document.querySelector('.lp-noacc__cb');
+    if (cb) cb.checked = false;
+    state.hasAccount = 'sim';
+  }
   if (regModal) {
     regModal.addEventListener('click', function (e) { if (e.target.hasAttribute('data-close')) closeReg(); });
     document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !regModal.hidden) closeReg(); });
@@ -1662,7 +1727,8 @@ body {
   applyBranding();
   paintHeroSeal();
   renderFooter();
-  if (B.flow === 'direct') renderForm(false); else renderGate();
+  if (B.flow === 'direct') { state.hasAccount = 'sim'; renderForm(false); }
+  else renderGate();
 })();
 
 </script>

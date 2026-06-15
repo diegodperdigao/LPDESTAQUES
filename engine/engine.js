@@ -49,6 +49,7 @@
      Branding: tokens, meta e hero (a partir da config)
      =========================================================== */
   function applyBranding() {
+    document.documentElement.setAttribute('data-flow', B.flow || 'full');
     if (B.meta) {
       if (B.meta.title) document.title = B.meta.title;
       setMeta('name', 'description', B.meta.description);
@@ -265,7 +266,11 @@
       var cb = el('input', 'lp-noacc__cb');
       cb.type = 'checkbox';
       na.appendChild(cb);
-      na.appendChild(el('span', 'lp-noacc__txt', D.noAccountLabel || 'Não possui cadastro?'));
+      var txt = el('span', 'lp-noacc__txt');
+      txt.appendChild(el('span', 'lp-noacc__q', D.noAccountLabel || 'Não possui cadastro?'));
+      txt.appendChild(el('span', 'lp-noacc__cta', D.noAccountCta || 'Cadastre-se aqui'));
+      na.appendChild(txt);
+      na.appendChild(el('span', 'lp-noacc__arrow', '→'));
       cb.addEventListener('change', function () {
         if (cb.checked) { state.hasAccount = 'nao'; sendPartial(); openReg(); }
         else { state.hasAccount = 'sim'; }
@@ -490,7 +495,13 @@
     regModal.hidden = false;
     document.body.style.overflow = 'hidden';
   }
-  function closeReg() { if (regModal) { regModal.hidden = true; document.body.style.overflow = ''; } }
+  function closeReg() {
+    if (regModal) { regModal.hidden = true; document.body.style.overflow = ''; }
+    // fechar o pop-up volta a checkbox p/ desmarcada (ela é só o gatilho)
+    var cb = document.querySelector('.lp-noacc__cb');
+    if (cb) cb.checked = false;
+    state.hasAccount = 'sim';
+  }
   if (regModal) {
     regModal.addEventListener('click', function (e) { if (e.target.hasAttribute('data-close')) closeReg(); });
     document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !regModal.hidden) closeReg(); });
@@ -500,5 +511,6 @@
   applyBranding();
   paintHeroSeal();
   renderFooter();
-  if (B.flow === 'direct') renderForm(false); else renderGate();
+  if (B.flow === 'direct') { state.hasAccount = 'sim'; renderForm(false); }
+  else renderGate();
 })();
