@@ -96,15 +96,17 @@
     setHeroImg('.lp-hero__photo', h.creatorPhoto, h.creatorPhotoAlt);
     setHeroImg('.lp-hero__banner', h.creatorBanner, h.creatorPhotoAlt);
 
-    var title = document.querySelector('.lp-hero__title');
-    if (title) title.textContent = h.title || '';
-
-    var sub = document.querySelector('.lp-hero__subtitle');
-    if (sub) {
-      sub.innerHTML =
-        '<span class="u-only-mobile">' + escapeHtml(h.subtitleMobile || '') + '</span>' +
-        '<span class="u-only-desktop">' + escapeHtml(h.subtitleDesktop || '') + '</span>';
-    }
+    // título/subtítulo existem em 2 lugares (hero p/ mobile, corpo p/ desktop);
+    // cada um é exibido por breakpoint no CSS. Preenche todos.
+    var subHTML =
+      '<span class="u-only-mobile">' + escapeHtml(h.subtitleMobile || '') + '</span>' +
+      '<span class="u-only-desktop">' + escapeHtml(h.subtitleDesktop || '') + '</span>';
+    Array.prototype.forEach.call(document.querySelectorAll('.lp-hero__title'), function (t) {
+      t.textContent = h.title || '';
+    });
+    Array.prototype.forEach.call(document.querySelectorAll('.lp-hero__subtitle'), function (s) {
+      s.innerHTML = subHTML;
+    });
 
     var hfText = document.querySelector('.lp-hero__foot-text');
     if (hfText && B.seal) hfText.textContent = B.seal.text;

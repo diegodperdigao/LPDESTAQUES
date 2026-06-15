@@ -1006,6 +1006,7 @@ body {
    =========================================================== */
 .lp-hero__photo { display: none; }              /* só desktop */
 .lp-hero__banner { display: none; }             /* base oculto */
+.lp-body__headline { display: none; }           /* título no corpo: só desktop */
 
 /* Mobile: banner horizontal nas telas iniciais (gate e "criar conta").
    Some só quando aparece o formulário inteiro de perguntas. */
@@ -1032,6 +1033,24 @@ body {
     object-fit: contain;
     object-position: center bottom;
   }
-  .lp-hero__headline { margin: 26px 0 0; }       /* título sobe p/ caber a foto */
+  /* título/subtítulo saem do hero e vão pra parte branca (corpo),
+     liberando o painel laranja inteiro p/ a imagem do influenciador */
+  .lp-hero__headline { display: none; }
   .lp-hero__foot { margin-top: 0; }
+
+  /* corpo empilha o título sobre o gate/formulário, centralizado */
+  .lp-body { flex-direction: column; }
+  .lp-body__headline {
+    display: block;
+    width: 100%;
+    max-width: 620px;
+    margin: 0 auto 22px;
+  }
+  .lp-body__headline .lp-hero__title { color: var(--ink); }
+  .lp-body__headline .lp-hero__subtitle {
+    color: var(--ink-soft);
+    opacity: 1;
+    max-width: 46ch;
+  }
+  .lp-body__inner { width: 100%; }
 }
