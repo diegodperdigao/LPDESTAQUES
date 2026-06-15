@@ -1,39 +1,33 @@
 /* ===========================================================
    Betano — CSS específico da marca (carregado pelo build).
-   Textura tonal no hero + bolt divider (raio) na transição.
+   Desktop: hero com textura tonal. Mobile: hero sólido + bolt SVG.
    =========================================================== */
 
-/* Hero com a textura tonal laranja da marca */
+/* Hero com a textura tonal (desktop) — sem o radial da SuperJon */
 .lp-hero {
   background: var(--red) url('./brands/betano/assets/hero-tonal-orange.png') center / cover no-repeat;
 }
-/* Remove o brilho radial (era da SuperJon; não combina com a Betano) */
 .lp-hero::after { display: none; }
 
 @media (max-width: 879px) {
-  /* Conteúdo ancorado no topo, abaixo do raio */
-  .lp-body {
-    padding-top: 0;
-    position: relative;
-  }
+  /* Mobile: hero em cor sólida (sem textura) */
+  .lp-hero { background: var(--red); }
+
+  /* Conteúdo ancorado no topo, logo abaixo do divider */
+  .lp-body { padding-top: 0; }
   .lp-body__inner {
     justify-content: flex-start;
-    padding-top: 56px;
+    padding-top: 34px;
   }
-  .lp-body > * { position: relative; z-index: 1; }
 
-  /* Bolt divider: o off-white SOBREPÕE o hero. A parte transparente deixa
-     a textura tonal aparecer (sem emenda); o raio "morde" o laranja e a
-     base off-white casa com o corpo. */
+  /* Expressive bolt divider (SVG laranja) na transição hero -> corpo.
+     A cor casa com o hero; os "raios" descem pro corpo off-white. */
   .lp-body::before {
     content: "";
-    position: absolute;
-    left: 0;
-    right: 0;
-    top: -56px;
-    bottom: 0;
-    background: url('./brands/betano/assets/bolt-divider-offwhite.png') top center / 100% auto no-repeat;
-    z-index: 0;
-    pointer-events: none;
+    display: block;
+    flex: 0 0 auto;
+    width: 100%;
+    aspect-ratio: 1440 / 465;
+    background: url('./brands/betano/assets/EXPRESSIVE_BOLT_DIVIDER_HORIZONTAL_ORANGE.svg') top center / 100% auto no-repeat;
   }
 }
