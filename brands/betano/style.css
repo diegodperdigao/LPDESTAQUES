@@ -1,8 +1,9 @@
 /* ===========================================================
    Betano — CSS específico da marca (carregado pelo build).
-   Desktop: hero com textura tonal. Mobile: hero em cor sólida.
-   (O bolt divider volta junto com a foto do influenciador —
-    é a transição foto -> conteúdo, conforme o guia da marca.)
+   Desktop: foto do influenciador encaixada no painel hero atual
+   (canto inferior direito), layout do desktop inalterado.
+   Mobile: hero em cor sólida -> foto -> bolt divider -> conteúdo
+   (o bolt é a transição foto -> conteúdo, conforme o guia da marca).
    =========================================================== */
 
 /* Hero com a textura tonal (desktop) — sem o radial da SuperJon */
@@ -11,7 +12,57 @@
 }
 .lp-hero::after { display: none; }
 
+/* Foto do influenciador — encaixada no canto inferior direito do
+   painel hero, atrás do conteúdo (logos/título/selo ficam na frente). */
+.lp-hero__photo {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  height: 66%;
+  width: auto;
+  max-width: 58%;
+  object-fit: contain;
+  object-position: bottom right;
+  z-index: 0;
+  pointer-events: none;
+}
+
 @media (max-width: 879px) {
-  /* Mobile: hero em cor sólida (sem textura) */
-  .lp-hero { background: var(--red); }
+  /* Mobile: hero em cor sólida (sem textura), foto no fim do hero */
+  .lp-hero {
+    background: var(--red);
+    padding-bottom: 0;
+    overflow: visible;
+  }
+
+  /* Foto em fluxo, centralizada na base do hero laranja */
+  .lp-hero__photo {
+    position: static;
+    display: block;
+    height: auto;
+    width: auto;
+    max-width: 76%;
+    max-height: 280px;
+    margin: 14px auto 0;
+    object-position: bottom center;
+  }
+
+  /* Bolt divider: faixa que transiciona da foto (laranja) p/ o conteúdo.
+     O raio laranja vaza sobre o off-white do corpo. */
+  .lp-body {
+    position: relative;
+    padding-top: 0;
+  }
+  .lp-body::before {
+    content: "";
+    display: block;
+    width: 100%;
+    aspect-ratio: 1440 / 465;
+    background: url('./brands/betano/assets/EXPRESSIVE_BOLT_DIVIDER_HORIZONTAL_ORANGE.svg')
+      top center / 100% auto no-repeat;
+    margin: 0 0 6px;
+  }
+  .lp-body__inner {
+    padding-top: 4px;
+  }
 }

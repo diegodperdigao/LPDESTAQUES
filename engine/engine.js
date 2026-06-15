@@ -91,6 +91,17 @@
       else { jon.style.display = 'none'; }   // sem logo do criador -> não mostra img quebrada
     }
 
+    var photo = document.querySelector('.lp-hero__photo');
+    if (photo) {
+      if (h.creatorPhoto) {
+        photo.src = h.creatorPhoto;
+        photo.alt = h.creatorPhotoAlt || '';
+        document.documentElement.classList.add('has-hero-photo');
+      } else {
+        photo.style.display = 'none'; // sem foto -> não mostra img quebrada
+      }
+    }
+
     var title = document.querySelector('.lp-hero__title');
     if (title) title.textContent = h.title || '';
 

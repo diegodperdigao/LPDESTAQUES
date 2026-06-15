@@ -1046,6 +1046,8 @@ body {
           <span class="lp-hero__foot-text"></span>
         </div>
       </div>
+      <!-- Foto do influenciador (preenchida pelo engine; oculta se vazia) -->
+      <img class="lp-hero__photo" alt="" fetchpriority="high" decoding="async" />
     </header>
 
     <!-- Corpo: telas renderizadas pelo engine + rodapé persistente -->
@@ -1285,6 +1287,17 @@ window.BRAND = {
     if (jon) {
       if (h.creatorLogo) { jon.src = h.creatorLogo; jon.alt = h.creatorAlt || ''; }
       else { jon.style.display = 'none'; }   // sem logo do criador -> não mostra img quebrada
+    }
+
+    var photo = document.querySelector('.lp-hero__photo');
+    if (photo) {
+      if (h.creatorPhoto) {
+        photo.src = h.creatorPhoto;
+        photo.alt = h.creatorPhotoAlt || '';
+        document.documentElement.classList.add('has-hero-photo');
+      } else {
+        photo.style.display = 'none'; // sem foto -> não mostra img quebrada
+      }
     }
 
     var title = document.querySelector('.lp-hero__title');
