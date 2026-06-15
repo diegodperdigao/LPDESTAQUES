@@ -1,10 +1,9 @@
 /* ===========================================================
    Betano — CSS específico da marca (carregado pelo build).
-   Desktop: foto do influenciador encaixada no painel hero atual
-   (canto inferior direito), layout do desktop inalterado.
-   Mobile: hero sólido -> bolt divider INVADINDO o header ->
-   banner menor do influenciador -> conteúdo.
-   (o bolt é a transição header -> conteúdo, conforme o guia.)
+   Desktop: hero com o padrão tonal laranja + divisor reto (2 painéis).
+            Foto do influenciador na coluna esquerda, ENTRE o título
+            e o selo +18.
+   Mobile:  hero sólido (sem bolt) -> conteúdo -> foto -> +18.
    =========================================================== */
 
 /* Hero com a textura tonal (desktop) — sem o radial da SuperJon */
@@ -13,109 +12,47 @@
 }
 .lp-hero::after { display: none; }
 
-/* Foto do influenciador — encaixada no canto inferior direito do
-   painel hero (desktop), atrás do conteúdo. */
-.lp-hero__photo {
-  position: absolute;
-  right: 0;
-  bottom: 0;
-  height: 66%;
-  width: auto;
-  max-width: 58%;
-  object-fit: contain;
-  object-position: bottom right;
-  z-index: 0;
-  pointer-events: none;
-}
-
-/* O banner do corpo é só mobile — escondido no desktop */
+/* A foto do corpo (banner) é só mobile — escondida no desktop */
 .lp-body__banner { display: none; }
 
-/* Desktop: bolt VERTICAL como divisor da tela (modelo Betano).
-   O hero laranja é recortado no formato do raio (máscara SVG) e o corpo
-   aparece no vão. Título sobe pro topo e a foto do streamer fica
-   centralizada no painel esquerdo. */
+/* ---------------- Desktop ---------------- */
 @media (min-width: 880px) {
-  /* base off-white preenche o vão do raio (onde o hero fica transparente) */
-  .lp { background: var(--white); }
+  /* título encosta mais no topo (logo abaixo da linha das logos) */
+  .lp-hero__headline { margin: 26px 0 0; }
 
-  .lp-hero {
-    flex: 0 0 46%;
-    max-width: 740px;
-    background: var(--red);      /* laranja SÓLIDO quando o bolt entra (sem tonal) */
-    /* proporção preservada (auto 100%) p/ a forma do raio ficar idêntica ao SVG */
-    -webkit-mask: url('./brands/betano/assets/CORE_BOLT_DIVIDER_VERTICAL_ORANGE_1.svg')
-      left top / auto 100% no-repeat;
-    mask: url('./brands/betano/assets/CORE_BOLT_DIVIDER_VERTICAL_ORANGE_1.svg')
-      left top / auto 100% no-repeat;
-  }
-  .lp-hero::after { display: none; }
-
-  /* título encosta no topo (logo abaixo da logo) */
-  .lp-hero__headline { margin: 22px 0 0; }
-
-  /* foto do streamer centralizada na faixa laranja do raio */
+  /* foto do influenciador ocupa o espaço entre o título e o selo */
   .lp-hero__photo {
-    position: absolute;
-    left: 40%;
-    transform: translateX(-50%);
-    bottom: 0;
-    height: 58%;
-    max-width: 64%;
-    width: auto;
+    flex: 1 1 auto;
+    min-height: 0;
+    width: 100%;
+    margin: 10px 0;
     object-fit: contain;
-    object-position: bottom center;
+    object-position: center bottom;
     z-index: 0;
   }
 
-  /* selo fica na base, acima da foto */
-  .lp-hero__foot { margin-top: auto; position: relative; z-index: 1; }
-
-  /* corpo: pequeno respiro do gume do raio */
-  .lp-body { padding-left: 4%; }
+  /* selo fixado na base do painel */
+  .lp-hero__foot { margin-top: 0; }
 }
 
+/* ---------------- Mobile ---------------- */
 @media (max-width: 879px) {
-  /* Mobile: hero em cor sólida, sem a foto grande dentro do header */
-  .lp-hero {
-    background: var(--red);
-    overflow: visible;
-  }
-  .lp-hero__photo { display: none; }
+  /* hero em cor sólida, padrão antigo (sem bolt divider) */
+  .lp-hero { background: var(--red); }
 
-  /* Bolt divider invade o header: margem negativa puxa o raio
-     pra cima, sobrepondo a base do hero laranja. */
-  .lp-body {
-    position: relative;
-    padding-top: 0;
-  }
-  .lp-body::before {
-    content: "";
-    display: block;
-    width: 100%;
-    aspect-ratio: 1440 / 465;
-    background: url('./brands/betano/assets/EXPRESSIVE_BOLT_DIVIDER_HORIZONTAL_ORANGE.svg')
-      top center / 100% auto no-repeat;
-    margin-top: -9%;        /* invade o header */
-    position: relative;
-    z-index: 1;
-  }
-
-  /* Banner menor do influenciador: depois do divider, antes do conteúdo */
+  /* foto do influenciador: depois do conteúdo, antes do selo +18 */
   .lp-body__banner {
     display: block;
     text-align: center;
-    margin: 2px auto 10px;
+    margin: 18px auto 6px;
   }
   .lp-banner__img {
     display: block;
     margin: 0 auto;
     width: auto;
     height: auto;
-    max-width: 52%;
-    max-height: 110px;
+    max-width: 64%;
+    max-height: 220px;
     object-fit: contain;
   }
-
-  .lp-body__inner { padding-top: 2px; }
 }

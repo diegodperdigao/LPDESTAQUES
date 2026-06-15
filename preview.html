@@ -1040,21 +1040,21 @@ body {
           <h1 class="lp-hero__title"></h1>
           <p class="lp-hero__subtitle"></p>
         </div>
+        <!-- Foto do influenciador (desktop): entre o título e o selo +18 -->
+        <img class="lp-hero__photo" alt="" fetchpriority="high" decoding="async" />
         <!-- Selo +18 no rodapé do hero (visível no desktop) -->
         <div class="lp-hero__foot">
           <span data-seal></span>
           <span class="lp-hero__foot-text"></span>
         </div>
       </div>
-      <!-- Foto do influenciador (preenchida pelo engine; oculta se vazia) -->
-      <img class="lp-hero__photo" alt="" fetchpriority="high" decoding="async" />
     </header>
 
     <!-- Corpo: telas renderizadas pelo engine + rodapé persistente -->
     <section class="lp-body">
-      <!-- Banner do influenciador (mobile): entra depois do divider, antes do conteúdo -->
-      <div class="lp-body__banner"><img class="lp-banner__img" alt="" decoding="async" /></div>
       <div class="lp-body__inner" id="screen"></div>
+      <!-- Foto do influenciador (mobile): depois do conteúdo, antes do +18 -->
+      <div class="lp-body__banner"><img class="lp-banner__img" alt="" decoding="async" /></div>
       <footer class="lp-foot" id="lpFoot"></footer>
     </section>
   </main>
