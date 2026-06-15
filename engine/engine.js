@@ -187,14 +187,6 @@
     screenEl.innerHTML = '';
     var F = B.form;
 
-    var prog = el('div', 'lp-progress');
-    prog.setAttribute('role', 'progressbar');
-    prog.setAttribute('aria-valuemin', '0');
-    prog.setAttribute('aria-valuemax', '100');
-    var fill = el('div', 'lp-progress__fill');
-    prog.appendChild(fill);
-    screenEl.appendChild(prog);
-
     if (fromCreate) {
       screenEl.appendChild(el('p', 'lp-intro lp-intro--success', F.successIntro));
     } else {
@@ -217,7 +209,6 @@
       input.addEventListener('input', function () {
         state.data[f.id] = input.value;
         card.classList.remove('is-pending');
-        updateProgress(fill, prog);
       });
       card.appendChild(input);
       card.dataset.field = f.id;
@@ -236,7 +227,6 @@
         chips.querySelectorAll('.chip').forEach(function (cc) { cc.classList.remove('is-selected'); });
         chip.classList.add('is-selected');
         betCard.classList.remove('is-pending');
-        updateProgress(fill, prog);
       });
       chips.appendChild(chip);
     });
@@ -260,23 +250,11 @@
     form.addEventListener('submit', function (e) { e.preventDefault(); handleSubmit(cta); });
 
     screenEl.appendChild(form);
-    updateProgress(fill, prog);
   }
 
   /* ----------------------- Validação ----------------------- */
-  function fieldFilled(id) {
-    if (id === BET.id) return state.bet != null;
-    return (state.data[id] || '').trim().length > 0;
-  }
   function requiredIds() {
     return FIELDS.map(function (f) { return f.id; }).concat([BET.id]);
-  }
-  function updateProgress(fill, prog) {
-    var ids = requiredIds();
-    var done = ids.filter(fieldFilled).length;
-    var pct = Math.round((done / ids.length) * 100);
-    fill.style.width = pct + '%';
-    if (prog) prog.setAttribute('aria-valuenow', String(pct));
   }
   function validateField(id) {
     var v = (state.data[id] || '').trim();
