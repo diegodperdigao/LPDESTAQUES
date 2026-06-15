@@ -121,9 +121,9 @@ window.BRAND = {
     noAccountLabel: 'Não possui cadastro?',
     noAccountCta: 'Cadastre-se aqui',
     popup: {
-      title: 'Você ainda não tem conta?',
-      text: 'Crie sua conta na Superbet (abre em nova aba), volte aqui e finalize pra entrar no grupo do Jon Vlogs.',
-      cta: 'Clique aqui e se cadastre'
+      title: 'Sua conta em 1 minuto',
+      text: 'Rápido e gratuito: crie sua conta na Superbet em cerca de 1 minuto (abre em nova aba). Volte aqui, finalize e pronto — você libera o acesso completo ao grupo do Jon Vlogs.',
+      cta: 'Criar minha conta agora'
     }
   },
 
