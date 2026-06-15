@@ -1056,32 +1056,46 @@ body {
 /* O banner do corpo é só mobile — escondido no desktop */
 .lp-body__banner { display: none; }
 
-/* Desktop: bolt diagonal grande dividindo a tela (hero -> conteúdo).
-   O hero (laranja) é recortado num gume de raio; o corpo passa por baixo
-   pra preencher o vão, formando a divisão diagonal — como no modelo Betano. */
+/* Desktop: bolt VERTICAL como divisor da tela (modelo Betano).
+   O hero laranja é recortado no formato do raio (máscara SVG) e o corpo
+   aparece no vão. Título sobe pro topo e a foto do streamer fica
+   centralizada no painel esquerdo. */
 @media (min-width: 880px) {
+  /* base off-white preenche o vão do raio (onde o hero fica transparente) */
+  .lp { background: var(--white); }
+
   .lp-hero {
-    flex-basis: 46%;
-    padding-right: 86px;
-    -webkit-clip-path: polygon(
-      0 0, 100% 0,
-      calc(100% - 30px) 34%, calc(100% - 4px) 44%,
-      calc(100% - 132px) 100%, 0 100%);
-    clip-path: polygon(
-      0 0, 100% 0,
-      calc(100% - 30px) 34%, calc(100% - 4px) 44%,
-      calc(100% - 132px) 100%, 0 100%);
+    flex: 0 0 52%;
+    max-width: 760px;
+    margin-right: -8%;            /* hero avança sobre o corpo */
+    -webkit-mask: url('./brands/betano/assets/CORE_BOLT_DIVIDER_VERTICAL_ORANGE_1.svg')
+      left center / 100% 100% no-repeat;
+    mask: url('./brands/betano/assets/CORE_BOLT_DIVIDER_VERTICAL_ORANGE_1.svg')
+      left center / 100% 100% no-repeat;
   }
-  /* o corpo entra por baixo do gume diagonal do hero */
-  .lp-body {
-    margin-left: -120px;
-    padding-left: 132px;
-  }
-  /* a foto acompanha o recorte — encostada no gume, sem vazar */
+
+  /* título encosta no topo (logo abaixo da logo) */
+  .lp-hero__headline { margin: 22px 0 0; }
+
+  /* foto do streamer centralizada no painel esquerdo */
   .lp-hero__photo {
-    max-width: 64%;
-    height: 72%;
+    position: absolute;
+    left: 42%;
+    transform: translateX(-50%);
+    bottom: 0;
+    height: 60%;
+    max-width: 72%;
+    width: auto;
+    object-fit: contain;
+    object-position: bottom center;
+    z-index: 0;
   }
+
+  /* selo fica na base, acima da foto */
+  .lp-hero__foot { margin-top: auto; position: relative; z-index: 1; }
+
+  /* corpo: form afastado do gume do raio */
+  .lp-body { padding-left: 11%; }
 }
 
 @media (max-width: 879px) {
