@@ -57,15 +57,19 @@ window.BRAND = {
     brandLogo: 'https://i.ibb.co/qMcDxty8/image.png',
     brandLogoWhite: true,     // deixa a logo branca sobre a hero laranja
     brandWordmark: 'betano',
-    creatorLogo: '',          // TODO: logo do criador/influencer da Betano
-    creatorAlt: 'Criador',
+    creatorLogo: './brands/betano/assets/influ-logo.png', // logo do influ (fundo preto removido)
+    creatorAlt: 'Influenciador Betano',
     // Influenciador (PLACEHOLDERS p/ planejar — trocar pelos finais):
     creatorPhoto: './brands/betano/assets/_placeholder-influencer.png', // desktop: vertical
     creatorBanner: './brands/betano/assets/_placeholder-banner.png',    // mobile: horizontal
     creatorPhotoAlt: 'Influenciador Betano',
-    title: 'Betano',          // TODO: nome da campanha/LP
+    title: 'Betano',          // mobile: nome curto no hero
     subtitleMobile: 'Responda abaixo e garanta sua vaga no grupo.',
-    subtitleDesktop: 'Responda ao lado e garanta sua vaga no grupo.'
+    subtitleDesktop: 'Responda ao lado e garanta sua vaga no grupo.',
+    // Headline do desktop (parte branca) — foco no influenciador.
+    // TODO: trocar [nome do influenciador] pelo nome real.
+    headlineHTML: 'Faça parte do grupo do <span class="lp-gate__hl">[nome do influenciador]</span>',
+    subheadline: 'Acesso gratuito e direto pra quem é da comunidade. Responda abaixo e garanta sua vaga no grupo.'
   },
 
   gate: {

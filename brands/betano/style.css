@@ -10,3 +10,8 @@
   background: var(--red) url('./brands/betano/assets/hero-tonal-orange.png') center / cover no-repeat;
 }
 .lp-hero::after { display: none; }
+
+/* Logo do influenciador (marca alta/quadrada): um pouco maior que o slot
+   padrão de wordmark, pra ficar visível ao lado da logo Betano. */
+.lp-jon-motion { height: 40px; }
+@media (min-width: 880px) { .lp-jon-motion { height: 48px; } }

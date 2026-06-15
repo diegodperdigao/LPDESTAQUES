@@ -44,7 +44,10 @@ window.BRAND = {
     creatorPhotoAlt: 'Jon Vlogs',
     title: 'SuperJon',
     subtitleMobile: 'Responda abaixo e garanta sua vaga no grupo do Jon Vlogs.',
-    subtitleDesktop: 'Responda ao lado e garanta sua vaga no grupo do Jon Vlogs.'
+    subtitleDesktop: 'Responda ao lado e garanta sua vaga no grupo do Jon Vlogs.',
+    // Headline do desktop (parte branca) — foco no influenciador.
+    headlineHTML: 'Faça parte do grupo do <span class="lp-gate__hl">Jon Vlogs</span>',
+    subheadline: 'Acesso gratuito e direto pra quem é da comunidade. Responda abaixo e garanta sua vaga no grupo.'
   },
 
   gate: {

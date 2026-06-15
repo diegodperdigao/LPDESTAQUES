@@ -11,6 +11,7 @@
   <link rel="apple-touch-icon" href="./brands/betano/assets/favicon.png" />
   <link rel="preconnect" href="https://i.ibb.co" crossorigin />
   <link rel="preload" as="image" fetchpriority="high" href="https://i.ibb.co/qMcDxty8/image.png" />
+  <link rel="preload" as="image" fetchpriority="high" href="./brands/betano/assets/influ-logo.png" />
   <link rel="preload" as="font" type="font/woff2" href="./brands/betano/assets/fonts/BetanoNichromeBold.woff2" crossorigin />
   <link rel="preload" as="font" type="font/woff2" href="./brands/betano/assets/fonts/HafferRegular.woff2" crossorigin />
   <link rel="preload" as="font" type="font/woff2" href="./brands/betano/assets/fonts/HafferMedium.woff2" crossorigin />
@@ -1063,12 +1064,24 @@ body {
     display: block;
     width: 100%;
     max-width: 620px;
-    margin: 0 auto 22px;
+    margin: 0 auto 26px;
   }
-  .lp-body__headline .lp-hero__title { color: var(--ink); }
-  .lp-body__headline .lp-hero__subtitle {
+  .lp-body__title {
+    font-family: var(--font-hero);
+    font-weight: 800;
+    font-style: var(--hero-style);
+    text-transform: uppercase;
+    font-size: clamp(34px, 3.6vw, 52px);
+    line-height: 1.02;
+    letter-spacing: -1px;
+    color: var(--ink);
+  }
+  .lp-body__title .lp-gate__hl { color: var(--red); }
+  .lp-body__sub {
+    margin-top: 14px;
+    font-size: 16px;
+    line-height: 1.5;
     color: var(--ink-soft);
-    opacity: 1;
     max-width: 46ch;
   }
   .lp-body__inner { width: 100%; }
@@ -1093,6 +1106,11 @@ body {
   background: var(--red) url('./brands/betano/assets/hero-tonal-orange.png') center / cover no-repeat;
 }
 .lp-hero::after { display: none; }
+
+/* Logo do influenciador (marca alta/quadrada): um pouco maior que o slot
+   padrão de wordmark, pra ficar visível ao lado da logo Betano. */
+.lp-jon-motion { height: 40px; }
+@media (min-width: 880px) { .lp-jon-motion { height: 48px; } }
 
 </style>
 </head>
@@ -1128,8 +1146,8 @@ body {
       <!-- Título/subtítulo no corpo (desktop): acima do gate, na parte branca.
            No mobile fica oculto (o título aparece no hero laranja). -->
       <div class="lp-body__headline">
-        <h1 class="lp-hero__title"></h1>
-        <p class="lp-hero__subtitle"></p>
+        <h1 class="lp-body__title"></h1>
+        <p class="lp-body__sub"></p>
       </div>
       <div class="lp-body__inner" id="screen"></div>
       <footer class="lp-foot" id="lpFoot"></footer>
@@ -1206,15 +1224,19 @@ window.BRAND = {
     brandLogo: 'https://i.ibb.co/qMcDxty8/image.png',
     brandLogoWhite: true,     // deixa a logo branca sobre a hero laranja
     brandWordmark: 'betano',
-    creatorLogo: '',          // TODO: logo do criador/influencer da Betano
-    creatorAlt: 'Criador',
+    creatorLogo: './brands/betano/assets/influ-logo.png', // logo do influ (fundo preto removido)
+    creatorAlt: 'Influenciador Betano',
     // Influenciador (PLACEHOLDERS p/ planejar — trocar pelos finais):
     creatorPhoto: './brands/betano/assets/_placeholder-influencer.png', // desktop: vertical
     creatorBanner: './brands/betano/assets/_placeholder-banner.png',    // mobile: horizontal
     creatorPhotoAlt: 'Influenciador Betano',
-    title: 'Betano',          // TODO: nome da campanha/LP
+    title: 'Betano',          // mobile: nome curto no hero
     subtitleMobile: 'Responda abaixo e garanta sua vaga no grupo.',
-    subtitleDesktop: 'Responda ao lado e garanta sua vaga no grupo.'
+    subtitleDesktop: 'Responda ao lado e garanta sua vaga no grupo.',
+    // Headline do desktop (parte branca) — foco no influenciador.
+    // TODO: trocar [nome do influenciador] pelo nome real.
+    headlineHTML: 'Faça parte do grupo do <span class="lp-gate__hl">[nome do influenciador]</span>',
+    subheadline: 'Acesso gratuito e direto pra quem é da comunidade. Responda abaixo e garanta sua vaga no grupo.'
   },
 
   gate: {
@@ -1398,17 +1420,20 @@ window.BRAND = {
     setHeroImg('.lp-hero__photo', h.creatorPhoto, h.creatorPhotoAlt);
     setHeroImg('.lp-hero__banner', h.creatorBanner, h.creatorPhotoAlt);
 
-    // título/subtítulo existem em 2 lugares (hero p/ mobile, corpo p/ desktop);
-    // cada um é exibido por breakpoint no CSS. Preenche todos.
-    var subHTML =
-      '<span class="u-only-mobile">' + escapeHtml(h.subtitleMobile || '') + '</span>' +
-      '<span class="u-only-desktop">' + escapeHtml(h.subtitleDesktop || '') + '</span>';
-    Array.prototype.forEach.call(document.querySelectorAll('.lp-hero__title'), function (t) {
-      t.textContent = h.title || '';
-    });
-    Array.prototype.forEach.call(document.querySelectorAll('.lp-hero__subtitle'), function (s) {
-      s.innerHTML = subHTML;
-    });
+    // Hero (mobile): nome curto da marca + subtítulo direcional
+    var heroTitle = document.querySelector('.lp-hero__title');
+    if (heroTitle) heroTitle.textContent = h.title || '';
+    var heroSub = document.querySelector('.lp-hero__subtitle');
+    if (heroSub) {
+      heroSub.innerHTML =
+        '<span class="u-only-mobile">' + escapeHtml(h.subtitleMobile || '') + '</span>' +
+        '<span class="u-only-desktop">' + escapeHtml(h.subtitleDesktop || '') + '</span>';
+    }
+    // Corpo (desktop): headline de valor (mais espaço, foco no influenciador)
+    var bodyTitle = document.querySelector('.lp-body__title');
+    if (bodyTitle) bodyTitle.innerHTML = h.headlineHTML || escapeHtml(h.title || '');
+    var bodySub = document.querySelector('.lp-body__sub');
+    if (bodySub) bodySub.innerHTML = escapeHtml(h.subheadline || h.subtitleDesktop || '');
 
     var hfText = document.querySelector('.lp-hero__foot-text');
     if (hfText && B.seal) hfText.textContent = B.seal.text;
