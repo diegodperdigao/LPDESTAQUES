@@ -1,6 +1,8 @@
 /* ===========================================================
    Betano — CSS específico da marca (carregado pelo build).
-   Desktop: hero com textura tonal. Mobile: hero sólido + bolt SVG.
+   Desktop: hero com textura tonal. Mobile: hero em cor sólida.
+   (O bolt divider volta junto com a foto do influenciador —
+    é a transição foto -> conteúdo, conforme o guia da marca.)
    =========================================================== */
 
 /* Hero com a textura tonal (desktop) — sem o radial da SuperJon */
@@ -12,22 +14,4 @@
 @media (max-width: 879px) {
   /* Mobile: hero em cor sólida (sem textura) */
   .lp-hero { background: var(--red); }
-
-  /* Conteúdo ancorado no topo, logo abaixo do divider */
-  .lp-body { padding-top: 0; }
-  .lp-body__inner {
-    justify-content: flex-start;
-    padding-top: 34px;
-  }
-
-  /* Expressive bolt divider (SVG laranja) na transição hero -> corpo.
-     A cor casa com o hero; os "raios" descem pro corpo off-white. */
-  .lp-body::before {
-    content: "";
-    display: block;
-    flex: 0 0 auto;
-    width: 100%;
-    aspect-ratio: 1440 / 465;
-    background: url('./brands/betano/assets/EXPRESSIVE_BOLT_DIVIDER_HORIZONTAL_ORANGE.svg') top center / 100% auto no-repeat;
-  }
 }
