@@ -1025,30 +1025,28 @@ body {
 :root{--red:#FF3C00;--red-rgb:255, 60, 0;--red-deep:#e63600;--burgundy:#7a1d00;--dark-purple:#191932;--yellow:#FF3C00;--yellow-text:#ffffff;--white:#FAF5F0;--ink:#141414;--ink-soft:#4a4a4a;--ink-faint:#8a8a8a;--bg-2:#FFFFFF;--line:rgba(0, 0, 0, 0.12);--line-strong:rgba(0, 0, 0, 0.22);--font-hero:'Betano Nichrome', system-ui, sans-serif;--font-body:'Haffer', system-ui, sans-serif;--font-cta:'Haffer', system-ui, sans-serif;--cta-weight:600;--hero-style:normal;}
 /* ===========================================================
    Betano — CSS específico da marca (carregado pelo build).
-   Enriquecimento visual: textura tonal no hero + bolt divider.
-   Não afeta outras marcas (cada uma tem seu style.css opcional).
+   Textura tonal no hero + bolt divider na transição hero->corpo.
+   Não afeta outras marcas.
    =========================================================== */
 
-/* Hero com a textura tonal laranja da marca (no lugar do gradiente liso) */
+/* Hero com a textura tonal laranja da marca */
 .lp-hero {
   background: var(--red) url('./brands/betano/assets/hero-tonal-orange.png') center / cover no-repeat;
 }
 
-/* Bolt divider: a transição hero -> corpo vira um corte em raio (assinatura
-   Betano). Só no mobile (no desktop o hero é painel lateral). */
 @media (max-width: 879px) {
-  .lp-body { position: relative; }
+  /* Conteúdo ancorado no topo (logo após o divider) — sem vão flutuante */
+  .lp-body { padding-top: 0; }
+  .lp-body__inner { justify-content: flex-start; padding-top: 26px; }
+
+  /* Bolt divider: strip de transição (laranja -> raio -> off-white) que
+     encaixa direto no topo do corpo, colado no hero. */
   .lp-body::before {
     content: "";
-    position: absolute;
-    left: 0;
-    right: 0;
-    top: -42px;            /* sobe pro hero pra cortar o laranja */
-    height: 84px;
-    background: url('./brands/betano/assets/bolt-divider-offwhite.png') no-repeat top center;
-    background-size: 100% auto;
-    z-index: 1;
-    pointer-events: none;
+    flex: 0 0 auto;
+    width: 100%;
+    aspect-ratio: 1400 / 470;
+    background: url('./brands/betano/assets/bolt-transition.png') top center / 100% auto no-repeat;
   }
 }
 
@@ -1333,7 +1331,10 @@ window.BRAND = {
       }
     }
     var jon = document.querySelector('.lp-jon-motion');
-    if (jon) { jon.src = h.creatorLogo || ''; jon.alt = h.creatorAlt || ''; }
+    if (jon) {
+      if (h.creatorLogo) { jon.src = h.creatorLogo; jon.alt = h.creatorAlt || ''; }
+      else { jon.style.display = 'none'; }   // sem logo do criador -> não mostra img quebrada
+    }
 
     var title = document.querySelector('.lp-hero__title');
     if (title) title.textContent = h.title || '';

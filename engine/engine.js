@@ -86,7 +86,10 @@
       }
     }
     var jon = document.querySelector('.lp-jon-motion');
-    if (jon) { jon.src = h.creatorLogo || ''; jon.alt = h.creatorAlt || ''; }
+    if (jon) {
+      if (h.creatorLogo) { jon.src = h.creatorLogo; jon.alt = h.creatorAlt || ''; }
+      else { jon.style.display = 'none'; }   // sem logo do criador -> não mostra img quebrada
+    }
 
     var title = document.querySelector('.lp-hero__title');
     if (title) title.textContent = h.title || '';
