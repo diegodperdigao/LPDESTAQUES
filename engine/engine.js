@@ -222,7 +222,7 @@
     form.noValidate = true;
     var n = 1;
 
-    FIELDS.forEach(function (f) {
+    function fieldCard(f) {
       var card = cardShell(n++, f.label);
       var input = el('input', 'lp-input');
       input.type = f.type;
@@ -237,46 +237,57 @@
       });
       card.appendChild(input);
       card.dataset.field = f.id;
-      form.appendChild(card);
-    });
+      return card;
+    }
 
-    var betCard = cardShell(n++, BET.label);
-    betCard.dataset.field = BET.id;
-    var chips = el('div', 'lp-chips');
-    BET.options.forEach(function (opt) {
-      var chip = el('button', 'chip', opt.label);
-      chip.type = 'button';
-      if (state.bet === opt.value) chip.classList.add('is-selected');
-      chip.addEventListener('click', function () {
-        state.bet = opt.value;
-        chips.querySelectorAll('.chip').forEach(function (cc) { cc.classList.remove('is-selected'); });
-        chip.classList.add('is-selected');
-        betCard.classList.remove('is-pending');
+    function betCardEl() {
+      var betCard = cardShell(n++, BET.label);
+      betCard.dataset.field = BET.id;
+      var chips = el('div', 'lp-chips');
+      BET.options.forEach(function (opt) {
+        var chip = el('button', 'chip', opt.label);
+        chip.type = 'button';
+        if (state.bet === opt.value) chip.classList.add('is-selected');
+        chip.addEventListener('click', function () {
+          state.bet = opt.value;
+          chips.querySelectorAll('.chip').forEach(function (cc) { cc.classList.remove('is-selected'); });
+          chip.classList.add('is-selected');
+          betCard.classList.remove('is-pending');
+        });
+        chips.appendChild(chip);
       });
-      chips.appendChild(chip);
-    });
-    betCard.appendChild(chips);
-    form.appendChild(betCard);
+      betCard.appendChild(chips);
+      return betCard;
+    }
 
-    // Fluxo direto: "Não possui cadastro?" abre o pop-up de cadastro e
-    // salva o lead parcial (early-save).
-    if (B.flow === 'direct') {
+    // "Não possui cadastro?" (fluxo direto): callout em destaque -> pop-up + early-save
+    function noAccEl() {
       var D = B.direct || {};
       var na = el('label', 'lp-noacc');
       var cb = el('input', 'lp-noacc__cb');
       cb.type = 'checkbox';
       na.appendChild(cb);
-      var txt = el('span', 'lp-noacc__txt');
-      txt.appendChild(el('span', 'lp-noacc__q', D.noAccountLabel || 'Não possui cadastro?'));
-      txt.appendChild(el('span', 'lp-noacc__cta', D.noAccountCta || 'Cadastre-se aqui'));
-      na.appendChild(txt);
-      na.appendChild(el('span', 'lp-noacc__arrow', '→'));
+      na.appendChild(el('span', 'lp-noacc__q', D.noAccountLabel || 'Não possui cadastro?'));
       cb.addEventListener('change', function () {
         if (cb.checked) { state.hasAccount = 'nao'; sendPartial(); openReg(); }
         else { state.hasAccount = 'sim'; }
       });
-      form.appendChild(na);
+      return na;
     }
+
+    // ordem dos itens. Padrão: campos + faixa no fim. A variante direta
+    // reordena via F.order (ex.: e-mail/ID depois da faixa de aposta).
+    var order = (F.order && F.order.length) ? F.order
+      : FIELDS.map(function (f) { return f.id; }).concat(['bet']);
+    order.forEach(function (id) {
+      if (id === 'bet') {
+        form.appendChild(betCardEl());
+        if (B.flow === 'direct') form.appendChild(noAccEl()); // checkbox logo após a faixa
+      } else {
+        var f = FIELDS.filter(function (x) { return x.id === id; })[0];
+        if (f) form.appendChild(fieldCard(f));
+      }
+    });
 
     var consent = el('p', 'lp-consent');
     consent.appendChild(document.createTextNode(F.consentText));

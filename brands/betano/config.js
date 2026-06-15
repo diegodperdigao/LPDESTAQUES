@@ -97,16 +97,16 @@ window.BRAND = {
     sectionLabel: 'Seus dados',
     successIntro: 'Agora que deu tudo certo com o cadastro, responde essas perguntas pra liberar o seu acesso:',
     fields: [
-      { id: 'nome', label: 'Nome', type: 'text', autocomplete: 'name',
+      { id: 'nome', label: 'Nome Completo', type: 'text', autocomplete: 'name',
         placeholder: 'Seu nome completo' },
       { id: 'contato', label: 'E-mail ou ID Betano', type: 'text',
         autocomplete: 'email', placeholder: 'email@exemplo.com ou seu ID' },
-      { id: 'telefone', label: 'Telefone', type: 'tel', autocomplete: 'tel',
+      { id: 'telefone', label: 'WhatsApp', type: 'tel', autocomplete: 'tel',
         inputmode: 'tel', placeholder: '(11) 99999-9999' }
     ],
     bet: {
       id: 'faixa_aposta',
-      label: 'Sobre quanto você aposta?',
+      label: 'Quanto você aposta por mês?',
       options: [
         { value: 'ate_1000', label: 'Até R$ 1.000' },
         { value: '1000_3000', label: 'R$ 1.000 a 3.000' },
@@ -156,7 +156,9 @@ window.BRAND = {
     direta: {
       flow: 'direct',                 // abre direto nas perguntas
       source: 'lp_betano_direta',     // distingue a origem na MESMA tabela
-      meta: { title: 'Betano — Entrar no grupo (direto)' }
+      meta: { title: 'Betano — Entrar no grupo (direto)' },
+      // no fluxo direto, o e-mail/ID vem DEPOIS da faixa de aposta
+      form: { order: ['nome', 'telefone', 'bet', 'contato'] }
     }
   },
 

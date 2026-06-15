@@ -872,20 +872,7 @@ body {
   flex: 0 0 auto;
   cursor: pointer;
 }
-.lp-noacc__txt { display: flex; flex-direction: column; gap: 1px; line-height: 1.2; }
-.lp-noacc__q { font-size: 14px; font-weight: 700; color: var(--ink); }
-.lp-noacc__cta {
-  font-size: 12.5px; font-weight: 700; color: var(--red);
-  text-decoration: underline; text-underline-offset: 2px;
-}
-.lp-noacc__arrow {
-  margin-left: auto;
-  font-family: var(--font-hero);
-  font-style: var(--hero-style);
-  font-weight: 800;
-  font-size: 20px;
-  color: var(--red);
-}
+.lp-noacc__q { font-size: 14.5px; font-weight: 700; color: var(--ink); }
 
 /* =====================================================
    DESKTOP / TABLET LARGO — split-screen
@@ -1076,13 +1063,13 @@ body {
   object-position: center;
 }
 
-/* Fluxo direto (mobile): a foto do influ entra como banner PEQUENO no header
-   (objetivo: caber tudo numa tela só, sem scroll). */
+/* Fluxo direto (mobile): a foto do influ entra como banner no header.
+   O +18 pode ficar abaixo da dobra, então o header pode ser maior. */
 [data-flow="direct"] .lp-hero__banner {
   display: block;
   width: 100%;
-  max-height: 92px;
-  margin: 8px auto 2px;
+  max-height: 210px;
+  margin: 10px auto 4px;
   object-fit: contain;
   object-position: center;
 }
@@ -1121,7 +1108,10 @@ body {
    O selo +18 pode ficar abaixo da dobra (ok scrollar só p/ ele).
    =========================================================== */
 @media (max-width: 879px) {
-  [data-flow="direct"] .lp-hero { padding-bottom: 6px; }
+  [data-flow="direct"] .lp-hero { padding-bottom: 8px; }
+  /* form encosta no header (não centraliza), empurrando o +18 p/ baixo da dobra */
+  [data-flow="direct"] .lp-body { padding-top: 10px; }
+  [data-flow="direct"] .lp-body__inner { justify-content: flex-start; padding: 6px 0 14px; }
   [data-flow="direct"] .lp-section-label { display: none; }   /* economiza linha */
   [data-flow="direct"] .lp-q { padding: 8px 11px; margin-bottom: 7px; }
   [data-flow="direct"] .lp-q__head { margin-bottom: 7px; }
@@ -1312,16 +1302,16 @@ window.BRAND = {
     sectionLabel: 'Seus dados',
     successIntro: 'Agora que deu tudo certo com o cadastro, responde essas perguntas pra liberar o seu acesso:',
     fields: [
-      { id: 'nome', label: 'Nome', type: 'text', autocomplete: 'name',
+      { id: 'nome', label: 'Nome Completo', type: 'text', autocomplete: 'name',
         placeholder: 'Seu nome completo' },
       { id: 'contato', label: 'E-mail ou ID Betano', type: 'text',
         autocomplete: 'email', placeholder: 'email@exemplo.com ou seu ID' },
-      { id: 'telefone', label: 'Telefone', type: 'tel', autocomplete: 'tel',
+      { id: 'telefone', label: 'WhatsApp', type: 'tel', autocomplete: 'tel',
         inputmode: 'tel', placeholder: '(11) 99999-9999' }
     ],
     bet: {
       id: 'faixa_aposta',
-      label: 'Sobre quanto você aposta?',
+      label: 'Quanto você aposta por mês?',
       options: [
         { value: 'ate_1000', label: 'Até R$ 1.000' },
         { value: '1000_3000', label: 'R$ 1.000 a 3.000' },
@@ -1357,6 +1347,7 @@ window.BRAND = {
   // cadastro?" e do pop-up de cadastro.
   direct: {
     noAccountLabel: 'Não possui cadastro?',
+    noAccountCta: 'Cadastre-se aqui',
     popup: {
       title: 'Você ainda não tem conta?',
       text: 'Crie sua conta na Betano (abre em nova aba), volte aqui e finalize pra entrar no grupo.',
@@ -1370,7 +1361,9 @@ window.BRAND = {
     direta: {
       flow: 'direct',                 // abre direto nas perguntas
       source: 'lp_betano_direta',     // distingue a origem na MESMA tabela
-      meta: { title: 'Betano — Entrar no grupo (direto)' }
+      meta: { title: 'Betano — Entrar no grupo (direto)' },
+      // no fluxo direto, o e-mail/ID vem DEPOIS da faixa de aposta
+      form: { order: ['nome', 'telefone', 'bet', 'contato'] }
     }
   },
 
@@ -1615,7 +1608,7 @@ window.BRAND = {
     form.noValidate = true;
     var n = 1;
 
-    FIELDS.forEach(function (f) {
+    function fieldCard(f) {
       var card = cardShell(n++, f.label);
       var input = el('input', 'lp-input');
       input.type = f.type;
@@ -1630,46 +1623,57 @@ window.BRAND = {
       });
       card.appendChild(input);
       card.dataset.field = f.id;
-      form.appendChild(card);
-    });
+      return card;
+    }
 
-    var betCard = cardShell(n++, BET.label);
-    betCard.dataset.field = BET.id;
-    var chips = el('div', 'lp-chips');
-    BET.options.forEach(function (opt) {
-      var chip = el('button', 'chip', opt.label);
-      chip.type = 'button';
-      if (state.bet === opt.value) chip.classList.add('is-selected');
-      chip.addEventListener('click', function () {
-        state.bet = opt.value;
-        chips.querySelectorAll('.chip').forEach(function (cc) { cc.classList.remove('is-selected'); });
-        chip.classList.add('is-selected');
-        betCard.classList.remove('is-pending');
+    function betCardEl() {
+      var betCard = cardShell(n++, BET.label);
+      betCard.dataset.field = BET.id;
+      var chips = el('div', 'lp-chips');
+      BET.options.forEach(function (opt) {
+        var chip = el('button', 'chip', opt.label);
+        chip.type = 'button';
+        if (state.bet === opt.value) chip.classList.add('is-selected');
+        chip.addEventListener('click', function () {
+          state.bet = opt.value;
+          chips.querySelectorAll('.chip').forEach(function (cc) { cc.classList.remove('is-selected'); });
+          chip.classList.add('is-selected');
+          betCard.classList.remove('is-pending');
+        });
+        chips.appendChild(chip);
       });
-      chips.appendChild(chip);
-    });
-    betCard.appendChild(chips);
-    form.appendChild(betCard);
+      betCard.appendChild(chips);
+      return betCard;
+    }
 
-    // Fluxo direto: "Não possui cadastro?" abre o pop-up de cadastro e
-    // salva o lead parcial (early-save).
-    if (B.flow === 'direct') {
+    // "Não possui cadastro?" (fluxo direto): callout em destaque -> pop-up + early-save
+    function noAccEl() {
       var D = B.direct || {};
       var na = el('label', 'lp-noacc');
       var cb = el('input', 'lp-noacc__cb');
       cb.type = 'checkbox';
       na.appendChild(cb);
-      var txt = el('span', 'lp-noacc__txt');
-      txt.appendChild(el('span', 'lp-noacc__q', D.noAccountLabel || 'Não possui cadastro?'));
-      txt.appendChild(el('span', 'lp-noacc__cta', D.noAccountCta || 'Cadastre-se aqui'));
-      na.appendChild(txt);
-      na.appendChild(el('span', 'lp-noacc__arrow', '→'));
+      na.appendChild(el('span', 'lp-noacc__q', D.noAccountLabel || 'Não possui cadastro?'));
       cb.addEventListener('change', function () {
         if (cb.checked) { state.hasAccount = 'nao'; sendPartial(); openReg(); }
         else { state.hasAccount = 'sim'; }
       });
-      form.appendChild(na);
+      return na;
     }
+
+    // ordem dos itens. Padrão: campos + faixa no fim. A variante direta
+    // reordena via F.order (ex.: e-mail/ID depois da faixa de aposta).
+    var order = (F.order && F.order.length) ? F.order
+      : FIELDS.map(function (f) { return f.id; }).concat(['bet']);
+    order.forEach(function (id) {
+      if (id === 'bet') {
+        form.appendChild(betCardEl());
+        if (B.flow === 'direct') form.appendChild(noAccEl()); // checkbox logo após a faixa
+      } else {
+        var f = FIELDS.filter(function (x) { return x.id === id; })[0];
+        if (f) form.appendChild(fieldCard(f));
+      }
+    });
 
     var consent = el('p', 'lp-consent');
     consent.appendChild(document.createTextNode(F.consentText));
