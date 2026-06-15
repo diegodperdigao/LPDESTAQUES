@@ -282,12 +282,14 @@
     order.forEach(function (id) {
       if (id === 'bet') {
         form.appendChild(betCardEl());
-        if (B.flow === 'direct') form.appendChild(noAccEl()); // checkbox logo após a faixa
       } else {
         var f = FIELDS.filter(function (x) { return x.id === id; })[0];
         if (f) form.appendChild(fieldCard(f));
       }
     });
+
+    // Fluxo direto: "Não possui cadastro?" depois de todos os tópicos
+    if (B.flow === 'direct') form.appendChild(noAccEl());
 
     var consent = el('p', 'lp-consent');
     consent.appendChild(document.createTextNode(F.consentText));
