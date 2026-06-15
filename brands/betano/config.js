@@ -12,7 +12,7 @@ window.BRAND = {
     title: 'Betano — Entre no grupo',
     description: 'Responda as perguntas rápidas e a equipe te direciona pro grupo. Conteúdo para maiores de 18 anos.',
     themeColor: '#FF3C00',
-    favicon: ''             // TODO: favicon da Betano
+    favicon: 'https://i.ibb.co/gbH2XF7Q/image.png'
   },
 
   // Cores da Betano: branco + laranja, texto preto. (sobrescrevem o engine)
@@ -44,8 +44,8 @@ window.BRAND = {
   },
 
   hero: {
-    brandLogo: '',            // TODO: logo da Betano (vazio -> wordmark)
-    brandLogoWhite: true,
+    brandLogo: 'https://i.ibb.co/qMcDxty8/image.png',
+    brandLogoWhite: true,     // deixa a logo branca sobre a hero laranja
     brandWordmark: 'betano',
     creatorLogo: '',          // TODO: logo do criador/influencer da Betano
     creatorAlt: 'Criador',
