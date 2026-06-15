@@ -37,22 +37,23 @@
 
 /* ---------------- Mobile ---------------- */
 @media (max-width: 879px) {
-  /* hero em cor sólida, padrão antigo (sem bolt divider) */
-  .lp-hero { background: var(--red); }
+  /* hero mantém o padrão tonal laranja da Betano (igual ao desktop) —
+     herda do .lp-hero base; sem override sólido aqui. */
 
-  /* foto do influenciador: depois do conteúdo, antes do selo +18 */
+  /* foto do influenciador: banner PEQUENO entre o header e o conteúdo
+     (empurra os botões pra altura do dedo) */
   .lp-body__banner {
     display: block;
     text-align: center;
-    margin: 18px auto 6px;
+    margin: 8px auto 4px;
   }
   .lp-banner__img {
     display: block;
     margin: 0 auto;
     width: auto;
     height: auto;
-    max-width: 64%;
-    max-height: 220px;
+    max-width: 62%;
+    max-height: 120px;
     object-fit: contain;
   }
 }
