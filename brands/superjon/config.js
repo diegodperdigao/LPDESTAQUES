@@ -38,9 +38,9 @@ window.BRAND = {
     brandWordmark: 'superbet',   // fallback se a imagem falhar
     creatorLogo: './brands/superjon/assets/jonvlogs.png',
     creatorAlt: 'Jon Vlogs',
-    // Influenciador (PLACEHOLDERS p/ planejar — trocar pelas fotos do Jon):
-    creatorPhoto: './brands/superjon/assets/_placeholder-influencer.png', // desktop: vertical
-    creatorBanner: './brands/superjon/assets/_placeholder-banner.png',    // mobile: horizontal
+    // Influenciador (imagens finais do Jon — WebP otimizado p/ alto tráfego):
+    creatorPhoto: './brands/superjon/assets/jon-desktop.webp',  // desktop: vertical 3:4 (113KB)
+    creatorBanner: './brands/superjon/assets/jon-mobile.webp',  // mobile: horizontal 16:10 (86KB)
     creatorPhotoAlt: 'Jon Vlogs',
     title: 'SuperJon',
     subtitleMobile: 'Responda abaixo e garanta sua vaga no grupo do Jon Vlogs.',
