@@ -1126,6 +1126,44 @@ body {
   [data-flow="direct"] .lp-cta { margin-top: 10px; padding: 12px; }
 }
 
+/* ===========================================================
+   Tratamento da imagem do influenciador (suaviza a inserção).
+   Selecionável via ?fx=card|round|fade|cover|none (default: card).
+   Aplica em desktop (.lp-hero__photo) e mobile (.lp-hero__banner).
+   =========================================================== */
+[data-fx="round"] .lp-hero__photo,
+[data-fx="round"] .lp-hero__banner,
+[data-fx="card"]  .lp-hero__photo,
+[data-fx="card"]  .lp-hero__banner,
+[data-fx="cover"] .lp-hero__photo,
+[data-fx="cover"] .lp-hero__banner { border-radius: 16px; }
+
+[data-fx="card"] .lp-hero__photo,
+[data-fx="card"] .lp-hero__banner { box-shadow: 0 16px 38px -16px rgba(0, 0, 0, 0.45); }
+
+[data-fx="cover"] .lp-hero__photo { object-fit: cover; }
+[data-fx="cover"] .lp-hero__banner {
+  object-fit: cover;
+  height: 200px;
+  max-height: 200px;
+}
+
+[data-fx="fade"] .lp-hero__photo,
+[data-fx="fade"] .lp-hero__banner {
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent),
+    linear-gradient(to bottom, transparent, #000 8%, #000 92%, transparent);
+  -webkit-mask-composite: source-in;
+  mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent),
+    linear-gradient(to bottom, transparent, #000 8%, #000 92%, transparent);
+  mask-composite: intersect;
+}
+
+@media (min-width: 880px) {
+  [data-fx="round"] .lp-hero__photo,
+  [data-fx="card"]  .lp-hero__photo,
+  [data-fx="cover"] .lp-hero__photo { border-radius: 20px; }
+}
+
 </style>
   <style>
 @font-face{font-family:'Betano Nichrome';src:url('./brands/betano/assets/fonts/BetanoNichromeBold.woff2') format('woff2');font-weight:100 900;font-style:normal;font-display:swap;}
@@ -1438,6 +1476,10 @@ window.BRAND = {
      =========================================================== */
   function applyBranding() {
     document.documentElement.setAttribute('data-flow', B.flow || 'full');
+    // Tratamento da imagem do influenciador — testável via ?fx=card|round|fade|cover|none
+    var fx = new URLSearchParams(window.location.search).get('fx');
+    var FX = ['none', 'round', 'card', 'fade', 'cover'];
+    document.documentElement.setAttribute('data-fx', FX.indexOf(fx) >= 0 ? fx : 'card');
     if (B.meta) {
       if (B.meta.title) document.title = B.meta.title;
       setMeta('name', 'description', B.meta.description);
