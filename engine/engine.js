@@ -378,26 +378,74 @@
     return row;
   }
 
-  /* ----------------------- Submit -> Supabase ----------------------- */
-  async function submitLead(row) {
+  /* ----------------------- Submit -> Supabase (robusto) ----------------------- */
+  function wait(ms) { return new Promise(function (r) { setTimeout(r, ms); }); }
+
+  function leadEndpoint() {
     var sb = B.supabase || {};
-    if (sb.url && sb.anonKey) {
-      var endpoint = sb.url.replace(/\/+$/, '') + '/rest/v1/' + (sb.table || 'lp_leads');
-      var res = await fetch(endpoint, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'apikey': sb.anonKey,
-          'Authorization': 'Bearer ' + sb.anonKey,
-          'Prefer': 'return=minimal'
-        },
-        body: JSON.stringify(row)
-      });
-      if (!res.ok) throw new Error('Supabase insert ' + res.status + ': ' + (await res.text()));
-      return;
+    if (!sb.url || !sb.anonKey) return null;
+    return {
+      url: sb.url.replace(/\/+$/, '') + '/rest/v1/' + (sb.table || 'lp_leads'),
+      key: sb.anonKey
+    };
+  }
+
+  // 1 POST. keepalive=true deixa o insert completar mesmo durante o redirect
+  // pro WhatsApp (senão a navegação cancela a requisição).
+  async function postLead(row) {
+    var ep = leadEndpoint();
+    if (!ep) { console.log('[submitLead] (Supabase não configurado) row:', row); await wait(120); return; }
+    var res = await fetch(ep.url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'apikey': ep.key,
+        'Authorization': 'Bearer ' + ep.key,
+        'Prefer': 'return=minimal'
+      },
+      body: JSON.stringify(row),
+      keepalive: true
+    });
+    if (!res.ok) throw new Error('Supabase insert ' + res.status + ': ' + (await res.text()));
+  }
+
+  // tenta com backoff (rede instável / pico de tráfego)
+  async function submitLead(row) {
+    var delays = [0, 700, 1800];
+    var lastErr;
+    for (var i = 0; i < delays.length; i++) {
+      if (delays[i]) await wait(delays[i]);
+      try { await postLead(row); return; }
+      catch (e) { lastErr = e; }
     }
-    console.log('[submitLead] (Supabase não configurado) row:', row);
-    return new Promise(function (r) { setTimeout(r, 400); });
+    throw lastErr;
+  }
+
+  // Fila local (à prova de falha): se o banco falhar mesmo após os retries,
+  // o lead não se perde — fica salvo e é reenviado na próxima visita.
+  var QUEUE_KEY = 'lp_lead_queue';
+  function queueLead(row) {
+    try {
+      var q = JSON.parse(localStorage.getItem(QUEUE_KEY) || '[]');
+      q.push(row);
+      if (q.length > 80) q = q.slice(-80);
+      localStorage.setItem(QUEUE_KEY, JSON.stringify(q));
+    } catch (e) { /* localStorage indisponível: ok, segue */ }
+  }
+  function flushQueue() {
+    if (!leadEndpoint()) return;
+    var q;
+    try { q = JSON.parse(localStorage.getItem(QUEUE_KEY) || '[]'); } catch (e) { return; }
+    if (!q.length) return;
+    var remaining = [];
+    (function next(i) {
+      if (i >= q.length) {
+        try { localStorage.setItem(QUEUE_KEY, JSON.stringify(remaining)); } catch (e) {}
+        return;
+      }
+      postLead(q[i]).then(function () { next(i + 1); })
+        .catch(function () { remaining.push(q[i]); next(i + 1); });
+    })(0);
   }
 
   // Salva o lead PARCIAL (fluxo direto): dispara quando a pessoa marca
@@ -406,11 +454,13 @@
   function sendPartial() {
     if (state.partialSent) return;
     state.partialSent = true;
+    var row = buildRow({ partial: true });
     try {
-      submitLead(buildRow({ partial: true })).catch(function (err) {
-        console.warn('[sendPartial] falhou (segue o fluxo):', err);
+      submitLead(row).catch(function (err) {
+        console.warn('[sendPartial] falhou — enfileirando:', err);
+        queueLead(row);
       });
-    } catch (e) { console.warn('[sendPartial] erro:', e); }
+    } catch (e) { console.warn('[sendPartial] erro:', e); queueLead(row); }
   }
 
   function handleSubmit(cta) {
@@ -423,10 +473,10 @@
     submitLead(row)
       .then(function () { goToGroup(row); })
       .catch(function (err) {
-        console.error('[submitLead] erro:', err);
-        cta.classList.remove('is-loading');
-        cta.disabled = false;
-        lbl.textContent = 'Tentar de novo';
+        // não perde o lead (fila local) e não trava a conversão (segue pro grupo)
+        console.error('[submitLead] erro após retries — enfileirando:', err);
+        queueLead(row);
+        goToGroup(row);
       });
   }
 
@@ -524,6 +574,7 @@
   applyBranding();
   paintHeroSeal();
   renderFooter();
+  flushQueue(); // reenvia leads que ficaram pendentes em visitas anteriores
   if (B.flow === 'direct') { state.hasAccount = 'sim'; renderForm(false); }
   else renderGate();
 })();
