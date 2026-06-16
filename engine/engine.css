@@ -1038,9 +1038,9 @@ body {
   display: block;
   width: 100%;
   max-height: 320px;          /* maior: o título saiu do hero, sobra espaço */
-  margin: 18px auto 6px;       /* recentralizado */
+  margin: 30px auto 8px;       /* desce a imagem (respiro no topo) */
   object-fit: contain;
-  object-position: center;
+  object-position: center top;
 }
 
 /* Fluxo direto (mobile): a foto do influ entra como banner no header.
@@ -1125,9 +1125,10 @@ body {
   box-shadow: 0 24px 54px -12px rgba(0, 0, 0, 0.6), 0 8px 20px -8px rgba(0, 0, 0, 0.45);
 }
 
-[data-fx="cover"] .lp-hero__photo { object-fit: cover; }
+[data-fx="cover"] .lp-hero__photo { object-fit: cover; object-position: center top; }
 [data-fx="cover"] .lp-hero__banner {
   object-fit: cover;
+  object-position: center top;   /* preserva a cabeça/boné ao cortar */
   height: 200px;
   max-height: 200px;
 }
