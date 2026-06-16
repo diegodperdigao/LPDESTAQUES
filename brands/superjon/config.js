@@ -94,7 +94,7 @@ window.BRAND = {
     },
     consentText: 'Ao enviar, você concorda com os ',
     termsLink: 'Termos e Condições',
-    cta: 'Quero entrar no grupo agora'
+    cta: 'Quero entrar no grupo VIP agora'
   },
 
   done: {
