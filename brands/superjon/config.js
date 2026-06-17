@@ -16,16 +16,22 @@ window.BRAND = {
     favicon: 'https://play-lh.googleusercontent.com/Q6uqNf1b4k7h4peN2r7jX1ok-Ur5l28cjm9qUb02Te2fyvo7iQRI09ReCZOQM26FSw=s256-c'
   },
 
-  // Tokens de cor — identidade do Jon: roxo escuro + Generosity Yellow + branco.
+  // Tokens de cor — premium PRETO & DOURADO (tema escuro).
   tokens: {
-    '--red': '#2a1745',          // roxo (hero/acentos/glows) — substitui o vermelho
-    '--red-rgb': '42, 23, 69',   // mesmo roxo em rgb (glows com alpha)
-    '--red-deep': '#181020',     // Dark Purple — fim do gradiente do hero
+    '--red': '#c9a24b',          // ouro — acentos/eyebrow/destaque/foco/glow
+    '--red-rgb': '201, 162, 75',
+    '--red-deep': '#0b0b0c',     // preto — fim do gradiente do hero
     '--burgundy': '#540031',
-    '--dark-purple': '#181020',
-    '--ink': '#181020',          // texto escuro (roxo)
-    '--yellow': '#FFE200',       // Generosity Yellow — AÇÕES (CTA/chip)
-    '--yellow-text': '#181020'   // texto escuro sobre o amarelo
+    '--dark-purple': '#0b0b0c',
+    '--ink': '#f4f0e8',          // texto claro (sobre fundo escuro)
+    '--ink-soft': '#b9b2a3',
+    '--ink-faint': '#837d70',
+    '--white': '#ffffff',        // texto branco no hero (superfícies viram escuras no style.css)
+    '--bg-2': '#16161b',         // cards escuros
+    '--line': 'rgba(255, 255, 255, 0.08)',
+    '--line-strong': 'rgba(201, 162, 75, 0.35)',
+    '--yellow': '#c9a24b',       // alias do ouro
+    '--yellow-text': '#0b0b0c'
   },
 
   // Tipografia (Google Fonts). hero = Roboto Flex (bold itálico), corpo = Inter.

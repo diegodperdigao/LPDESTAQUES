@@ -1181,45 +1181,69 @@ body {
 </style>
   <style>
 
-:root{--red:#2a1745;--red-rgb:42, 23, 69;--red-deep:#181020;--burgundy:#540031;--dark-purple:#181020;--ink:#181020;--yellow:#FFE200;--yellow-text:#181020;}
+:root{--red:#c9a24b;--red-rgb:201, 162, 75;--red-deep:#0b0b0c;--burgundy:#540031;--dark-purple:#0b0b0c;--ink:#f4f0e8;--ink-soft:#b9b2a3;--ink-faint:#837d70;--white:#ffffff;--bg-2:#16161b;--line:rgba(255, 255, 255, 0.08);--line-strong:rgba(201, 162, 75, 0.35);--yellow:#c9a24b;--yellow-text:#0b0b0c;}
 /* ===========================================================
-   SuperJon — CSS específico (identidade do Jon).
-   Roxo escuro + Generosity Yellow + branco. Estrutura/acentos em
-   roxo (via tokens); AÇÕES em amarelo (CTA, opção principal, chip).
+   SuperJon — estética PREMIUM PRETO & DOURADO (tema escuro).
+   Fundo escuro em tudo; ouro nos acentos e nas ações. Texto claro.
    =========================================================== */
 
-/* CTA principal ("Quero entrar no grupo VIP agora") — amarelo + texto escuro */
+/* Fundo geral escuro */
+html, body { background: #0b0b0c; }
+.lp { background: #0b0b0c; }
+.lp-body { background: #0b0b0c; }
+
+/* Hero: preto com brilho dourado sutil */
+.lp-hero { background: radial-gradient(130% 110% at 50% -10%, #241a08 0%, #0b0b0c 58%); }
+.lp-hero::after { background: radial-gradient(circle, rgba(201, 162, 75, 0.22), transparent 70%); }
+
+/* Superfícies escuras (inputs, opções, chips, cards) */
+.lp-gate__opt {
+  background: #15151a;
+  border-color: rgba(201, 162, 75, 0.25);
+  color: var(--ink);
+}
+.lp-gate__opt:hover { border-color: var(--red); box-shadow: 0 10px 22px -14px rgba(201, 162, 75, 0.5); }
+.lp-input {
+  background: #15151a;
+  border-color: rgba(255, 255, 255, 0.14);
+  color: var(--ink);
+}
+.lp-input::placeholder { color: #6f6a5e; }
+.chip { background: #15151a; border-color: rgba(255, 255, 255, 0.16); color: var(--ink-soft); }
+.lp-q { background: #121217; border-color: rgba(255, 255, 255, 0.07); }
+.lp-q__num, .lp-steps__n { color: #0b0b0c; }   /* número sobre o ouro */
+
+/* Ações em OURO com texto preto */
 .lp-cta {
-  background: var(--yellow);
-  color: var(--ink);
-  box-shadow: 0 12px 26px -12px rgba(255, 226, 0, 0.55);
+  background: linear-gradient(180deg, #e9cc78, #c9a24b);
+  color: #0b0b0c;
+  box-shadow: 0 14px 30px -12px rgba(201, 162, 75, 0.55);
 }
-.lp-cta:hover { box-shadow: 0 16px 30px -10px rgba(255, 226, 0, 0.65); }
-/* corpo do CTA com borda animada (.lp-cta--go) — preenche em amarelo */
-.lp-cta--go::after { background: var(--yellow); }
-.lp-cta--go:hover { box-shadow: 0 18px 34px -10px rgba(255, 226, 0, 0.5); }
-
-/* CTA de cadastro (.lp-cta--pulse) — pulso em amarelo (sobrescreve o roxo) */
-@keyframes ctaPulse {
-  0%, 100% { box-shadow: 0 12px 24px -12px rgba(255, 226, 0, 0.5); transform: translateY(0) scale(1); }
-  50% { box-shadow: 0 18px 36px -10px rgba(255, 226, 0, 0.5), 0 0 0 5px rgba(255, 226, 0, 0.18); transform: translateY(-2px) scale(1.015); }
-}
-
-/* Opção principal do gate ("Sim, já tenho") — amarelo */
+.lp-cta:hover { box-shadow: 0 18px 36px -10px rgba(201, 162, 75, 0.7); }
+.lp-cta--go::after { background: linear-gradient(180deg, #e9cc78, #c9a24b); }
+.lp-cta--go:hover { box-shadow: 0 18px 34px -10px rgba(201, 162, 75, 0.55); }
 .lp-gate__opt--primary {
-  background: var(--yellow);
-  border-color: var(--yellow);
-  color: var(--ink);
+  background: linear-gradient(180deg, #e9cc78, #c9a24b);
+  border-color: #c9a24b;
+  color: #0b0b0c;
 }
-.lp-gate__opt--primary .lp-gate__opt-arrow { color: var(--ink); }
-.lp-gate__opt--primary:hover { box-shadow: 0 12px 24px -14px rgba(255, 226, 0, 0.6); }
+.lp-gate__opt--primary .lp-gate__opt-arrow { color: #0b0b0c; }
+.lp-gate__opt--primary:hover { box-shadow: 0 12px 24px -12px rgba(201, 162, 75, 0.6); }
+.chip.is-selected { background: #c9a24b; border-color: #c9a24b; color: #0b0b0c; }
 
-/* Chip de faixa selecionado — amarelo */
-.chip.is-selected {
-  background: var(--yellow);
-  border-color: var(--yellow);
-  color: var(--ink);
+/* Pulso do CTA de cadastro em ouro (sobrescreve o glow padrão) */
+@keyframes ctaPulse {
+  0%, 100% { box-shadow: 0 12px 24px -12px rgba(201, 162, 75, 0.5); transform: translateY(0) scale(1); }
+  50% { box-shadow: 0 18px 36px -10px rgba(201, 162, 75, 0.5), 0 0 0 5px rgba(201, 162, 75, 0.18); transform: translateY(-2px) scale(1.015); }
 }
+
+/* Modal escuro */
+.lp-modal__panel { background: #141418; color: var(--ink); box-shadow: 0 24px 60px -20px #000; }
+.lp-modal__title { color: var(--ink); }
+.lp-modal__close { color: var(--ink-faint); }
+
+/* Confirmação */
+.lp-done__check { color: #0b0b0c; }
 
 </style>
 </head>
@@ -1293,16 +1317,22 @@ window.BRAND = {
     favicon: 'https://play-lh.googleusercontent.com/Q6uqNf1b4k7h4peN2r7jX1ok-Ur5l28cjm9qUb02Te2fyvo7iQRI09ReCZOQM26FSw=s256-c'
   },
 
-  // Tokens de cor — identidade do Jon: roxo escuro + Generosity Yellow + branco.
+  // Tokens de cor — premium PRETO & DOURADO (tema escuro).
   tokens: {
-    '--red': '#2a1745',          // roxo (hero/acentos/glows) — substitui o vermelho
-    '--red-rgb': '42, 23, 69',   // mesmo roxo em rgb (glows com alpha)
-    '--red-deep': '#181020',     // Dark Purple — fim do gradiente do hero
+    '--red': '#c9a24b',          // ouro — acentos/eyebrow/destaque/foco/glow
+    '--red-rgb': '201, 162, 75',
+    '--red-deep': '#0b0b0c',     // preto — fim do gradiente do hero
     '--burgundy': '#540031',
-    '--dark-purple': '#181020',
-    '--ink': '#181020',          // texto escuro (roxo)
-    '--yellow': '#FFE200',       // Generosity Yellow — AÇÕES (CTA/chip)
-    '--yellow-text': '#181020'   // texto escuro sobre o amarelo
+    '--dark-purple': '#0b0b0c',
+    '--ink': '#f4f0e8',          // texto claro (sobre fundo escuro)
+    '--ink-soft': '#b9b2a3',
+    '--ink-faint': '#837d70',
+    '--white': '#ffffff',        // texto branco no hero (superfícies viram escuras no style.css)
+    '--bg-2': '#16161b',         // cards escuros
+    '--line': 'rgba(255, 255, 255, 0.08)',
+    '--line-strong': 'rgba(201, 162, 75, 0.35)',
+    '--yellow': '#c9a24b',       // alias do ouro
+    '--yellow-text': '#0b0b0c'
   },
 
   // Tipografia (Google Fonts). hero = Roboto Flex (bold itálico), corpo = Inter.
