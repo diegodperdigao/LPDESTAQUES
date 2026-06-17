@@ -38,6 +38,7 @@ html, body { background: #160a30; }
 
 /* VERDE só em PEQUENOS detalhes */
 .lp-gate__eyebrow { color: var(--yellow); }
+.lp-q__num, .lp-steps__n { background: var(--yellow); color: var(--yellow-text); }   /* números em verde */
 .lp-input:focus { border-color: var(--yellow); box-shadow: 0 0 0 3px rgba(166, 242, 60, 0.18); }
 .lp-noacc { background: rgba(166, 242, 60, 0.08); border-color: var(--yellow); box-shadow: 0 8px 20px -14px rgba(166, 242, 60, 0.4); }
 .lp-noacc__cb { accent-color: var(--yellow); }

@@ -1054,7 +1054,8 @@ body {
 /* Mobile: banner horizontal nas telas iniciais (gate e "criar conta").
    Some só quando aparece o formulário inteiro de perguntas. */
 [data-screen="gate"] .lp-hero__banner,
-[data-screen="create"] .lp-hero__banner {
+[data-screen="create"] .lp-hero__banner,
+[data-screen="form"] .lp-hero__banner {
   display: block;
   width: 100%;
   max-height: 320px;          /* maior: o título saiu do hero, sobra espaço */
@@ -1078,6 +1079,7 @@ body {
   /* desktop nunca usa o banner (usa a foto vertical, sempre visível) */
   [data-screen="gate"] .lp-hero__banner,
   [data-screen="create"] .lp-hero__banner,
+  [data-screen="form"] .lp-hero__banner,
   [data-flow="direct"] .lp-hero__banner { display: none; }
   .lp-hero__photo {                 /* desktop: foto vertical — caixa abraça a arte */
     display: block;
@@ -1225,6 +1227,7 @@ html, body { background: #160a30; }
 
 /* VERDE só em PEQUENOS detalhes */
 .lp-gate__eyebrow { color: var(--yellow); }
+.lp-q__num, .lp-steps__n { background: var(--yellow); color: var(--yellow-text); }   /* números em verde */
 .lp-input:focus { border-color: var(--yellow); box-shadow: 0 0 0 3px rgba(166, 242, 60, 0.18); }
 .lp-noacc { background: rgba(166, 242, 60, 0.08); border-color: var(--yellow); box-shadow: 0 8px 20px -14px rgba(166, 242, 60, 0.4); }
 .lp-noacc__cb { accent-color: var(--yellow); }
