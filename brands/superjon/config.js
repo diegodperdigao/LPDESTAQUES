@@ -16,14 +16,16 @@ window.BRAND = {
     favicon: 'https://play-lh.googleusercontent.com/Q6uqNf1b4k7h4peN2r7jX1ok-Ur5l28cjm9qUb02Te2fyvo7iQRI09ReCZOQM26FSw=s256-c'
   },
 
-  // Tokens de cor (sobrescrevem os defaults do engine.css em :root)
+  // Tokens de cor — identidade do Jon: roxo escuro + Generosity Yellow + branco.
   tokens: {
-    '--red': '#FD0104',
-    '--red-deep': '#d10003',
+    '--red': '#2a1745',          // roxo (hero/acentos/glows) — substitui o vermelho
+    '--red-rgb': '42, 23, 69',   // mesmo roxo em rgb (glows com alpha)
+    '--red-deep': '#181020',     // Dark Purple — fim do gradiente do hero
     '--burgundy': '#540031',
     '--dark-purple': '#181020',
-    '--yellow': '#FFE200',
-    '--yellow-text': '#7a5c00'
+    '--ink': '#181020',          // texto escuro (roxo)
+    '--yellow': '#FFE200',       // Generosity Yellow — AÇÕES (CTA/chip)
+    '--yellow-text': '#181020'   // texto escuro sobre o amarelo
   },
 
   // Tipografia (Google Fonts). hero = Roboto Flex (bold itálico), corpo = Inter.
