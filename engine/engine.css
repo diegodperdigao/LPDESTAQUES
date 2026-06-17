@@ -867,10 +867,13 @@ body {
   .u-only-mobile { display: none; }
   .u-only-desktop { display: inline; }
 
-  /* Hero vira painel esquerdo fixo, tela cheia */
+  /* Hero vira painel esquerdo fixo, tela cheia.
+     Largura amarrada à altura na proporção da arte (3:4 = 0.775), pra a
+     imagem em cover preencher SEM cortar e sem margem. min() limita em telas
+     muito altas pra o formulário manter espaço. */
   .lp-hero {
-    flex: 0 0 42%;
-    max-width: 560px;
+    flex: 0 0 auto;
+    width: min(52%, calc(100dvh * 0.775));
     padding: 44px 56px 48px;
     display: flex;
     align-items: stretch;
@@ -1180,4 +1183,39 @@ body {
   [data-fx="cover"] .lp-hero__top,
   [data-fx="cover"] .lp-hero__foot { position: relative; z-index: 2; }
   [data-fx="cover"] .lp-hero__foot { margin-top: auto; }
+}
+
+/* ===========================================================
+   Cover no MOBILE: a imagem do influ é o FUNDO do header (edge-to-edge);
+   a logo fica por cima. (O selo +18 no mobile fica no rodapé do corpo.)
+   =========================================================== */
+@media (max-width: 879px) {
+  [data-fx="cover"] .lp-hero {
+    position: relative;
+    min-height: 58vw;          /* área da imagem no header (16:10 ~ natural) */
+    overflow: hidden;
+    padding-bottom: 0;
+  }
+  [data-fx="cover"] .lp-hero__banner {
+    position: absolute !important;
+    inset: 0;
+    width: 100% !important;
+    height: 100% !important;
+    max-height: none !important;
+    margin: 0 !important;
+    border-radius: 0;
+    object-fit: cover;
+    object-position: center top;
+    z-index: 0;
+  }
+  [data-fx="cover"] .lp-hero__inner { position: relative; z-index: 2; }
+  /* scrim no topo p/ a logo ler sobre a imagem */
+  [data-fx="cover"] .lp-hero::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0.45), transparent 32%, transparent 72%, rgba(0, 0, 0, 0.3));
+    z-index: 1;
+    pointer-events: none;
+  }
 }
