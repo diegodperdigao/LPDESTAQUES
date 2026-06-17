@@ -1150,17 +1150,34 @@ body {
   [data-fx="card"]  .lp-hero__photo,
   [data-fx="cover"] .lp-hero__photo { border-radius: 20px; }
 
-  /* cover no desktop: preenche TODO o painel (entre a logo e o selo) */
+  /* cover no desktop: a imagem é o FUNDO do painel inteiro (edge-to-edge);
+     a logo (topo) e o selo (base) ficam POR CIMA da imagem. */
   [data-fx="cover"] .lp-hero__photo {
-    flex: 1 1 auto;
-    width: 100%;
+    position: absolute;
+    top: -44px; left: -56px; right: -56px; bottom: -48px;  /* = padding do hero */
+    width: auto;
     height: auto;
     min-height: 0;
     max-width: none;
     max-height: none;
-    margin: 0 0 20px;
-    align-self: stretch;
+    margin: 0;
+    border-radius: 0;
     object-fit: cover;
     object-position: center top;
+    z-index: 0;
   }
+  /* scrim: escurece topo e base p/ a logo e o selo lerem sobre a foto */
+  [data-fx="cover"] .lp-hero__inner::before {
+    content: "";
+    position: absolute;
+    top: -44px; left: -56px; right: -56px; bottom: -48px;
+    background: linear-gradient(180deg,
+      rgba(0, 0, 0, 0.5) 0%, rgba(0, 0, 0, 0.1) 22%,
+      transparent 46%, transparent 60%, rgba(0, 0, 0, 0.62) 100%);
+    z-index: 1;
+    pointer-events: none;
+  }
+  [data-fx="cover"] .lp-hero__top,
+  [data-fx="cover"] .lp-hero__foot { position: relative; z-index: 2; }
+  [data-fx="cover"] .lp-hero__foot { margin-top: auto; }
 }
