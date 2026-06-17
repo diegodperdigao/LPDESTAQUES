@@ -53,7 +53,7 @@
     // Tratamento da imagem do influenciador — testável via ?fx=card|round|fade|cover|none
     var fx = new URLSearchParams(window.location.search).get('fx');
     var FX = ['none', 'round', 'card', 'fade', 'cover'];
-    document.documentElement.setAttribute('data-fx', FX.indexOf(fx) >= 0 ? fx : 'card');
+    document.documentElement.setAttribute('data-fx', FX.indexOf(fx) >= 0 ? fx : 'cover');
     if (B.meta) {
       if (B.meta.title) document.title = B.meta.title;
       setMeta('name', 'description', B.meta.description);

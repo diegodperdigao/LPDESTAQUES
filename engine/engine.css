@@ -1150,12 +1150,17 @@ body {
   [data-fx="card"]  .lp-hero__photo,
   [data-fx="cover"] .lp-hero__photo { border-radius: 20px; }
 
-  /* cover no desktop: caixa preenche (a base passou a abraçar a imagem) */
+  /* cover no desktop: preenche TODO o painel (entre a logo e o selo) */
   [data-fx="cover"] .lp-hero__photo {
+    flex: 1 1 auto;
     width: 100%;
-    height: 62vh;
+    height: auto;
+    min-height: 0;
     max-width: none;
     max-height: none;
+    margin: 0 0 20px;
+    align-self: stretch;
     object-fit: cover;
+    object-position: center top;
   }
 }

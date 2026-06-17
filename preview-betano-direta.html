@@ -1170,13 +1170,18 @@ body {
   [data-fx="card"]  .lp-hero__photo,
   [data-fx="cover"] .lp-hero__photo { border-radius: 20px; }
 
-  /* cover no desktop: caixa preenche (a base passou a abraçar a imagem) */
+  /* cover no desktop: preenche TODO o painel (entre a logo e o selo) */
   [data-fx="cover"] .lp-hero__photo {
+    flex: 1 1 auto;
     width: 100%;
-    height: 62vh;
+    height: auto;
+    min-height: 0;
     max-width: none;
     max-height: none;
+    margin: 0 0 20px;
+    align-self: stretch;
     object-fit: cover;
+    object-position: center top;
   }
 }
 
@@ -1358,7 +1363,7 @@ html, body { background: #160a30; }
     // Tratamento da imagem do influenciador — testável via ?fx=card|round|fade|cover|none
     var fx = new URLSearchParams(window.location.search).get('fx');
     var FX = ['none', 'round', 'card', 'fade', 'cover'];
-    document.documentElement.setAttribute('data-fx', FX.indexOf(fx) >= 0 ? fx : 'card');
+    document.documentElement.setAttribute('data-fx', FX.indexOf(fx) >= 0 ? fx : 'cover');
     if (B.meta) {
       if (B.meta.title) document.title = B.meta.title;
       setMeta('name', 'description', B.meta.description);
