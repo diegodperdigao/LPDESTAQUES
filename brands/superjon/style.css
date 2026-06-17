@@ -60,3 +60,9 @@ html, body { background: #0b0b0c; }
 
 /* Confirmação */
 .lp-done__check { color: #0b0b0c; }
+
+/* Header: só a logo do Jon. Esconde a da Superbet — com o space-between,
+   a do Jon assume o canto esquerdo (onde a Superbet estava). */
+.lp-logo-wrap { display: none; }
+.lp-jon-motion { height: 30px; }
+@media (min-width: 880px) { .lp-jon-motion { height: 38px; } }
