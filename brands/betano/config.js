@@ -15,22 +15,23 @@ window.BRAND = {
     favicon: './brands/betano/assets/favicon.png'
   },
 
-  // Cores — identidade do NOBRU: premium roxo (2 tons) + branco + verde neon.
+  // Cores — identidade do NOBRU: premium DOIS TONS DE ROXO + branco;
+  // verde neon SÓ em pequenos detalhes.
   tokens: {
-    '--red': '#A6F23C',          // verde neon — acentos/destaque/foco/glow/ações
-    '--red-rgb': '166, 242, 60',
+    '--red': '#7C3AED',          // roxo vívido — acentos/ações (CTA, opção, chip)
+    '--red-rgb': '124, 58, 237',
     '--red-deep': '#160a30',     // roxo profundo — fim do gradiente do hero
     '--burgundy': '#3a1a6e',
     '--dark-purple': '#160a30',
-    '--yellow': '#A6F23C',       // alias do verde
+    '--yellow': '#A6F23C',       // VERDE neon — só detalhes (eyebrow, foco, badge)
     '--yellow-text': '#15082e',  // texto escuro sobre o verde
-    '--white': '#ffffff',        // texto branco no hero
+    '--white': '#ffffff',        // texto branco (hero e ações roxas)
     '--ink': '#f2eefb',          // texto claro
     '--ink-soft': '#bcb0d8',
     '--ink-faint': '#8b7fae',
     '--bg-2': '#241149',         // cards roxo escuro
     '--line': 'rgba(255, 255, 255, 0.10)',
-    '--line-strong': 'rgba(166, 242, 60, 0.35)',
+    '--line-strong': 'rgba(255, 255, 255, 0.18)',
     '--font-hero': "'Betano Nichrome', system-ui, sans-serif",
     '--font-body': "'Haffer', system-ui, sans-serif",
     '--font-cta': "'Haffer', system-ui, sans-serif",   // CTAs em Haffer SemiBold
