@@ -1192,7 +1192,7 @@ body {
 @media (max-width: 879px) {
   [data-fx="cover"] .lp-hero {
     position: relative;
-    min-height: 58vw;          /* área da imagem no header (16:10 ~ natural) */
+    min-height: 62.5vw;        /* = 100/1.6 -> proporção 16:10 exata (sem corte) */
     overflow: hidden;
     padding-bottom: 0;
   }
