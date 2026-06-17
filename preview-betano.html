@@ -1184,22 +1184,59 @@ body {
 @font-face{font-family:'Haffer';src:url('./brands/betano/assets/fonts/HafferRegular.woff2') format('woff2');font-weight:400;font-style:normal;font-display:swap;}
 @font-face{font-family:'Haffer';src:url('./brands/betano/assets/fonts/HafferMedium.woff2') format('woff2');font-weight:500;font-style:normal;font-display:swap;}
 @font-face{font-family:'Haffer';src:url('./brands/betano/assets/fonts/HafferSemiBold.woff2') format('woff2');font-weight:600 700;font-style:normal;font-display:swap;}
-:root{--red:#FF3C00;--red-rgb:255, 60, 0;--red-deep:#e63600;--burgundy:#7a1d00;--dark-purple:#191932;--yellow:#FF3C00;--yellow-text:#ffffff;--white:#FAF5F0;--ink:#141414;--ink-soft:#4a4a4a;--ink-faint:#8a8a8a;--bg-2:#FFFFFF;--line:rgba(0, 0, 0, 0.12);--line-strong:rgba(0, 0, 0, 0.22);--font-hero:'Betano Nichrome', system-ui, sans-serif;--font-body:'Haffer', system-ui, sans-serif;--font-cta:'Haffer', system-ui, sans-serif;--cta-weight:600;--hero-style:normal;}
+:root{--red:#A6F23C;--red-rgb:166, 242, 60;--red-deep:#160a30;--burgundy:#3a1a6e;--dark-purple:#160a30;--yellow:#A6F23C;--yellow-text:#15082e;--white:#ffffff;--ink:#f2eefb;--ink-soft:#bcb0d8;--ink-faint:#8b7fae;--bg-2:#241149;--line:rgba(255, 255, 255, 0.10);--line-strong:rgba(166, 242, 60, 0.35);--font-hero:'Betano Nichrome', system-ui, sans-serif;--font-body:'Haffer', system-ui, sans-serif;--font-cta:'Haffer', system-ui, sans-serif;--cta-weight:600;--hero-style:normal;}
 /* ===========================================================
-   Betano — CSS específico da marca (carregado pelo build).
-   Só o que é exclusivo da Betano: a textura tonal laranja no hero.
-   O layout das imagens do influenciador (foto vertical no desktop +
-   banner horizontal no mobile) vive no engine compartilhado.
+   Betano — identidade do NOBRU: premium ROXO (2 tons) + branco + VERDE neon.
+   Tema escuro: superfícies roxas, texto claro, verde nos detalhes e ações.
    =========================================================== */
 
-/* Hero com a textura tonal — sem o radial decorativo da SuperJon */
-.lp-hero {
-  background: var(--red) url('./brands/betano/assets/hero-tonal-orange.png') center / cover no-repeat;
-}
-.lp-hero::after { display: none; }
+/* Fundo geral escuro (roxo profundo) */
+html, body { background: #160a30; }
+.lp { background: #160a30; }
+.lp-body { background: #160a30; }
 
-/* Logo do influenciador (marca alta/quadrada): um pouco maior que o slot
-   padrão de wordmark, pra ficar visível ao lado da logo Betano. */
+/* Hero: dois tons de roxo + brilho verde sutil */
+.lp-hero {
+  background: linear-gradient(160deg, #7C3AED 0%, #3a1a6e 52%, #160a30 100%);
+}
+.lp-hero::after {
+  display: block;
+  background: radial-gradient(circle, rgba(166, 242, 60, 0.2), transparent 70%);
+}
+
+/* Superfícies escuras (inputs, opções, chips, cards) */
+.lp-gate__opt { background: #241149; border-color: rgba(166, 242, 60, 0.25); color: var(--ink); }
+.lp-gate__opt:hover { border-color: var(--red); box-shadow: 0 10px 22px -14px rgba(166, 242, 60, 0.5); }
+.lp-input { background: #241149; border-color: rgba(255, 255, 255, 0.14); color: var(--ink); }
+.lp-input::placeholder { color: #8b7fae; }
+.chip { background: #241149; border-color: rgba(255, 255, 255, 0.16); color: var(--ink-soft); }
+.lp-q { background: #1e0f40; border-color: rgba(255, 255, 255, 0.07); }
+.lp-q__num, .lp-steps__n { color: var(--yellow-text); }   /* número sobre o verde */
+
+/* Ações em VERDE com texto escuro */
+.lp-cta { color: var(--yellow-text); box-shadow: 0 14px 30px -12px rgba(166, 242, 60, 0.5); }
+.lp-cta:hover { box-shadow: 0 18px 36px -10px rgba(166, 242, 60, 0.65); }
+.lp-cta--go:hover { box-shadow: 0 18px 34px -10px rgba(166, 242, 60, 0.5); }
+.lp-gate__opt--primary { color: var(--yellow-text); }
+.lp-gate__opt--primary .lp-gate__opt-arrow { color: var(--yellow-text); }
+.lp-gate__opt--primary:hover { box-shadow: 0 12px 24px -12px rgba(166, 242, 60, 0.6); }
+.chip.is-selected { color: var(--yellow-text); }
+
+/* Pulso do CTA de cadastro em verde (sobrescreve o glow padrão) */
+@keyframes ctaPulse {
+  0%, 100% { box-shadow: 0 12px 24px -12px rgba(166, 242, 60, 0.5); transform: translateY(0) scale(1); }
+  50% { box-shadow: 0 18px 36px -10px rgba(166, 242, 60, 0.5), 0 0 0 5px rgba(166, 242, 60, 0.18); transform: translateY(-2px) scale(1.015); }
+}
+
+/* Modal escuro */
+.lp-modal__panel { background: #1c0e3c; color: var(--ink); box-shadow: 0 24px 60px -20px #000; }
+.lp-modal__title { color: var(--ink); }
+.lp-modal__close { color: var(--ink-faint); }
+
+/* Confirmação */
+.lp-done__check { color: var(--yellow-text); }
+
+/* Logo do influenciador no header (marca alta/quadrada) */
 .lp-jon-motion { height: 40px; }
 @media (min-width: 880px) { .lp-jon-motion { height: 48px; } }
 
@@ -1274,22 +1311,22 @@ window.BRAND = {
     favicon: './brands/betano/assets/favicon.png'
   },
 
-  // Cores da Betano: branco + laranja, texto preto. (sobrescrevem o engine)
+  // Cores — identidade do NOBRU: premium roxo (2 tons) + branco + verde neon.
   tokens: {
-    '--red': '#FF3C00',          // laranja — primária/CTA/hero/acentos
-    '--red-rgb': '255, 60, 0',   // mesmo laranja em rgb (glows com alpha)
-    '--red-deep': '#e63600',     // fim do gradiente da hero
-    '--burgundy': '#7a1d00',
-    '--dark-purple': '#191932',  // azul tonal da marca (fundos escuros pontuais)
-    '--yellow': '#FF3C00',       // sem chip amarelo na Betano: alias do laranja
-    '--yellow-text': '#ffffff',
-    '--white': '#FAF5F0',        // off-white da marca (fundo do corpo / casa com o divider)
-    '--ink': '#141414',          // texto preto
-    '--ink-soft': '#4a4a4a',
-    '--ink-faint': '#8a8a8a',
-    '--bg-2': '#FFFFFF',         // cards brancos (destacam no off-white)
-    '--line': 'rgba(0, 0, 0, 0.12)',
-    '--line-strong': 'rgba(0, 0, 0, 0.22)',
+    '--red': '#A6F23C',          // verde neon — acentos/destaque/foco/glow/ações
+    '--red-rgb': '166, 242, 60',
+    '--red-deep': '#160a30',     // roxo profundo — fim do gradiente do hero
+    '--burgundy': '#3a1a6e',
+    '--dark-purple': '#160a30',
+    '--yellow': '#A6F23C',       // alias do verde
+    '--yellow-text': '#15082e',  // texto escuro sobre o verde
+    '--white': '#ffffff',        // texto branco no hero
+    '--ink': '#f2eefb',          // texto claro
+    '--ink-soft': '#bcb0d8',
+    '--ink-faint': '#8b7fae',
+    '--bg-2': '#241149',         // cards roxo escuro
+    '--line': 'rgba(255, 255, 255, 0.10)',
+    '--line-strong': 'rgba(166, 242, 60, 0.35)',
     '--font-hero': "'Betano Nichrome', system-ui, sans-serif",
     '--font-body': "'Haffer', system-ui, sans-serif",
     '--font-cta': "'Haffer', system-ui, sans-serif",   // CTAs em Haffer SemiBold

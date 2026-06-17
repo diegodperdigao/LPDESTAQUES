@@ -1,17 +1,54 @@
 /* ===========================================================
-   Betano — CSS específico da marca (carregado pelo build).
-   Só o que é exclusivo da Betano: a textura tonal laranja no hero.
-   O layout das imagens do influenciador (foto vertical no desktop +
-   banner horizontal no mobile) vive no engine compartilhado.
+   Betano — identidade do NOBRU: premium ROXO (2 tons) + branco + VERDE neon.
+   Tema escuro: superfícies roxas, texto claro, verde nos detalhes e ações.
    =========================================================== */
 
-/* Hero com a textura tonal — sem o radial decorativo da SuperJon */
-.lp-hero {
-  background: var(--red) url('./brands/betano/assets/hero-tonal-orange.png') center / cover no-repeat;
-}
-.lp-hero::after { display: none; }
+/* Fundo geral escuro (roxo profundo) */
+html, body { background: #160a30; }
+.lp { background: #160a30; }
+.lp-body { background: #160a30; }
 
-/* Logo do influenciador (marca alta/quadrada): um pouco maior que o slot
-   padrão de wordmark, pra ficar visível ao lado da logo Betano. */
+/* Hero: dois tons de roxo + brilho verde sutil */
+.lp-hero {
+  background: linear-gradient(160deg, #7C3AED 0%, #3a1a6e 52%, #160a30 100%);
+}
+.lp-hero::after {
+  display: block;
+  background: radial-gradient(circle, rgba(166, 242, 60, 0.2), transparent 70%);
+}
+
+/* Superfícies escuras (inputs, opções, chips, cards) */
+.lp-gate__opt { background: #241149; border-color: rgba(166, 242, 60, 0.25); color: var(--ink); }
+.lp-gate__opt:hover { border-color: var(--red); box-shadow: 0 10px 22px -14px rgba(166, 242, 60, 0.5); }
+.lp-input { background: #241149; border-color: rgba(255, 255, 255, 0.14); color: var(--ink); }
+.lp-input::placeholder { color: #8b7fae; }
+.chip { background: #241149; border-color: rgba(255, 255, 255, 0.16); color: var(--ink-soft); }
+.lp-q { background: #1e0f40; border-color: rgba(255, 255, 255, 0.07); }
+.lp-q__num, .lp-steps__n { color: var(--yellow-text); }   /* número sobre o verde */
+
+/* Ações em VERDE com texto escuro */
+.lp-cta { color: var(--yellow-text); box-shadow: 0 14px 30px -12px rgba(166, 242, 60, 0.5); }
+.lp-cta:hover { box-shadow: 0 18px 36px -10px rgba(166, 242, 60, 0.65); }
+.lp-cta--go:hover { box-shadow: 0 18px 34px -10px rgba(166, 242, 60, 0.5); }
+.lp-gate__opt--primary { color: var(--yellow-text); }
+.lp-gate__opt--primary .lp-gate__opt-arrow { color: var(--yellow-text); }
+.lp-gate__opt--primary:hover { box-shadow: 0 12px 24px -12px rgba(166, 242, 60, 0.6); }
+.chip.is-selected { color: var(--yellow-text); }
+
+/* Pulso do CTA de cadastro em verde (sobrescreve o glow padrão) */
+@keyframes ctaPulse {
+  0%, 100% { box-shadow: 0 12px 24px -12px rgba(166, 242, 60, 0.5); transform: translateY(0) scale(1); }
+  50% { box-shadow: 0 18px 36px -10px rgba(166, 242, 60, 0.5), 0 0 0 5px rgba(166, 242, 60, 0.18); transform: translateY(-2px) scale(1.015); }
+}
+
+/* Modal escuro */
+.lp-modal__panel { background: #1c0e3c; color: var(--ink); box-shadow: 0 24px 60px -20px #000; }
+.lp-modal__title { color: var(--ink); }
+.lp-modal__close { color: var(--ink-faint); }
+
+/* Confirmação */
+.lp-done__check { color: var(--yellow-text); }
+
+/* Logo do influenciador no header (marca alta/quadrada) */
 .lp-jon-motion { height: 40px; }
 @media (min-width: 880px) { .lp-jon-motion { height: 48px; } }

@@ -15,22 +15,22 @@ window.BRAND = {
     favicon: './brands/betano/assets/favicon.png'
   },
 
-  // Cores da Betano: branco + laranja, texto preto. (sobrescrevem o engine)
+  // Cores — identidade do NOBRU: premium roxo (2 tons) + branco + verde neon.
   tokens: {
-    '--red': '#FF3C00',          // laranja — primária/CTA/hero/acentos
-    '--red-rgb': '255, 60, 0',   // mesmo laranja em rgb (glows com alpha)
-    '--red-deep': '#e63600',     // fim do gradiente da hero
-    '--burgundy': '#7a1d00',
-    '--dark-purple': '#191932',  // azul tonal da marca (fundos escuros pontuais)
-    '--yellow': '#FF3C00',       // sem chip amarelo na Betano: alias do laranja
-    '--yellow-text': '#ffffff',
-    '--white': '#FAF5F0',        // off-white da marca (fundo do corpo / casa com o divider)
-    '--ink': '#141414',          // texto preto
-    '--ink-soft': '#4a4a4a',
-    '--ink-faint': '#8a8a8a',
-    '--bg-2': '#FFFFFF',         // cards brancos (destacam no off-white)
-    '--line': 'rgba(0, 0, 0, 0.12)',
-    '--line-strong': 'rgba(0, 0, 0, 0.22)',
+    '--red': '#A6F23C',          // verde neon — acentos/destaque/foco/glow/ações
+    '--red-rgb': '166, 242, 60',
+    '--red-deep': '#160a30',     // roxo profundo — fim do gradiente do hero
+    '--burgundy': '#3a1a6e',
+    '--dark-purple': '#160a30',
+    '--yellow': '#A6F23C',       // alias do verde
+    '--yellow-text': '#15082e',  // texto escuro sobre o verde
+    '--white': '#ffffff',        // texto branco no hero
+    '--ink': '#f2eefb',          // texto claro
+    '--ink-soft': '#bcb0d8',
+    '--ink-faint': '#8b7fae',
+    '--bg-2': '#241149',         // cards roxo escuro
+    '--line': 'rgba(255, 255, 255, 0.10)',
+    '--line-strong': 'rgba(166, 242, 60, 0.35)',
     '--font-hero': "'Betano Nichrome', system-ui, sans-serif",
     '--font-body': "'Haffer', system-ui, sans-serif",
     '--font-cta': "'Haffer', system-ui, sans-serif",   // CTAs em Haffer SemiBold
