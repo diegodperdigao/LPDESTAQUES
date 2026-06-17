@@ -1045,81 +1045,46 @@ body {
 }
 
 /* ===========================================================
-   Influenciador no hero (compartilhado por todas as marcas).
-   Foto VERTICAL no desktop (entre o título e o selo) + BANNER
-   HORIZONTAL no mobile (logo abaixo do título). As imagens vêm da
-   config (hero.creatorPhoto / hero.creatorBanner); se uma marca não
-   tiver a imagem, o engine oculta o <img> via inline style.
+   Influenciador no hero — a imagem PREENCHE o painel (cover); a logo
+   e o selo +18 ficam POR CIMA. As imagens (hero.creatorPhoto = desktop,
+   hero.creatorBanner = mobile) são filhas diretas de .lp-hero, como fundo.
+   Sem imagem, o engine oculta o <img> via inline style.
    =========================================================== */
-.lp-hero__photo { display: none; }              /* só desktop */
-.lp-hero__banner { display: none; }             /* base oculto */
-
-/* Mobile: banner horizontal nas telas iniciais (gate e "criar conta").
-   Some só quando aparece o formulário inteiro de perguntas. */
-[data-screen="gate"] .lp-hero__banner,
-[data-screen="create"] .lp-hero__banner,
-[data-screen="form"] .lp-hero__banner {
-  display: block;
+.lp-hero__photo,
+.lp-hero__banner {
+  position: absolute;
+  inset: 0;
   width: 100%;
-  max-height: 320px;          /* maior: o título saiu do hero, sobra espaço */
-  margin: 30px auto 8px;       /* desce a imagem (respiro no topo) */
-  object-fit: contain;
+  height: 100%;
+  object-fit: cover;
   object-position: center top;
+  z-index: 0;
+  display: none;                 /* cada breakpoint mostra a sua */
 }
-
-/* Fluxo direto (mobile): a foto do influ entra como banner no header.
-   O +18 pode ficar abaixo da dobra, então o header pode ser maior. */
-[data-flow="direct"] .lp-hero__banner {
-  display: block;
-  width: 100%;
-  max-height: 210px;
-  margin: 10px auto 4px;
-  object-fit: contain;
-  object-position: center;
+.lp-hero__scrim {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  display: none;
 }
+.lp-hero__inner { z-index: 2; }  /* logo/selo por cima da imagem e do scrim */
+.lp-hero::after { display: none; } /* a imagem é o fundo: sem o glow decorativo */
 
-@media (min-width: 880px) {
-  /* desktop nunca usa o banner (usa a foto vertical, sempre visível) */
-  [data-screen="gate"] .lp-hero__banner,
-  [data-screen="create"] .lp-hero__banner,
-  [data-screen="form"] .lp-hero__banner,
-  [data-flow="direct"] .lp-hero__banner { display: none; }
-  .lp-hero__photo {                 /* desktop: foto vertical — caixa abraça a arte */
-    display: block;
-    flex: 0 1 auto;
-    min-height: 0;
-    width: auto;
-    height: auto;
-    max-width: 100%;
-    max-height: 58vh;               /* elemento = imagem ajustada; respiro p/ a sombra */
-    margin: auto;                   /* centraliza entre a logo e o selo */
-    object-fit: contain;
-  }
-  .lp-hero__foot { margin-top: 0; }
-
-  /* Sem título/subtítulo: o gate/formulário ocupa a parte branca inteira,
-     então damos mais largura e escala ao conteúdo no desktop. */
-  .lp-body__inner { width: 100%; max-width: 720px; }
-
-  .lp-gate__eyebrow { font-size: 12px; margin-bottom: 22px; }
-  .lp-gate__title { font-size: clamp(34px, 3.4vw, 48px); }
-  .lp-gate__sub { font-size: 15px; margin-top: 12px; }
-  .lp-gate__opts { gap: 12px; margin-top: 26px; }
-  .lp-gate__opt { padding: 20px 22px; font-size: 17px; border-radius: 15px; }
-  .lp-cta { font-size: 17px; padding: 18px; }
-}
-
-/* ===========================================================
-   Fluxo DIRETO no mobile — objetivo: caber tudo numa tela só
-   (sem scroll). Compacta espaçamentos do formulário e do hero.
-   O selo +18 pode ficar abaixo da dobra (ok scrollar só p/ ele).
-   =========================================================== */
+/* ---------------- MOBILE: banner preenche o header (16:10) ---------------- */
 @media (max-width: 879px) {
-  /* "Seus dados" some no mobile (otimiza espaço, ajuda a caber numa tela) */
+  .lp-hero { min-height: 62.5vw; }       /* 100/1.6 -> proporção 16:10 */
+  .lp-hero__banner { display: block; }   /* fundo do header */
+  .lp-hero__scrim {
+    display: block;
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0.5), transparent 30%, transparent 74%, rgba(0, 0, 0, 0.32));
+  }
+
+  /* "Seus dados" some no mobile (otimiza espaço) */
   .lp-section-label { display: none; }
 
-  [data-flow="direct"] .lp-hero { padding-bottom: 8px; }
-  /* form encosta no header (não centraliza), empurrando o +18 p/ baixo da dobra */
+  /* Fluxo direto: header menor + form compacto p/ caber numa tela só */
+  [data-flow="direct"] .lp-hero { min-height: 52vw; }
   [data-flow="direct"] .lp-body { padding-top: 10px; }
   [data-flow="direct"] .lp-body__inner { justify-content: flex-start; padding: 6px 0 14px; }
   [data-flow="direct"] .lp-q { padding: 8px 11px; margin-bottom: 7px; }
@@ -1133,111 +1098,25 @@ body {
   [data-flow="direct"] .lp-cta { margin-top: 10px; padding: 12px; }
 }
 
-/* ===========================================================
-   Tratamento da imagem do influenciador (suaviza a inserção).
-   Selecionável via ?fx=card|round|fade|cover|none (default: card).
-   Aplica em desktop (.lp-hero__photo) e mobile (.lp-hero__banner).
-   =========================================================== */
-[data-fx="round"] .lp-hero__photo,
-[data-fx="round"] .lp-hero__banner,
-[data-fx="card"]  .lp-hero__photo,
-[data-fx="card"]  .lp-hero__banner,
-[data-fx="cover"] .lp-hero__photo,
-[data-fx="cover"] .lp-hero__banner { border-radius: 16px; }
-
-[data-fx="card"] .lp-hero__photo,
-[data-fx="card"] .lp-hero__banner {
-  box-shadow: 0 24px 54px -12px rgba(0, 0, 0, 0.6), 0 8px 20px -8px rgba(0, 0, 0, 0.45);
-}
-
-[data-fx="cover"] .lp-hero__photo { object-fit: cover; object-position: center top; }
-[data-fx="cover"] .lp-hero__banner {
-  object-fit: cover;
-  object-position: center top;   /* preserva a cabeça/boné ao cortar */
-  height: 200px;
-  max-height: 200px;
-}
-
-[data-fx="fade"] .lp-hero__photo,
-[data-fx="fade"] .lp-hero__banner {
-  -webkit-mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent),
-    linear-gradient(to bottom, transparent, #000 8%, #000 92%, transparent);
-  -webkit-mask-composite: source-in;
-  mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent),
-    linear-gradient(to bottom, transparent, #000 8%, #000 92%, transparent);
-  mask-composite: intersect;
-}
-
+/* ---------------- DESKTOP: foto preenche o painel (3:4) ---------------- */
 @media (min-width: 880px) {
-  [data-fx="round"] .lp-hero__photo,
-  [data-fx="card"]  .lp-hero__photo,
-  [data-fx="cover"] .lp-hero__photo { border-radius: 20px; }
-
-  /* cover no desktop: a imagem é o FUNDO do painel inteiro (edge-to-edge);
-     a logo (topo) e o selo (base) ficam POR CIMA da imagem. */
-  [data-fx="cover"] .lp-hero__photo {
-    position: absolute;
-    top: -44px; left: -56px; right: -56px; bottom: -48px;  /* = padding do hero */
-    width: auto;
-    height: auto;
-    min-height: 0;
-    max-width: none;
-    max-height: none;
-    margin: 0;
-    border-radius: 0;
-    object-fit: cover;
-    object-position: center top;
-    z-index: 0;
-  }
-  /* scrim: escurece topo e base p/ a logo e o selo lerem sobre a foto */
-  [data-fx="cover"] .lp-hero__inner::before {
-    content: "";
-    position: absolute;
-    top: -44px; left: -56px; right: -56px; bottom: -48px;
+  .lp-hero__photo { display: block; }
+  .lp-hero__scrim {
+    display: block;
     background: linear-gradient(180deg,
-      rgba(0, 0, 0, 0.5) 0%, rgba(0, 0, 0, 0.1) 22%,
-      transparent 46%, transparent 60%, rgba(0, 0, 0, 0.62) 100%);
-    z-index: 1;
-    pointer-events: none;
+      rgba(0, 0, 0, 0.55) 0%, rgba(0, 0, 0, 0.12) 20%,
+      transparent 46%, transparent 58%, rgba(0, 0, 0, 0.62) 100%);
   }
-  [data-fx="cover"] .lp-hero__top,
-  [data-fx="cover"] .lp-hero__foot { position: relative; z-index: 2; }
-  [data-fx="cover"] .lp-hero__foot { margin-top: auto; }
-}
+  .lp-hero__foot { margin-top: auto; }   /* selo na base, por cima da imagem */
 
-/* ===========================================================
-   Cover no MOBILE: a imagem do influ é o FUNDO do header (edge-to-edge);
-   a logo fica por cima. (O selo +18 no mobile fica no rodapé do corpo.)
-   =========================================================== */
-@media (max-width: 879px) {
-  [data-fx="cover"] .lp-hero {
-    position: relative;
-    min-height: 62.5vw;        /* = 100/1.6 -> proporção 16:10 exata (sem corte) */
-    overflow: hidden;
-    padding-bottom: 0;
-  }
-  [data-fx="cover"] .lp-hero__banner {
-    position: absolute !important;
-    inset: 0;
-    width: 100% !important;
-    height: 100% !important;
-    max-height: none !important;
-    margin: 0 !important;
-    border-radius: 0;
-    object-fit: cover;
-    object-position: center top;
-    z-index: 0;
-  }
-  [data-fx="cover"] .lp-hero__inner { position: relative; z-index: 2; }
-  /* scrim no topo p/ a logo ler sobre a imagem */
-  [data-fx="cover"] .lp-hero::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(180deg, rgba(0, 0, 0, 0.45), transparent 32%, transparent 72%, rgba(0, 0, 0, 0.3));
-    z-index: 1;
-    pointer-events: none;
-  }
+  /* Sem título/subtítulo: o gate/formulário ocupa a parte branca inteira */
+  .lp-body__inner { width: 100%; max-width: 720px; }
+  .lp-gate__eyebrow { font-size: 12px; margin-bottom: 22px; }
+  .lp-gate__title { font-size: clamp(34px, 3.4vw, 48px); }
+  .lp-gate__sub { font-size: 15px; margin-top: 12px; }
+  .lp-gate__opts { gap: 12px; margin-top: 26px; }
+  .lp-gate__opt { padding: 20px 22px; font-size: 17px; border-radius: 15px; }
+  .lp-cta { font-size: 17px; padding: 18px; }
 }
 
 </style>
@@ -1319,6 +1198,11 @@ html, body { background: #0b0b0c; }
   <main class="lp" id="lp">
     <!-- Hero (preenchido pelo engine a partir da config da marca) -->
     <header class="lp-hero">
+      <!-- Influenciador: PREENCHE o painel (cover). Filhos diretos do hero p/
+           o inset:0 cobrir o painel inteiro. Foto = desktop, banner = mobile. -->
+      <img class="lp-hero__photo" alt="" fetchpriority="high" decoding="async" />
+      <img class="lp-hero__banner" alt="" fetchpriority="high" decoding="async" />
+      <div class="lp-hero__scrim" aria-hidden="true"></div>
       <div class="lp-hero__inner">
         <div class="lp-hero__top">
           <span class="lp-logo-wrap">
@@ -1327,10 +1211,7 @@ html, body { background: #0b0b0c; }
           </span>
           <img class="lp-jon-motion" alt="" fetchpriority="high" decoding="async" />
         </div>
-        <!-- Influenciador no hero: foto vertical (desktop) + banner horizontal (mobile) -->
-        <img class="lp-hero__photo" alt="" fetchpriority="high" decoding="async" />
-        <img class="lp-hero__banner" alt="" fetchpriority="high" decoding="async" />
-        <!-- Selo +18 no rodapé do hero (visível no desktop) -->
+        <!-- Selo +18 (por cima da imagem no desktop) -->
         <div class="lp-hero__foot">
           <span data-seal></span>
           <span class="lp-hero__foot-text"></span>
@@ -1585,10 +1466,6 @@ window.BRAND = {
      =========================================================== */
   function applyBranding() {
     document.documentElement.setAttribute('data-flow', B.flow || 'full');
-    // Tratamento da imagem do influenciador — testável via ?fx=card|round|fade|cover|none
-    var fx = new URLSearchParams(window.location.search).get('fx');
-    var FX = ['none', 'round', 'card', 'fade', 'cover'];
-    document.documentElement.setAttribute('data-fx', FX.indexOf(fx) >= 0 ? fx : 'cover');
     if (B.meta) {
       if (B.meta.title) document.title = B.meta.title;
       setMeta('name', 'description', B.meta.description);

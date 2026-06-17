@@ -13,6 +13,11 @@
   <main class="lp" id="lp">
     <!-- Hero (preenchido pelo engine a partir da config da marca) -->
     <header class="lp-hero">
+      <!-- Influenciador: PREENCHE o painel (cover). Filhos diretos do hero p/
+           o inset:0 cobrir o painel inteiro. Foto = desktop, banner = mobile. -->
+      <img class="lp-hero__photo" alt="" fetchpriority="high" decoding="async" />
+      <img class="lp-hero__banner" alt="" fetchpriority="high" decoding="async" />
+      <div class="lp-hero__scrim" aria-hidden="true"></div>
       <div class="lp-hero__inner">
         <div class="lp-hero__top">
           <span class="lp-logo-wrap">
@@ -21,10 +26,7 @@
           </span>
           <img class="lp-jon-motion" alt="" fetchpriority="high" decoding="async" />
         </div>
-        <!-- Influenciador no hero: foto vertical (desktop) + banner horizontal (mobile) -->
-        <img class="lp-hero__photo" alt="" fetchpriority="high" decoding="async" />
-        <img class="lp-hero__banner" alt="" fetchpriority="high" decoding="async" />
-        <!-- Selo +18 no rodapé do hero (visível no desktop) -->
+        <!-- Selo +18 (por cima da imagem no desktop) -->
         <div class="lp-hero__foot">
           <span data-seal></span>
           <span class="lp-hero__foot-text"></span>
