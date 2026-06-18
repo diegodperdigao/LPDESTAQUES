@@ -5,8 +5,8 @@
    =========================================================== */
 window.BRAND = {
   id: 'betano',
-  brand: 'betano',          // coluna `brand` no banco
-  source: 'lp_betano',      // coluna `source` (criador/campanha) — ajustar
+  brand: 'nobru',           // coluna `brand` no banco (influenciador)
+  source: 'full',           // qual das 2 LPs: 'full' (com gate) | 'direta'
 
   meta: {
     title: 'Betano — Entre no grupo',
@@ -155,7 +155,7 @@ window.BRAND = {
   variants: {
     direta: {
       flow: 'direct',                 // abre direto nas perguntas
-      source: 'lp_betano_direta',     // distingue a origem na MESMA tabela
+      source: 'direta',               // distingue a origem na MESMA tabela
       meta: { title: 'Betano — Entrar no grupo (direto)' },
       // no fluxo direto, o e-mail/ID vem DEPOIS da faixa de aposta
       form: { order: ['nome', 'telefone', 'bet', 'contato'] }

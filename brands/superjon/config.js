@@ -6,8 +6,8 @@
    =========================================================== */
 window.BRAND = {
   id: 'superjon',
-  brand: 'superbet',        // vai na coluna `brand` do banco
-  source: 'lp_superjon',    // vai na coluna `source` (criador/campanha)
+  brand: 'jon',             // vai na coluna `brand` do banco (influenciador)
+  source: 'full',           // qual das 2 LPs: 'full' (com gate) | 'direta'
 
   meta: {
     title: 'SuperJon — Entre no grupo',
@@ -140,7 +140,7 @@ window.BRAND = {
   variants: {
     direta: {
       flow: 'direct',
-      source: 'lp_superjon_direta',
+      source: 'direta',
       meta: { title: 'SuperJon — Entrar no grupo (direto)' },
       // no fluxo direto, o e-mail/ID vem DEPOIS da faixa de aposta
       form: { order: ['nome', 'telefone', 'bet', 'contato'] }
