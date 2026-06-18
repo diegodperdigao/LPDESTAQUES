@@ -1,6 +1,6 @@
 # Deploy & Backend — guia prático
 
-4 LPs (2 por marca): `superjon`, `superjon-direta`, `betano`, `betano-direta`.
+4 LPs (2 por creator): `jon`, `jon-direta`, `nobru`, `nobru-direta`.
 Mesma base de código (engine compartilhado); cada marca tem 1 projeto Supabase
 próprio (isolamento de tráfego). As 2 variantes de uma marca dividem o mesmo
 banco e o mesmo link de cadastro — diferenciadas pelo campo `source`.
@@ -14,7 +14,7 @@ banco e o mesmo link de cadastro — diferenciadas pelo campo `source`.
    - **Build command:** `node build-all.mjs`
    - **Build output directory:** `dist`
 3. Deploy. As LPs ficam em:
-   - `/superjon/` · `/superjon-direta/` · `/betano/` · `/betano-direta/`
+   - `/jon/` · `/jon-direta/` · `/nobru/` · `/nobru-direta/`
    - (a raiz `/` é só um índice de QA com os 4 links)
 4. (Opcional) Domínios/subdomínios próprios por LP em **Custom domains**.
 
@@ -94,5 +94,5 @@ Vale para as duas variantes da marca (herdado).
 
 ```bash
 node build-all.mjs          # gera as 4 em dist/
-node build.mjs betano direta # uma específica + preview-betano-direta.html
+node build.mjs nobru direta # uma específica + preview-nobru-direta.html
 ```

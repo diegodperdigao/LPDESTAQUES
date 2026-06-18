@@ -11,10 +11,10 @@ engine/
   engine.js          # núcleo: fluxo, validação, submit (lê window.BRAND)
   engine.css         # estilos (tokens via CSS vars, sobrescritos pela marca)
 brands/
-  superjon/
-    config.js        # TUDO da marca: tokens, textos, perguntas, links, supabase
-    assets/          # logos/imagens da marca
-  betano/            # 2ª marca (scaffold) — mesma estrutura
+  jon/
+    config.js        # TUDO do creator: tokens, textos, perguntas, links, supabase
+    assets/          # logos/imagens do creator
+  nobru/             # 2º creator — mesma estrutura
 index.template.html  # shell genérico (placeholders <!--BRAND_HEAD--> e config)
 build.mjs            # gera dist/<marca>/ (deploy) + preview self-contained
 supabase/migrations/0001_lp_leads.sql   # tabela de leads (rodar no projeto)
@@ -26,8 +26,8 @@ preview[-<marca>].html  # preview self-contained (gerado pelo build)
 ## Build / preview
 
 ```bash
-node build.mjs superjon   # -> dist/superjon/ + preview.html
-node build.mjs betano     # -> dist/betano/  + preview-betano.html
+node build.mjs jon     # -> dist/jon/   + preview.html
+node build.mjs nobru   # -> dist/nobru/ + preview-nobru.html
 ```
 
 `dist/<marca>/` é autossuficiente (index.html com `<head>` da marca bakeado +
@@ -41,7 +41,7 @@ engine/ + brands/<marca>/). `preview*.html` é tudo inline, p/ abrir direto.
 
 ## Replicar para uma nova marca
 
-1. `cp -r brands/superjon brands/<nova>` e ajuste `config.js` (tokens, textos,
+1. `cp -r brands/jon brands/<novo>` e ajuste `config.js` (tokens, textos,
    perguntas, `links`, `supabase`, `creator`, `source`, `meta.favicon`) + troque os `assets/`.
 2. `node build.mjs <nova>` e crie um projeto Cloudflare Pages apontando p/ `dist/<nova>`.
 3. **Regra de ouro:** nada de marca no `engine/` (compartilhado). Tudo em `brands/<nova>/`.

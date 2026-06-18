@@ -4,20 +4,20 @@
  *   node build-all.mjs
  *
  * Saída:
- *   dist/superjon/ · dist/superjon-direta/ · dist/betano/ · dist/betano-direta/
+ *   dist/jon/ · dist/jon-direta/ · dist/nobru/ · dist/nobru-direta/
  *   dist/index.html  (índice de QA com links pras 4)
  *
  * No Cloudflare Pages: build command = `node build-all.mjs`, output dir = `dist`.
- * As LPs ficam em /superjon/, /superjon-direta/, /betano/, /betano-direta/.
+ * As LPs ficam em /jon/, /jon-direta/, /nobru/, /nobru-direta/.
  */
 import { execSync } from 'child_process';
 import { rmSync, writeFileSync } from 'fs';
 
 const targets = [
-  ['superjon'],
-  ['superjon', 'direta'],
-  ['betano'],
-  ['betano', 'direta']
+  ['jon'],
+  ['jon', 'direta'],
+  ['nobru'],
+  ['nobru', 'direta']
 ];
 
 rmSync('dist', { recursive: true, force: true });

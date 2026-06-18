@@ -1,10 +1,10 @@
 /* ===========================================================
-   CONFIG DA MARCA — Betano (SCAFFOLD)
-   Mesma estrutura da SuperJon. Preencher: assets (logo/criador),
-   links (cadastro/WhatsApp), supabase (projeto leads-betano), favicon.
+   CONFIG DO CREATOR — Nobru (Nobru × Betano)
+   Mesma estrutura do Jon. Preencher: assets (logo/criador),
+   links (cadastro/WhatsApp), supabase (projeto leads-nobru), favicon.
    =========================================================== */
 window.BRAND = {
-  id: 'betano',
+  id: 'nobru',
   creator: 'nobru',         // coluna `creator` no banco (influenciador)
   source: 'full',           // qual das 2 LPs: 'full' (com gate) | 'direta'
 
@@ -12,7 +12,7 @@ window.BRAND = {
     title: 'Grupo VIP Nobru — Entre no grupo',
     description: 'Responda as perguntas rápidas e a equipe te direciona pro grupo. Conteúdo para maiores de 18 anos.',
     themeColor: '#FF3C00',
-    favicon: './brands/betano/assets/favicon.png'
+    favicon: './brands/nobru/assets/favicon.png'
   },
 
   // Cores — identidade do NOBRU: premium DOIS TONS DE ROXO + branco;
@@ -43,13 +43,13 @@ window.BRAND = {
   fonts: {
     google: '',
     faces: [
-      { family: 'Betano Nichrome', src: './brands/betano/assets/fonts/BetanoNichromeBold.woff2',
+      { family: 'Betano Nichrome', src: './brands/nobru/assets/fonts/BetanoNichromeBold.woff2',
         weight: '100 900', style: 'normal', format: 'woff2' },
-      { family: 'Haffer', src: './brands/betano/assets/fonts/HafferRegular.woff2',
+      { family: 'Haffer', src: './brands/nobru/assets/fonts/HafferRegular.woff2',
         weight: '400', style: 'normal', format: 'woff2' },
-      { family: 'Haffer', src: './brands/betano/assets/fonts/HafferMedium.woff2',
+      { family: 'Haffer', src: './brands/nobru/assets/fonts/HafferMedium.woff2',
         weight: '500', style: 'normal', format: 'woff2' },
-      { family: 'Haffer', src: './brands/betano/assets/fonts/HafferSemiBold.woff2',
+      { family: 'Haffer', src: './brands/nobru/assets/fonts/HafferSemiBold.woff2',
         weight: '600 700', style: 'normal', format: 'woff2' }
     ]
   },
@@ -58,11 +58,11 @@ window.BRAND = {
     brandLogo: 'https://i.ibb.co/qMcDxty8/image.png',
     brandLogoWhite: true,     // deixa a logo branca sobre a hero laranja
     brandWordmark: 'betano',
-    creatorLogo: './brands/betano/assets/influ-logo.png', // logo do influ (fundo preto removido)
+    creatorLogo: './brands/nobru/assets/influ-logo.png', // logo do influ (fundo preto removido)
     creatorAlt: 'Nobru',
     // Influenciador (imagens finais do Nobru — WebP otimizado p/ alto tráfego):
-    creatorPhoto: './brands/betano/assets/nobru-desktop.webp', // desktop: vertical 3:4 (105KB)
-    creatorBanner: './brands/betano/assets/nobru-mobile.webp', // mobile: horizontal 16:10 (79KB)
+    creatorPhoto: './brands/nobru/assets/nobru-desktop.webp', // desktop: vertical 3:4 (105KB)
+    creatorBanner: './brands/nobru/assets/nobru-mobile.webp', // mobile: horizontal 16:10 (79KB)
     creatorPhotoAlt: 'Nobru',
     title: 'Grupo VIP Nobru', // mobile: nome curto no hero
     subtitleMobile: 'Responda abaixo e garanta sua vaga no grupo.',
@@ -150,7 +150,7 @@ window.BRAND = {
   },
 
   // Variantes da marca — herdam TUDO (assets, link, Supabase/DB) e mudam só
-  // o necessário. Build: node build.mjs betano direta  -> dist/betano-direta
+  // o necessário. Build: node build.mjs nobru direta  -> dist/nobru-direta
   variants: {
     direta: {
       flow: 'direct',                 // abre direto nas perguntas

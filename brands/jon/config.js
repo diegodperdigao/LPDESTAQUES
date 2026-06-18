@@ -1,11 +1,11 @@
 /* ===========================================================
-   CONFIG DA MARCA — SuperJon (Jon Vlogs × Superbet)
+   CONFIG DO CREATOR — Jon (Jon Vlogs × Superbet)
    Tudo que muda por marca/criador fica AQUI. O engine é genérico.
    Para replicar: copie esta pasta (brands/<nova>/), troque os valores
    e os assets, e aponte o index.html para o novo config.js.
    =========================================================== */
 window.BRAND = {
-  id: 'superjon',
+  id: 'jon',
   creator: 'jon',           // vai na coluna `creator` do banco (influenciador)
   source: 'full',           // qual das 2 LPs: 'full' (com gate) | 'direta'
 
@@ -44,11 +44,11 @@ window.BRAND = {
     brandLogo: 'https://i.ibb.co/YBhrn1zz/Superbet-Logo-svg.png',
     brandLogoWhite: true,        // aplica filtro p/ deixar a logo branca
     brandWordmark: 'superbet',   // fallback se a imagem falhar
-    creatorLogo: './brands/superjon/assets/jonvlogs.png',
+    creatorLogo: './brands/jon/assets/jonvlogs.png',
     creatorAlt: 'Jon Vlogs',
     // Influenciador (imagens finais do Jon — WebP otimizado p/ alto tráfego):
-    creatorPhoto: './brands/superjon/assets/jon-desktop.webp',  // desktop: vertical 3:4 (113KB)
-    creatorBanner: './brands/superjon/assets/jon-mobile.webp',  // mobile: horizontal 16:10 (86KB)
+    creatorPhoto: './brands/jon/assets/jon-desktop.webp',  // desktop: vertical 3:4 (113KB)
+    creatorBanner: './brands/jon/assets/jon-mobile.webp',  // mobile: horizontal 16:10 (86KB)
     creatorPhotoAlt: 'Jon Vlogs',
     title: 'Grupo VIP Jon',
     subtitleMobile: 'Responda abaixo e garanta sua vaga no grupo do Jon Vlogs.',
@@ -135,7 +135,7 @@ window.BRAND = {
   },
 
   // Variantes — herdam TUDO e mudam só o necessário.
-  // Build: node build.mjs superjon direta  -> dist/superjon-direta
+  // Build: node build.mjs jon direta  -> dist/jon-direta
   variants: {
     direta: {
       flow: 'direct',

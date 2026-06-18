@@ -1,8 +1,8 @@
 /**
  * build.mjs — gera a LP de uma marca (e variante) a partir do template + config.
  *
- *   node build.mjs <marca>            # ex.: node build.mjs superjon
- *   node build.mjs <marca> <variante> # ex.: node build.mjs betano direta
+ *   node build.mjs <marca>            # ex.: node build.mjs jon
+ *   node build.mjs <marca> <variante> # ex.: node build.mjs nobru direta
  *
  * Saídas:
  *   dist/<nome>/                  -> deploy (index.html + engine/ + brands/<marca>/)
@@ -13,7 +13,7 @@
  */
 import { readFileSync, writeFileSync, mkdirSync, cpSync, rmSync, existsSync } from 'fs';
 
-const brand = process.argv[2] || process.env.BRAND || 'superjon';
+const brand = process.argv[2] || process.env.BRAND || 'jon';
 const variant = process.argv[3] || process.env.VARIANT || '';
 const cfgCode = readFileSync(`brands/${brand}/config.js`, 'utf8');
 
@@ -115,7 +115,7 @@ if (!variant) {
   preview = preview.replace(`<script src="./brands/${brand}/config.js"></script>`,
     `<script>\n${cfgCode}\n</script>`);
 }
-const previewName = outName === 'superjon' ? 'preview.html' : `preview-${outName}.html`;
+const previewName = outName === 'jon' ? 'preview.html' : `preview-${outName}.html`;
 writeFileSync(previewName, preview);
 
 console.log(`✓ build ${outName} -> dist/${outName}/ + ${previewName}`);
