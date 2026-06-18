@@ -114,11 +114,11 @@ function getSheet_(name) {
   return sh;
 }
 
-// Rode uma vez: cria o gatilho de tempo (5 min). Remove duplicados antes.
+// Rode uma vez: cria o gatilho de tempo (1 min). Remove duplicados antes.
 function setupTrigger() {
   ScriptApp.getProjectTriggers().forEach(function (t) {
     if (t.getHandlerFunction() === 'syncLeads') ScriptApp.deleteTrigger(t);
   });
-  ScriptApp.newTrigger('syncLeads').timeBased().everyMinutes(5).create();
-  Logger.log('Gatilho criado: syncLeads a cada 5 min.');
+  ScriptApp.newTrigger('syncLeads').timeBased().everyMinutes(1).create();
+  Logger.log('Gatilho criado: syncLeads a cada 1 min.');
 }
