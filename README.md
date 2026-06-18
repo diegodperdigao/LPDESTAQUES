@@ -42,7 +42,7 @@ engine/ + brands/<marca>/). `preview*.html` é tudo inline, p/ abrir direto.
 ## Replicar para uma nova marca
 
 1. `cp -r brands/superjon brands/<nova>` e ajuste `config.js` (tokens, textos,
-   perguntas, `links`, `supabase`, `brand`, `source`, `meta.favicon`) + troque os `assets/`.
+   perguntas, `links`, `supabase`, `creator`, `source`, `meta.favicon`) + troque os `assets/`.
 2. `node build.mjs <nova>` e crie um projeto Cloudflare Pages apontando p/ `dist/<nova>`.
 3. **Regra de ouro:** nada de marca no `engine/` (compartilhado). Tudo em `brands/<nova>/`.
 
@@ -50,7 +50,7 @@ engine/ + brands/<marca>/). `preview*.html` é tudo inline, p/ abrir direto.
 
 Leads gravados via **PostgREST** (`/rest/v1/lp_leads`) com a chave anon e RLS
 **insert-only** (grava, não lê pela chave pública). **Recomendado: 1 projeto
-Supabase de leads por marca** (`leads-superbet`, `leads-betano`) p/ isolar
+Supabase de leads por creator** (`leads-jon`, `leads-nobru`) p/ isolar
 tráfego — a config `supabase` de cada marca aponta pro seu projeto.
 
 Setup por marca:
@@ -59,15 +59,16 @@ Setup por marca:
 3. Preencha `supabase.url` e `supabase.anonKey` em `brands/<marca>/config.js`.
 
 ### Sync com Google Sheets
-Database Webhook do Supabase (INSERT em lp_leads) → Web App do Apps Script
-(`apps-script/Code.gs`) → appendRow. Near-real-time.
+Pull em **lote** agendado: o Apps Script (`apps-script/Code.gs`) roda a cada 5 min,
+lê os leads ainda não sincronizados (`synced_to_sheets = false`) e grava de uma vez
+na aba do creator. Lote (não webhook por linha) para não estourar cota sob volume.
 
 ## Config — campos a preencher antes do ar (`brands/<marca>/config.js`)
 
 | Campo | O que é |
 |---|---|
 | `links.registration` | Link de cadastro da casa |
-| `links.whatsapp` / `whatsappVip` | Grupo de WhatsApp (e VIP opcional) |
+| `links.whatsapp` | Grupo de WhatsApp (destino final) |
 | `supabase.url` / `anonKey` | Projeto Supabase de leads da marca |
 | `meta.favicon` · `hero.brandLogo` · `hero.creatorLogo` | Assets da marca |
 | `terms` | Texto oficial dos Termos (revisão jurídica) |

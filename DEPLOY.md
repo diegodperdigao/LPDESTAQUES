@@ -24,10 +24,11 @@ banco e o mesmo link de cadastro — diferenciadas pelo campo `source`.
 
 ## 2. Supabase (banco — 1 projeto por marca)
 
-Para cada marca (`leads-betano`, `leads-superbet`):
+Para cada creator (`leads-nobru`, `leads-jon`):
 
-1. Crie o projeto (região **sa-east-1 / São Paulo**). Para alto tráfego, use um
-   plano/tamanho de compute adequado (não o free, que pausa e tem limites).
+1. Crie o projeto (região **sa-east-1 / São Paulo**). O plano **Free** dá conta
+   do volume típico — o tráfego de acesso nem toca o banco; só os envios de lead,
+   que são inserts pequenos. Suba pro **Pro** apenas em caso de pico viral extremo.
 2. **SQL Editor** → cole e rode `supabase/migrations/0001_lp_leads.sql`.
    (Cria a tabela `lp_leads`, índices e o RLS **insert-only** para a chave anon.)
 3. Pegue em **Project Settings → API**:
@@ -49,9 +50,8 @@ Para cada marca (`leads-betano`, `leads-superbet`):
 Em `brands/<marca>/config.js` → `links`:
 ```js
 links: {
-  registration: 'https://...',   // link de cadastro (afiliado)
-  whatsapp:      'https://chat.whatsapp.com/...',     // grupo principal
-  whatsappVip:   'https://chat.whatsapp.com/...'      // opcional (faixa 5.000+)
+  registration: 'https://...',                    // link de cadastro (afiliado)
+  whatsapp:      'https://chat.whatsapp.com/...'   // grupo único (destino final)
 }
 ```
 Vale para as duas variantes da marca (herdado).
@@ -65,8 +65,8 @@ Vale para as duas variantes da marca (herdado).
    chave **service role** de cada projeto:
    ```json
    [
-     {"name":"betano","url":"https://XXXX.supabase.co","key":"SERVICE_ROLE","sheet":"Betano"},
-     {"name":"superbet","url":"https://YYYY.supabase.co","key":"SERVICE_ROLE","sheet":"Superbet"}
+     {"name":"nobru","url":"https://XXXX.supabase.co","key":"SERVICE_ROLE","sheet":"Nobru"},
+     {"name":"jon","url":"https://YYYY.supabase.co","key":"SERVICE_ROLE","sheet":"Jon"}
    ]
    ```
 3. Rode `setupTrigger()` uma vez (cria o gatilho de 5 em 5 min). Teste com
