@@ -5,7 +5,7 @@
    =========================================================== */
 window.BRAND = {
   id: 'betano',
-  brand: 'nobru',           // coluna `brand` no banco (influenciador)
+  creator: 'nobru',         // coluna `creator` no banco (influenciador)
   source: 'full',           // qual das 2 LPs: 'full' (com gate) | 'direta'
 
   meta: {
@@ -111,7 +111,7 @@ window.BRAND = {
         { value: 'ate_1000', label: 'Até R$ 1.000' },
         { value: '1000_3000', label: 'R$ 1.000 a 3.000' },
         { value: '3000_5000', label: 'R$ 3.000 a 5.000' },
-        { value: '5000_mais', label: 'R$ 5.000+', tier: 'vip' }
+        { value: '5000_mais', label: 'R$ 5.000+' }
       ]
     },
     consentText: 'Ao enviar, você concorda com os ',
@@ -121,8 +121,7 @@ window.BRAND = {
 
   done: {
     title: 'Tudo certo!',
-    text: 'Recebemos seus dados. Em instantes você entra no Grupo VIP Nobru. Fica de olho no WhatsApp informado.',
-    vipBadge: 'Fila VIP'
+    text: 'Recebemos seus dados. Em instantes você entra no Grupo VIP Nobru. Fica de olho no WhatsApp informado.'
   },
 
   seal: {
@@ -165,8 +164,7 @@ window.BRAND = {
   // ---- Integrações (preencher) ----
   links: {
     registration: '',   // TODO: link de cadastro da Betano
-    whatsapp: '',        // TODO: grupo de WhatsApp
-    whatsappVip: ''
+    whatsapp: ''         // TODO: grupo de WhatsApp
   },
 
   // Projeto Supabase dedicado da Betano (leads-betano) — isolamento de tráfego.

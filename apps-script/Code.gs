@@ -16,8 +16,8 @@
  *    ler e marcar como sincronizado; mantenha secreta aqui):
  *
  *    SOURCES = [
- *      {"name":"betano","url":"https://XXXX.supabase.co","key":"SERVICE_ROLE_KEY","sheet":"Betano"},
- *      {"name":"superbet","url":"https://YYYY.supabase.co","key":"SERVICE_ROLE_KEY","sheet":"Superbet"}
+ *      {"name":"nobru","url":"https://XXXX.supabase.co","key":"SERVICE_ROLE_KEY","sheet":"Nobru"},
+ *      {"name":"jon","url":"https://YYYY.supabase.co","key":"SERVICE_ROLE_KEY","sheet":"Jon"}
  *    ]
  *
  * 3. Rode setupTrigger() uma vez (cria o gatilho de 5 em 5 min). Pronto.
@@ -31,9 +31,9 @@ var BATCH = 500;          // linhas por leitura (ajuste se precisar)
 var TABLE = 'lp_leads';
 
 var COLUMNS = [
-  'created_at', 'brand', 'source', 'flow', 'status', 'client_id',
+  'created_at', 'creator', 'source', 'flow', 'status', 'client_id',
   'nome', 'contato', 'telefone',
-  'faixa_aposta_label', 'tier', 'vip_candidate', 'ja_tinha_conta',
+  'faixa_aposta_label', 'ja_tinha_conta',
   'utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term',
   'referrer', 'landing_url'
 ];
@@ -41,7 +41,7 @@ var COLUMNS = [
 var HEADERS = [
   'Data/Hora', 'Creator', 'Origem', 'Fluxo', 'Status', 'Client ID',
   'Nome', 'E-mail/ID', 'WhatsApp',
-  'Faixa de aposta', 'Tier', 'VIP?', 'Já tinha conta',
+  'Faixa de aposta', 'Já tinha conta',
   'utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term',
   'Referrer', 'Landing URL'
 ];

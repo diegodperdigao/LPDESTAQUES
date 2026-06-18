@@ -6,7 +6,7 @@
    =========================================================== */
 window.BRAND = {
   id: 'superjon',
-  brand: 'jon',             // vai na coluna `brand` do banco (influenciador)
+  creator: 'jon',           // vai na coluna `creator` do banco (influenciador)
   source: 'full',           // qual das 2 LPs: 'full' (com gate) | 'direta'
 
   meta: {
@@ -97,7 +97,7 @@ window.BRAND = {
         { value: 'ate_1000', label: 'Até R$ 1.000' },
         { value: '1000_3000', label: 'R$ 1.000 a 3.000' },
         { value: '3000_5000', label: 'R$ 3.000 a 5.000' },
-        { value: '5000_mais', label: 'R$ 5.000+', tier: 'vip' }
+        { value: '5000_mais', label: 'R$ 5.000+' }
       ]
     },
     consentText: 'Ao enviar, você concorda com os ',
@@ -107,8 +107,7 @@ window.BRAND = {
 
   done: {
     title: 'Tudo certo!',
-    text: 'Recebemos seus dados. Em instantes você entra no Grupo VIP Jon. Fica de olho no WhatsApp informado.',
-    vipBadge: 'Fila VIP'
+    text: 'Recebemos seus dados. Em instantes você entra no Grupo VIP Jon. Fica de olho no WhatsApp informado.'
   },
 
   seal: {
@@ -150,8 +149,7 @@ window.BRAND = {
   // ---- Integrações (preencher para ir ao ar) ----
   links: {
     registration: '',      // link de cadastro da Superbet (botão "Criar conta")
-    whatsapp: '',          // grupo de WhatsApp (destino final)
-    whatsappVip: ''        // opcional: grupo VIP (faixa 5.000+)
+    whatsapp: ''           // grupo de WhatsApp (destino final)
   },
 
   // Destino dos leads — projeto Supabase dedicado (REST/PostgREST).

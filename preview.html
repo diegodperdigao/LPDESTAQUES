@@ -1256,7 +1256,7 @@ html, body { background: #0b0b0c; }
    =========================================================== */
 window.BRAND = {
   id: 'superjon',
-  brand: 'jon',             // vai na coluna `brand` do banco (influenciador)
+  creator: 'jon',           // vai na coluna `creator` do banco (influenciador)
   source: 'full',           // qual das 2 LPs: 'full' (com gate) | 'direta'
 
   meta: {
@@ -1347,7 +1347,7 @@ window.BRAND = {
         { value: 'ate_1000', label: 'Até R$ 1.000' },
         { value: '1000_3000', label: 'R$ 1.000 a 3.000' },
         { value: '3000_5000', label: 'R$ 3.000 a 5.000' },
-        { value: '5000_mais', label: 'R$ 5.000+', tier: 'vip' }
+        { value: '5000_mais', label: 'R$ 5.000+' }
       ]
     },
     consentText: 'Ao enviar, você concorda com os ',
@@ -1357,8 +1357,7 @@ window.BRAND = {
 
   done: {
     title: 'Tudo certo!',
-    text: 'Recebemos seus dados. Em instantes você entra no Grupo VIP Jon. Fica de olho no WhatsApp informado.',
-    vipBadge: 'Fila VIP'
+    text: 'Recebemos seus dados. Em instantes você entra no Grupo VIP Jon. Fica de olho no WhatsApp informado.'
   },
 
   seal: {
@@ -1400,8 +1399,7 @@ window.BRAND = {
   // ---- Integrações (preencher para ir ao ar) ----
   links: {
     registration: '',      // link de cadastro da Superbet (botão "Criar conta")
-    whatsapp: '',          // grupo de WhatsApp (destino final)
-    whatsappVip: ''        // opcional: grupo VIP (faixa 5.000+)
+    whatsapp: ''           // grupo de WhatsApp (destino final)
   },
 
   // Destino dos leads — projeto Supabase dedicado (REST/PostgREST).
@@ -1766,19 +1764,16 @@ window.BRAND = {
     opts = opts || {};
     var utm = getTracking();
     var bm = betMeta(state.bet);
-    var tier = bm.tier === 'vip' ? 'vip' : 'standard';
     var jtc = state.hasAccount === 'sim' ? 'sim'
       : (state.hasAccount === 'nao' ? 'nao' : 'criou_agora');
     var row = {
-      brand: B.brand,
+      creator: B.creator,
       source: B.source,
       flow: B.flow || 'full',
       client_id: state.clientId,
       status: opts.partial ? 'parcial' : 'completo',
       faixa_aposta: state.bet,
       faixa_aposta_label: bm.label || '',
-      tier: tier,
-      vip_candidate: tier === 'vip',
       ja_tinha_conta: jtc,
       consentimento: !opts.partial,
       utm_source: utm.utm_source,
@@ -1898,7 +1893,7 @@ window.BRAND = {
 
   function goToGroup(row) {
     var L = B.links || {};
-    var url = (row.tier === 'vip' && L.whatsappVip) ? L.whatsappVip : L.whatsapp;
+    var url = L.whatsapp;
     if (url) { window.location.href = url; return; }
     renderDone(row);
   }
@@ -1910,7 +1905,6 @@ window.BRAND = {
     var d = B.done;
     var box = el('div', 'lp-done');
     box.appendChild(el('div', 'lp-done__check', '✓'));
-    if (row.vip_candidate && d.vipBadge) box.appendChild(el('div', 'lp-done__badge', d.vipBadge));
     box.appendChild(el('h2', 'lp-done__title', d.title));
     box.appendChild(el('p', 'lp-done__text', d.text));
     screenEl.appendChild(box);

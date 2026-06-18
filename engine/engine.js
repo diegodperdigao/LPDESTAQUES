@@ -350,19 +350,16 @@
     opts = opts || {};
     var utm = getTracking();
     var bm = betMeta(state.bet);
-    var tier = bm.tier === 'vip' ? 'vip' : 'standard';
     var jtc = state.hasAccount === 'sim' ? 'sim'
       : (state.hasAccount === 'nao' ? 'nao' : 'criou_agora');
     var row = {
-      brand: B.brand,
+      creator: B.creator,
       source: B.source,
       flow: B.flow || 'full',
       client_id: state.clientId,
       status: opts.partial ? 'parcial' : 'completo',
       faixa_aposta: state.bet,
       faixa_aposta_label: bm.label || '',
-      tier: tier,
-      vip_candidate: tier === 'vip',
       ja_tinha_conta: jtc,
       consentimento: !opts.partial,
       utm_source: utm.utm_source,
@@ -482,7 +479,7 @@
 
   function goToGroup(row) {
     var L = B.links || {};
-    var url = (row.tier === 'vip' && L.whatsappVip) ? L.whatsappVip : L.whatsapp;
+    var url = L.whatsapp;
     if (url) { window.location.href = url; return; }
     renderDone(row);
   }
@@ -494,7 +491,6 @@
     var d = B.done;
     var box = el('div', 'lp-done');
     box.appendChild(el('div', 'lp-done__check', '✓'));
-    if (row.vip_candidate && d.vipBadge) box.appendChild(el('div', 'lp-done__badge', d.vipBadge));
     box.appendChild(el('h2', 'lp-done__title', d.title));
     box.appendChild(el('p', 'lp-done__text', d.text));
     screenEl.appendChild(box);
