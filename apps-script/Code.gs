@@ -88,8 +88,8 @@ function syncSource_(src) {
   });
   sheet.getRange(sheet.getLastRow() + 1, 1, values.length, COLUMNS.length).setValues(values);
 
-  // 3) marca como sincronizadas (PATCH em lote por id)
-  var ids = rows.map(function (r) { return '"' + r.id + '"'; }).join(',');
+  // 3) marca como sincronizadas (PATCH em lote por id; UUID não leva aspas)
+  var ids = rows.map(function (r) { return r.id; }).join(',');
   var patch = UrlFetchApp.fetch(base + '?id=in.(' + ids + ')', {
     method: 'patch',
     headers: { 'apikey': src.key, 'Authorization': 'Bearer ' + src.key,
