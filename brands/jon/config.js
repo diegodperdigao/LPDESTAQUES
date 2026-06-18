@@ -13,7 +13,7 @@ window.BRAND = {
     title: 'Grupo VIP Jon — Entre no grupo',
     description: 'Responda as perguntas rápidas e a equipe te direciona pro grupo. Conteúdo para maiores de 18 anos.',
     themeColor: '#FD0104',
-    favicon: 'https://play-lh.googleusercontent.com/Q6uqNf1b4k7h4peN2r7jX1ok-Ur5l28cjm9qUb02Te2fyvo7iQRI09ReCZOQM26FSw=s256-c'
+    favicon: './brands/jon/assets/favicon.png'
   },
 
   // Tokens de cor — premium PRETO & DOURADO (tema escuro).
@@ -47,8 +47,8 @@ window.BRAND = {
     creatorLogo: './brands/jon/assets/jonvlogs.png',
     creatorAlt: 'Jon Vlogs',
     // Influenciador (imagens finais do Jon — WebP otimizado p/ alto tráfego):
-    creatorPhoto: './brands/jon/assets/jon-desktop.webp',  // desktop: vertical 3:4 (113KB)
-    creatorBanner: './brands/jon/assets/jon-mobile.webp',  // mobile: horizontal 16:10 (86KB)
+    creatorPhoto: './brands/jon/assets/jon-desktop.webp',  // desktop: vertical 3:4 (136KB)
+    creatorBanner: './brands/jon/assets/jon-mobile.webp',  // mobile: horizontal 16:10 (118KB)
     creatorPhotoAlt: 'Jon Vlogs',
     title: 'Grupo VIP Jon',
     subtitleMobile: 'Responda abaixo e garanta sua vaga no grupo do Jon Vlogs.',
