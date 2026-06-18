@@ -164,7 +164,7 @@ window.BRAND = {
   // ---- Integrações (preencher) ----
   links: {
     registration: 'https://kg-br.com/C.ashx?btag=a_2001773b_10037c_&affid=2000324&siteid=2001773&adid=10037&c=',   // link de cadastro da Betano
-    whatsapp: ''         // TODO: grupo de WhatsApp
+    whatsapp: 'https://sndflw.com/i/nobru'         // grupo de WhatsApp (destino final)
   },
 
   // Projeto Supabase dedicado da Betano (leads-betano) — isolamento de tráfego.
