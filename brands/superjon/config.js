@@ -156,8 +156,8 @@ window.BRAND = {
 
   // Destino dos leads — projeto Supabase dedicado (REST/PostgREST).
   supabase: {
-    url: '',               // ex.: https://xxxx.supabase.co
-    anonKey: '',           // chave publishable/anon (pode ser pública)
+    url: 'https://kjewrnbiadergwzepaoo.supabase.co',
+    anonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtqZXdybmJpYWRlcmd3emVwYW9vIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE3Mjc3MDMsImV4cCI6MjA5NzMwMzcwM30.o_z8NKtHRfaEs17gfDCMgwTQgUr4-vBzdJ3tZFo4Ih0',
     table: 'lp_leads'
   }
 };
