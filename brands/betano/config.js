@@ -9,7 +9,7 @@ window.BRAND = {
   source: 'full',           // qual das 2 LPs: 'full' (com gate) | 'direta'
 
   meta: {
-    title: 'Betano — Entre no grupo',
+    title: 'Grupo VIP Nobru — Entre no grupo',
     description: 'Responda as perguntas rápidas e a equipe te direciona pro grupo. Conteúdo para maiores de 18 anos.',
     themeColor: '#FF3C00',
     favicon: './brands/betano/assets/favicon.png'
@@ -64,7 +64,7 @@ window.BRAND = {
     creatorPhoto: './brands/betano/assets/nobru-desktop.webp', // desktop: vertical 3:4 (105KB)
     creatorBanner: './brands/betano/assets/nobru-mobile.webp', // mobile: horizontal 16:10 (79KB)
     creatorPhotoAlt: 'Nobru',
-    title: 'Betano',          // mobile: nome curto no hero
+    title: 'Grupo VIP Nobru', // mobile: nome curto no hero
     subtitleMobile: 'Responda abaixo e garanta sua vaga no grupo.',
     subtitleDesktop: 'Responda ao lado e garanta sua vaga no grupo.',
     // Headline do desktop (parte branca) — foco no influenciador.
@@ -121,7 +121,7 @@ window.BRAND = {
 
   done: {
     title: 'Tudo certo!',
-    text: 'Recebemos seus dados. Em instantes você entra no grupo. Fica de olho no WhatsApp informado.',
+    text: 'Recebemos seus dados. Em instantes você entra no Grupo VIP Nobru. Fica de olho no WhatsApp informado.',
     vipBadge: 'Fila VIP'
   },
 
@@ -156,7 +156,7 @@ window.BRAND = {
     direta: {
       flow: 'direct',                 // abre direto nas perguntas
       source: 'direta',               // distingue a origem na MESMA tabela
-      meta: { title: 'Betano — Entrar no grupo (direto)' },
+      meta: { title: 'Grupo VIP Nobru — Entrar no grupo (direto)' },
       // no fluxo direto, o e-mail/ID vem DEPOIS da faixa de aposta
       form: { order: ['nome', 'telefone', 'bet', 'contato'] }
     }

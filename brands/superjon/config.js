@@ -10,7 +10,7 @@ window.BRAND = {
   source: 'full',           // qual das 2 LPs: 'full' (com gate) | 'direta'
 
   meta: {
-    title: 'SuperJon — Entre no grupo',
+    title: 'Grupo VIP Jon — Entre no grupo',
     description: 'Responda as perguntas rápidas e a equipe te direciona pro grupo. Conteúdo para maiores de 18 anos.',
     themeColor: '#FD0104',
     favicon: 'https://play-lh.googleusercontent.com/Q6uqNf1b4k7h4peN2r7jX1ok-Ur5l28cjm9qUb02Te2fyvo7iQRI09ReCZOQM26FSw=s256-c'
@@ -50,7 +50,7 @@ window.BRAND = {
     creatorPhoto: './brands/superjon/assets/jon-desktop.webp',  // desktop: vertical 3:4 (113KB)
     creatorBanner: './brands/superjon/assets/jon-mobile.webp',  // mobile: horizontal 16:10 (86KB)
     creatorPhotoAlt: 'Jon Vlogs',
-    title: 'SuperJon',
+    title: 'Grupo VIP Jon',
     subtitleMobile: 'Responda abaixo e garanta sua vaga no grupo do Jon Vlogs.',
     subtitleDesktop: 'Responda ao lado e garanta sua vaga no grupo do Jon Vlogs.',
     // Headline do desktop (parte branca) — foco no influenciador.
@@ -107,7 +107,7 @@ window.BRAND = {
 
   done: {
     title: 'Tudo certo!',
-    text: 'Recebemos seus dados. Em instantes você entra no grupo do SuperJon. Fica de olho no WhatsApp informado.',
+    text: 'Recebemos seus dados. Em instantes você entra no Grupo VIP Jon. Fica de olho no WhatsApp informado.',
     vipBadge: 'Fila VIP'
   },
 
@@ -118,7 +118,7 @@ window.BRAND = {
   },
 
   terms: [
-    'Ao enviar seus dados nesta página, você declara ter no mínimo 18 anos e concorda em receber comunicações do grupo do SuperJon na Superbet pelos contatos informados (WhatsApp, e-mail e/ou telefone).',
+    'Ao enviar seus dados nesta página, você declara ter no mínimo 18 anos e concorda em receber comunicações do Grupo VIP Jon na Superbet pelos contatos informados (WhatsApp, e-mail e/ou telefone).',
     'Seus dados são tratados conforme a Lei Geral de Proteção de Dados (LGPD) e utilizados para qualificação, comunicação e ações de marketing relacionadas à Superbet. Você pode solicitar a remoção a qualquer momento.',
     'Esta página não promete prêmios, bônus ou aumento de chance de ganho como recompensa por cadastro ou depósito. Promoções, quando existirem, são comunicadas dentro do grupo e seguem regras próprias.',
     'Conteúdo destinado a maiores de 18 anos. Aposte com responsabilidade. Este texto é um rascunho e deve passar por revisão jurídica.'
@@ -141,7 +141,7 @@ window.BRAND = {
     direta: {
       flow: 'direct',
       source: 'direta',
-      meta: { title: 'SuperJon — Entrar no grupo (direto)' },
+      meta: { title: 'Grupo VIP Jon — Entrar no grupo (direto)' },
       // no fluxo direto, o e-mail/ID vem DEPOIS da faixa de aposta
       form: { order: ['nome', 'telefone', 'bet', 'contato'] }
     }
