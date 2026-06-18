@@ -39,7 +39,7 @@ var COLUMNS = [
 ];
 
 var HEADERS = [
-  'Data/Hora', 'Marca', 'Origem', 'Fluxo', 'Status', 'Client ID',
+  'Data/Hora', 'Creator', 'Origem', 'Fluxo', 'Status', 'Client ID',
   'Nome', 'E-mail/ID', 'WhatsApp',
   'Faixa de aposta', 'Tier', 'VIP?', 'Já tinha conta',
   'utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term',
