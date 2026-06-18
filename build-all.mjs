@@ -28,17 +28,14 @@ for (const t of targets) {
   names.push(t.join('-'));
 }
 
-// índice raiz (só pra QA/navegação)
-const items = names.map((n) => `    <li><a href="./${n}/">${n}</a></li>`).join('\n');
+// raiz neutra: não expõe as LPs (acesso só pelos links diretos /jon/, /nobru/...)
 writeFileSync('dist/index.html',
   `<!doctype html><html lang="pt-br"><meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>LPs</title>
-<body style="font-family:system-ui;max-width:560px;margin:40px auto;padding:0 16px">
-  <h1>LPs de conversão</h1>
-  <ul>
-${items}
-  </ul>
+<meta name="robots" content="noindex, nofollow" />
+<title>404</title>
+<body style="font-family:system-ui;display:flex;min-height:100vh;align-items:center;justify-content:center;margin:0;background:#0b0b0c;color:#7a7a7a">
+  <p>Página não encontrada.</p>
 </body></html>\n`);
 
-console.log(`\n✓ build-all -> dist/ (${names.join(', ')})`);
+console.log(`\n✓ build-all -> dist/ (${names.join(', ')}) + raiz neutra`);
