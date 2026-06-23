@@ -149,7 +149,7 @@ window.BRAND = {
   // ---- Integrações (preencher para ir ao ar) ----
   links: {
     registration: 'https://wlsuperbet.adsrv.eacdn.com/C.ashx?btag=a_46521b_431c_&affid=873&siteid=46521&adid=431&c=',      // link de cadastro da Superbet (botão "Criar conta")
-    whatsapp: 'https://sndflw.com/i/superjon'           // grupo de WhatsApp (destino final)
+    whatsapp: 'https://api.wapsync.com.br/r/vipjon'           // grupo de WhatsApp (destino final)
   },
 
   // Destino dos leads — projeto Supabase dedicado (REST/PostgREST).
