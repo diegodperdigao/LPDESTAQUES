@@ -1806,18 +1806,23 @@ window.BRAND = {
   async function postLead(row) {
     var ep = leadEndpoint();
     if (!ep) { console.log('[submitLead] (Supabase não configurado) row:', row); await wait(120); return; }
-    var res = await fetch(ep.url, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'apikey': ep.key,
-        'Authorization': 'Bearer ' + ep.key,
-        'Prefer': 'return=minimal'
-      },
-      body: JSON.stringify(row),
-      keepalive: true
-    });
-    if (!res.ok) throw new Error('Supabase insert ' + res.status + ': ' + (await res.text()));
+    var ctrl = (typeof AbortController !== 'undefined') ? new AbortController() : null;
+    var to = ctrl ? setTimeout(function () { ctrl.abort(); }, 6000) : null;
+    try {
+      var res = await fetch(ep.url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'apikey': ep.key,
+          'Authorization': 'Bearer ' + ep.key,
+          'Prefer': 'return=minimal'
+        },
+        body: JSON.stringify(row),
+        keepalive: true,
+        signal: ctrl ? ctrl.signal : undefined
+      });
+      if (!res.ok) throw new Error('Supabase insert ' + res.status + ': ' + (await res.text()));
+    } finally { if (to) clearTimeout(to); }
   }
 
   // tenta com backoff (rede instável / pico de tráfego)
@@ -1881,25 +1886,32 @@ window.BRAND = {
     cta.classList.add('is-loading');
     cta.disabled = true;
     lbl.textContent = 'Enviando...';
+    var moved = false;
+    function go() { if (moved) return; moved = true; goToGroup(row); }
     submitLead(row)
-      .then(function () { goToGroup(row); })
+      .then(go)
       .catch(function (err) {
         // não perde o lead (fila local) e não trava a conversão (segue pro grupo)
         console.error('[submitLead] erro após retries — enfileirando:', err);
         queueLead(row);
-        goToGroup(row);
+        go();
       });
+    // Trava de segurança: NUNCA deixa o usuário preso em "Enviando...".
+    // O insert continua em background (keepalive) e fica na fila como backup.
+    setTimeout(function () { if (!moved) { queueLead(row); go(); } }, 4000);
   }
 
   function goToGroup(row) {
     var L = B.links || {};
-    var url = L.whatsapp;
-    if (url) { window.location.href = url; return; }
-    renderDone(row);
+    var url = L.whatsapp || '';
+    // Sempre renderiza a tela final (com botão) — assim o usuário nunca trava
+    // em "Enviando..." mesmo se o redirect automático demorar/for bloqueado.
+    renderDone(row, url);
+    if (url) { try { window.location.assign(url); } catch (e) {} }
   }
 
   /* ----------------------- TELA: done ----------------------- */
-  function renderDone(row) {
+  function renderDone(row, url) {
     setScreen('done');
     screenEl.innerHTML = '';
     var d = B.done;
@@ -1907,6 +1919,12 @@ window.BRAND = {
     box.appendChild(el('div', 'lp-done__check', '✓'));
     box.appendChild(el('h2', 'lp-done__title', d.title));
     box.appendChild(el('p', 'lp-done__text', d.text));
+    if (url) {
+      var goBtn = el('a', 'lp-cta lp-done__cta', (d && d.cta) || 'Entrar no grupo');
+      goBtn.href = url;
+      goBtn.rel = 'noopener noreferrer';
+      box.appendChild(goBtn);
+    }
     screenEl.appendChild(box);
   }
 
