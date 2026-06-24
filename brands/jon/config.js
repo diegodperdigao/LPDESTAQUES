@@ -107,7 +107,7 @@ window.BRAND = {
 
   done: {
     title: 'Tudo certo!',
-    text: 'Recebemos seus dados. Em instantes você entra no Grupo VIP Jon. Fica de olho no WhatsApp informado.'
+    text: 'Recebemos seus dados. Em instantes você entra no Grupo VIP Jon. Caso o redirecionamento não funcione, clique abaixo:'
   },
 
   seal: {
