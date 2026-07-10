@@ -346,6 +346,24 @@
   function betMeta(value) {
     return BET.options.filter(function (x) { return x.value === value; })[0] || {};
   }
+
+  // Dispara o evento de conversão no Meta Pixel — SÓ p/ a faixa marcada com
+  // `track: true` na config (ex.: R$ 5.000+). No-op se o Pixel não carregou
+  // (id vazio) ou se a faixa selecionada não é a rastreada.
+  function trackPixelConversion() {
+    var opt = betMeta(state.bet);
+    if (!opt || !opt.track) return;
+    if (typeof window.fbq !== 'function') return;
+    var evt = (B.pixel && B.pixel.event) || 'CriarConta5000';
+    try {
+      window.fbq('trackCustom', evt, {
+        creator: B.creator,
+        source: B.source,
+        faixa_aposta: state.bet
+      });
+    } catch (e) { /* pixel indisponível: nunca bloqueia o fluxo */ }
+  }
+
   function buildRow(opts) {
     opts = opts || {};
     var utm = getTracking();
@@ -566,6 +584,7 @@
       cta.href = reg || '#';
       cta.onclick = function (e) {
         if (!reg) { e.preventDefault(); console.warn('[reg] links.registration não configurado.'); }
+        trackPixelConversion(); // Meta Pixel: só dispara p/ a faixa 5.000+ (track:true)
         sendPartial(); // garante o early-save mesmo se o change não disparou
       };
     }

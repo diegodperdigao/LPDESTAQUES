@@ -15,6 +15,13 @@ window.BRAND = {
     favicon: './brands/nobru/assets/favicon.png'
   },
 
+  // Meta Pixel do creator. `id` vazio = não carrega (no-op). Preencha com o
+  // Pixel ID da conta de anúncio do Nobru. Vale para as 2 LPs (full + direta).
+  //  - PageView dispara em toda a página (injetado no <head> pelo build).
+  //  - `event` é disparado só por quem escolhe a faixa marcada com track:true
+  //    e clica em "criar conta" no pop-up (fluxo direto). Ver engine.js.
+  pixel: { id: '1787191679332721', event: 'CriarConta5000' },
+
   // Cores — identidade do NOBRU: premium DOIS TONS DE ROXO + branco;
   // verde neon SÓ em pequenos detalhes.
   tokens: {
@@ -111,7 +118,7 @@ window.BRAND = {
         { value: 'ate_1000', label: 'Até R$ 1.000' },
         { value: '1000_3000', label: 'R$ 1.000 a 3.000' },
         { value: '3000_5000', label: 'R$ 3.000 a 5.000' },
-        { value: '5000_mais', label: 'R$ 5.000+' }
+        { value: '5000_mais', label: 'R$ 5.000+', track: true }
       ]
     },
     consentText: 'Ao enviar, você concorda com os ',

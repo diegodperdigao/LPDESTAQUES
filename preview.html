@@ -4,6 +4,18 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
 
+  <!-- Meta Pixel -->
+<script>
+!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
+n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
+document,'script','https://connect.facebook.net/en_US/fbevents.js');
+fbq('init','2044295176436601');fbq('track','PageView');
+</script>
+<noscript><img height="1" width="1" style="display:none"
+src="https://www.facebook.com/tr?id=2044295176436601&ev=PageView&noscript=1" /></noscript>
+<!-- End Meta Pixel -->
   <title>Grupo VIP Jon — Entre no grupo</title>
   <meta name="description" content="Responda as perguntas rápidas e a equipe te direciona pro grupo. Conteúdo para maiores de 18 anos." />
   <meta name="theme-color" content="#FD0104" />
@@ -1266,6 +1278,13 @@ window.BRAND = {
     favicon: './brands/jon/assets/favicon.png'
   },
 
+  // Meta Pixel do creator. `id` vazio = não carrega (no-op). Preencha com o
+  // Pixel ID da conta de anúncio do Jon. Vale para as 2 LPs (full + direta).
+  //  - PageView dispara em toda a página (injetado no <head> pelo build).
+  //  - `event` é disparado só por quem escolhe a faixa marcada com track:true
+  //    e clica em "criar conta" no pop-up (fluxo direto). Ver engine.js.
+  pixel: { id: '2044295176436601', event: 'CriarConta5000' },
+
   // Tokens de cor — premium PRETO & DOURADO (tema escuro).
   tokens: {
     '--red': '#c9a24b',          // ouro — acentos/eyebrow/destaque/foco/glow
@@ -1347,7 +1366,7 @@ window.BRAND = {
         { value: 'ate_1000', label: 'Até R$ 1.000' },
         { value: '1000_3000', label: 'R$ 1.000 a 3.000' },
         { value: '3000_5000', label: 'R$ 3.000 a 5.000' },
-        { value: '5000_mais', label: 'R$ 5.000+' }
+        { value: '5000_mais', label: 'R$ 5.000+', track: true }
       ]
     },
     consentText: 'Ao enviar, você concorda com os ',
@@ -1760,6 +1779,24 @@ window.BRAND = {
   function betMeta(value) {
     return BET.options.filter(function (x) { return x.value === value; })[0] || {};
   }
+
+  // Dispara o evento de conversão no Meta Pixel — SÓ p/ a faixa marcada com
+  // `track: true` na config (ex.: R$ 5.000+). No-op se o Pixel não carregou
+  // (id vazio) ou se a faixa selecionada não é a rastreada.
+  function trackPixelConversion() {
+    var opt = betMeta(state.bet);
+    if (!opt || !opt.track) return;
+    if (typeof window.fbq !== 'function') return;
+    var evt = (B.pixel && B.pixel.event) || 'CriarConta5000';
+    try {
+      window.fbq('trackCustom', evt, {
+        creator: B.creator,
+        source: B.source,
+        faixa_aposta: state.bet
+      });
+    } catch (e) { /* pixel indisponível: nunca bloqueia o fluxo */ }
+  }
+
   function buildRow(opts) {
     opts = opts || {};
     var utm = getTracking();
@@ -1980,6 +2017,7 @@ window.BRAND = {
       cta.href = reg || '#';
       cta.onclick = function (e) {
         if (!reg) { e.preventDefault(); console.warn('[reg] links.registration não configurado.'); }
+        trackPixelConversion(); // Meta Pixel: só dispara p/ a faixa 5.000+ (track:true)
         sendPartial(); // garante o early-save mesmo se o change não disparou
       };
     }
