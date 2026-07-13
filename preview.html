@@ -1797,6 +1797,22 @@ window.BRAND = {
     } catch (e) { /* pixel indisponível: nunca bloqueia o fluxo */ }
   }
 
+  // Evento PADRÃO "CompleteRegistration" do Meta — dispara quando o lead
+  // completa e envia o formulário da LP. Vale p/ todas as marcas e fluxos,
+  // SEM trava de faixa (independente do valor escolhido). Independente do
+  // CriarConta5000. No-op se o Pixel não carregou (id vazio).
+  function trackCompleteRegistration() {
+    if (typeof window.fbq !== 'function') return;
+    try {
+      window.fbq('track', 'CompleteRegistration', {
+        creator: B.creator,
+        source: B.source,
+        flow: B.flow || 'full',
+        faixa_aposta: state.bet
+      });
+    } catch (e) { /* pixel indisponível: nunca bloqueia o fluxo */ }
+  }
+
   function buildRow(opts) {
     opts = opts || {};
     var utm = getTracking();
@@ -1918,6 +1934,7 @@ window.BRAND = {
 
   function handleSubmit(cta) {
     if (!requiredIds().every(validateField)) { highlightInvalid(); return; }
+    trackCompleteRegistration(); // Meta Pixel: lead completou o form (sem trava de faixa)
     var row = buildRow();
     var lbl = cta.querySelector('.lp-cta__label') || cta;
     cta.classList.add('is-loading');
