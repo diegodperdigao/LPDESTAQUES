@@ -40,7 +40,7 @@
     try { if (window.crypto && crypto.randomUUID) return crypto.randomUUID(); } catch (e) {}
     return 'lp-' + Date.now() + '-' + Math.random().toString(16).slice(2);
   }
-  var state = { hasAccount: null, data: {}, bet: null, clientId: uuid(), partialSent: false };
+  var state = { hasAccount: null, data: {}, bet: null, clientId: uuid(), partialSent: false, regEventSent: false };
   var FIELDS = B.form.fields;
   var BET = B.form.bet;
   var screenEl = document.getElementById('screen');
@@ -369,7 +369,9 @@
   // SEM trava de faixa (independente do valor escolhido). Independente do
   // CriarConta5000. No-op se o Pixel não carregou (id vazio).
   function trackCompleteRegistration() {
+    if (state.regEventSent) return;              // dispara no máx. 1x por sessão
     if (typeof window.fbq !== 'function') return;
+    state.regEventSent = true;
     try {
       window.fbq('track', 'CompleteRegistration', {
         creator: B.creator,
@@ -601,6 +603,7 @@
       cta.href = reg || '#';
       cta.onclick = function (e) {
         if (!reg) { e.preventDefault(); console.warn('[reg] links.registration não configurado.'); }
+        trackCompleteRegistration(); // Meta Pixel: também conta como registro completo (sem trava de faixa)
         trackPixelConversion(); // Meta Pixel: só dispara p/ a faixa 5.000+ (track:true)
         sendPartial(); // garante o early-save mesmo se o change não disparou
       };
