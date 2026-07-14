@@ -423,6 +423,25 @@
     };
   }
 
+  // Espelha o lead numa planilha do Google (Apps Script Web App) — destino que
+  // o time controla, além do Supabase. Best-effort: sendBeacon sobrevive ao
+  // redirect pro WhatsApp e não trava a conversão. No-op se B.sheet.url vazio.
+  function postToSheet(row) {
+    var url = B.sheet && B.sheet.url;
+    if (!url) return;
+    try {
+      var body = JSON.stringify(row);
+      if (navigator.sendBeacon) {
+        navigator.sendBeacon(url, new Blob([body], { type: 'text/plain;charset=UTF-8' }));
+      } else {
+        fetch(url, {
+          method: 'POST', mode: 'no-cors', keepalive: true,
+          headers: { 'Content-Type': 'text/plain;charset=UTF-8' }, body: body
+        });
+      }
+    } catch (e) { /* best-effort: nunca bloqueia o fluxo */ }
+  }
+
   // 1 POST. keepalive=true deixa o insert completar mesmo durante o redirect
   // pro WhatsApp (senão a navegação cancela a requisição).
   async function postLead(row) {
@@ -493,6 +512,7 @@
     if (state.partialSent) return;
     state.partialSent = true;
     var row = buildRow({ partial: true });
+    postToSheet(row); // espelha na planilha do time
     try {
       submitLead(row).catch(function (err) {
         console.warn('[sendPartial] falhou — enfileirando:', err);
@@ -505,6 +525,7 @@
     if (!requiredIds().every(validateField)) { highlightInvalid(); return; }
     trackCompleteRegistration(); // Meta Pixel: lead completou o form (sem trava de faixa)
     var row = buildRow();
+    postToSheet(row); // espelha na planilha do time
     var lbl = cta.querySelector('.lp-cta__label') || cta;
     cta.classList.add('is-loading');
     cta.disabled = true;

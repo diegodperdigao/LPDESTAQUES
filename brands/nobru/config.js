@@ -179,5 +179,9 @@ window.BRAND = {
     url: 'https://xmfguhdzcoybvzazhysx.supabase.co',
     anonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhtZmd1aGR6Y295YnZ6YXpoeXN4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE3MzY1NTcsImV4cCI6MjA5NzMxMjU1N30.Htf3loRKvCm3Zk4fcJfE-wnIO7UPhtrHiIFbvRvyiHI',
     table: 'lp_leads'
-  }
+  },
+
+  // Espelho dos leads numa planilha do Google (Apps Script Web App). Vazio =
+  // não envia. Mesma URL p/ Jon e Nobru; o recebedor separa por aba (creator).
+  sheet: { url: 'https://script.google.com/macros/s/AKfycbwnxDdRpASJgFrPGXrRFiKzXYXd0su5CAaQ97Vnc84-k1Qdl_sHGcMHsiFOVgghAoWa7A/exec' }
 };

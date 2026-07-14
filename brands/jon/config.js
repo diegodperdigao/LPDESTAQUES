@@ -164,5 +164,9 @@ window.BRAND = {
     url: 'https://kjewrnbiadergwzepaoo.supabase.co',
     anonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtqZXdybmJpYWRlcmd3emVwYW9vIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE3Mjc3MDMsImV4cCI6MjA5NzMwMzcwM30.o_z8NKtHRfaEs17gfDCMgwTQgUr4-vBzdJ3tZFo4Ih0',
     table: 'lp_leads'
-  }
+  },
+
+  // Espelho dos leads numa planilha do Google (Apps Script Web App). Vazio =
+  // não envia. Mesma URL p/ Jon e Nobru; o recebedor separa por aba (creator).
+  sheet: { url: 'https://script.google.com/macros/s/AKfycbwnxDdRpASJgFrPGXrRFiKzXYXd0su5CAaQ97Vnc84-k1Qdl_sHGcMHsiFOVgghAoWa7A/exec' }
 };

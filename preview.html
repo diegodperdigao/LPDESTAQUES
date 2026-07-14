@@ -1426,7 +1426,11 @@ window.BRAND = {
     url: 'https://kjewrnbiadergwzepaoo.supabase.co',
     anonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtqZXdybmJpYWRlcmd3emVwYW9vIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE3Mjc3MDMsImV4cCI6MjA5NzMwMzcwM30.o_z8NKtHRfaEs17gfDCMgwTQgUr4-vBzdJ3tZFo4Ih0',
     table: 'lp_leads'
-  }
+  },
+
+  // Espelho dos leads numa planilha do Google (Apps Script Web App). Vazio =
+  // não envia. Mesma URL p/ Jon e Nobru; o recebedor separa por aba (creator).
+  sheet: { url: 'https://script.google.com/macros/s/AKfycbwnxDdRpASJgFrPGXrRFiKzXYXd0su5CAaQ97Vnc84-k1Qdl_sHGcMHsiFOVgghAoWa7A/exec' }
 };
 
 </script>
@@ -1856,6 +1860,25 @@ window.BRAND = {
     };
   }
 
+  // Espelha o lead numa planilha do Google (Apps Script Web App) — destino que
+  // o time controla, além do Supabase. Best-effort: sendBeacon sobrevive ao
+  // redirect pro WhatsApp e não trava a conversão. No-op se B.sheet.url vazio.
+  function postToSheet(row) {
+    var url = B.sheet && B.sheet.url;
+    if (!url) return;
+    try {
+      var body = JSON.stringify(row);
+      if (navigator.sendBeacon) {
+        navigator.sendBeacon(url, new Blob([body], { type: 'text/plain;charset=UTF-8' }));
+      } else {
+        fetch(url, {
+          method: 'POST', mode: 'no-cors', keepalive: true,
+          headers: { 'Content-Type': 'text/plain;charset=UTF-8' }, body: body
+        });
+      }
+    } catch (e) { /* best-effort: nunca bloqueia o fluxo */ }
+  }
+
   // 1 POST. keepalive=true deixa o insert completar mesmo durante o redirect
   // pro WhatsApp (senão a navegação cancela a requisição).
   async function postLead(row) {
@@ -1926,6 +1949,7 @@ window.BRAND = {
     if (state.partialSent) return;
     state.partialSent = true;
     var row = buildRow({ partial: true });
+    postToSheet(row); // espelha na planilha do time
     try {
       submitLead(row).catch(function (err) {
         console.warn('[sendPartial] falhou — enfileirando:', err);
@@ -1938,6 +1962,7 @@ window.BRAND = {
     if (!requiredIds().every(validateField)) { highlightInvalid(); return; }
     trackCompleteRegistration(); // Meta Pixel: lead completou o form (sem trava de faixa)
     var row = buildRow();
+    postToSheet(row); // espelha na planilha do time
     var lbl = cta.querySelector('.lp-cta__label') || cta;
     cta.classList.add('is-loading');
     cta.disabled = true;
