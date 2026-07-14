@@ -1456,6 +1456,7 @@ html, body { background: #160a30; }
     btn.addEventListener('click', function (e) {
       if (!reg) { e.preventDefault(); console.warn('[create] links.registration não configurado.'); }
       state.hasAccount = 'criou_agora';
+      trackCompleteRegistration(); // Meta Pixel: clicou em "criar conta agora" (cadastro novo)
       setTimeout(function () { renderForm(true); }, 80);
     });
     wrap.appendChild(btn);
@@ -1787,9 +1788,10 @@ html, body { background: #160a30; }
 
   function handleSubmit(cta) {
     if (!requiredIds().every(validateField)) { highlightInvalid(); return; }
-    trackCompleteRegistration(); // Meta Pixel: lead completou o form (sem trava de faixa)
+    // NÃO dispara CompleteRegistration aqui: entrar no grupo (form submit) NÃO é
+    // criar conta. O evento sai só de quem clica em "criar conta agora".
     var row = buildRow();
-    postToSheet(row); // espelha na planilha do time
+    postToSheet(row); // espelha na planilha do time (independe do pixel)
     var lbl = cta.querySelector('.lp-cta__label') || cta;
     cta.classList.add('is-loading');
     cta.disabled = true;
