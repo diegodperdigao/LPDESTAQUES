@@ -735,6 +735,76 @@ body {
   display: block;
 }
 
+/* ── Aviso obrigatório: barra horizontal fixa no rodapé (Lei das Bets) ──
+   Replicada da LP Betano; cores adaptadas aos tokens da marca. */
+.lp-legal {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 60;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 6px 14px;
+  padding: 10px 18px;
+  padding-bottom: calc(10px + env(safe-area-inset-bottom, 0px));
+  background: rgba(12, 10, 20, 0.95);
+  border-top: 1.5px solid var(--yellow);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  box-shadow: 0 -8px 24px rgba(0, 0, 0, 0.4);
+  text-align: center;
+}
+.lp-legal__18 {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.4px;
+  color: var(--yellow-text);
+  background: var(--yellow);
+  border-radius: 999px;
+}
+.lp-legal__msg {
+  margin: 0;
+  min-width: 0;
+  max-width: 100%;
+  font-size: clamp(12px, 1.5vw, 15px);
+  font-weight: 600;
+  line-height: 1.35;
+  letter-spacing: 0.2px;
+  color: var(--white);
+}
+.lp-legal__msg strong { color: var(--yellow); font-weight: 700; }
+.lp-legal__extra {
+  flex-basis: 100%;
+  font-size: 10.5px;
+  letter-spacing: 0.2px;
+  color: var(--ink-soft);
+}
+/* espaço p/ o conteúdo não ficar escondido atrás da barra fixa */
+.lp { padding-bottom: 84px; }
+
+@media (max-width: 860px) {
+  .lp-legal {
+    flex-direction: column;
+    gap: 5px;
+    padding: 8px 14px;
+    padding-bottom: calc(8px + env(safe-area-inset-bottom, 0px));
+  }
+  .lp-legal__18 { width: 27px; height: 27px; font-size: 11px; }
+  .lp-legal__msg { width: 100%; font-size: 12px; }
+  .lp-legal__extra { flex-basis: auto; width: 100%; font-size: 9.5px; }
+  .lp { padding-bottom: 106px; }
+}
+
 /* ===================== Tela de confirmação ===================== */
 .lp-done {
   text-align: center;
@@ -906,7 +976,7 @@ body {
   .lp-hero {
     flex: 0 0 auto;
     width: min(52%, calc(100dvh * 0.775));
-    padding: 44px 56px 48px;
+    padding: 44px 56px 96px;   /* respiro inferior extra p/ o selo ficar acima da barra legal */
     display: flex;
     align-items: stretch;
     position: sticky;
@@ -1238,6 +1308,13 @@ html, body { background: #0b0b0c; }
     </section>
   </main>
 
+  <!-- Aviso obrigatório (Lei das Bets) — barra fixa no rodapé. Texto vem da config (B.legal). -->
+  <aside class="lp-legal" id="lpLegal" aria-label="Aviso obrigatório">
+    <span class="lp-legal__18">18+</span>
+    <p class="lp-legal__msg"></p>
+    <span class="lp-legal__extra"></span>
+  </aside>
+
   <!-- Modal: Termos e Condições -->
   <div class="lp-modal" id="termsModal" hidden>
     <div class="lp-modal__backdrop" data-close></div>
@@ -1259,7 +1336,7 @@ html, body { background: #0b0b0c; }
     </div>
   </div>
 
-  <script>window.BRAND = {"id":"jon","creator":"jon","source":"direta","meta":{"title":"Grupo VIP Jon — Entrar no grupo (direto)","description":"Responda as perguntas rápidas e a equipe te direciona pro grupo. Conteúdo para maiores de 18 anos.","themeColor":"#FD0104","favicon":"./brands/jon/assets/favicon.png"},"pixel":{"id":"2044295176436601","event":"CriarConta5000"},"tokens":{"--red":"#c9a24b","--red-rgb":"201, 162, 75","--red-deep":"#0b0b0c","--burgundy":"#540031","--dark-purple":"#0b0b0c","--ink":"#f4f0e8","--ink-soft":"#b9b2a3","--ink-faint":"#837d70","--white":"#ffffff","--bg-2":"#16161b","--line":"rgba(255, 255, 255, 0.08)","--line-strong":"rgba(201, 162, 75, 0.35)","--yellow":"#c9a24b","--yellow-text":"#0b0b0c"},"fonts":{"google":"Inter:wght@400;500;600;700&family=Roboto+Flex:ital,opsz,wght@0,8..144,400..900;1,8..144,600..900","faces":[]},"hero":{"brandLogo":"https://i.ibb.co/YBhrn1zz/Superbet-Logo-svg.png","brandLogoWhite":true,"brandWordmark":"superbet","creatorLogo":"./brands/jon/assets/jonvlogs.png","creatorAlt":"Jon Vlogs","creatorPhoto":"./brands/jon/assets/jon-desktop.webp","creatorBanner":"./brands/jon/assets/jon-mobile.webp","creatorPhotoAlt":"Jon Vlogs","title":"Grupo VIP Jon","subtitleMobile":"Responda abaixo e garanta sua vaga no grupo do Jon Vlogs.","subtitleDesktop":"Responda ao lado e garanta sua vaga no grupo do Jon Vlogs.","headlineHTML":"Faça parte do grupo do <span class=\"lp-gate__hl\">Jon Vlogs</span>","subheadline":"Acesso gratuito e direto pra quem é da comunidade. Responda abaixo e garanta sua vaga no grupo."},"gate":{"eyebrow":"Comece por aqui","questionHTML":"Você já tem conta na <span class=\"lp-gate__hl\">Superbet</span>?","sub":"Em 1 toque a gente te leva pro caminho certo.","yes":"Sim, já tenho","no":"Ainda não tenho"},"create":{"eyebrow":"Falta pouco","titleHTML":"Crie sua conta na <span class=\"lp-gate__hl\">Superbet</span>","sub":"É rápido e gratuito. Assim que criar, volte aqui pra liberar seu acesso ao grupo.","steps":["Crie sua conta na Superbet","Volte para esta página","Responda e entre no grupo"],"cta":"Criar conta agora","back":"Já tenho conta"},"form":{"sectionLabel":"Seus dados","successIntro":"Agora que deu tudo certo com o cadastro, responde essas perguntas pra liberar o seu acesso:","fields":[{"id":"nome","label":"Nome Completo","type":"text","autocomplete":"name","placeholder":"Seu nome completo"},{"id":"contato","label":"E-mail ou ID Superbet","type":"text","autocomplete":"email","placeholder":"email@exemplo.com ou seu ID"},{"id":"telefone","label":"WhatsApp","type":"tel","autocomplete":"tel","inputmode":"tel","placeholder":"(11) 99999-9999"}],"bet":{"id":"faixa_aposta","label":"Quanto você aposta por mês?","options":[{"value":"ate_1000","label":"Até R$ 1.000"},{"value":"1000_3000","label":"R$ 1.000 a 3.000"},{"value":"3000_5000","label":"R$ 3.000 a 5.000"},{"value":"5000_mais","label":"R$ 5.000+","track":true}]},"consentText":"Ao enviar, você concorda com os ","termsLink":"Termos e Condições","cta":"Quero entrar no grupo VIP agora","order":["nome","telefone","bet","contato"]},"done":{"title":"Tudo certo!","text":"Recebemos seus dados. Em instantes você entra no Grupo VIP Jon. Caso o redirecionamento não funcione, clique abaixo:"},"seal":{"age":"18+","imageUrl":"","text":"Jogue com responsabilidade. Portaria SPA/MF Nº 2.090."},"terms":["Ao enviar seus dados nesta página, você declara ter no mínimo 18 anos e concorda em receber comunicações do Grupo VIP Jon na Superbet pelos contatos informados (WhatsApp, e-mail e/ou telefone).","Seus dados são tratados conforme a Lei Geral de Proteção de Dados (LGPD) e utilizados para qualificação, comunicação e ações de marketing relacionadas à Superbet. Você pode solicitar a remoção a qualquer momento.","Esta página não promete prêmios, bônus ou aumento de chance de ganho como recompensa por cadastro ou depósito. Promoções, quando existirem, são comunicadas dentro do grupo e seguem regras próprias.","Conteúdo destinado a maiores de 18 anos. Aposte com responsabilidade. Este texto é um rascunho e deve passar por revisão jurídica."],"direct":{"noAccountLabel":"Não possui cadastro?","noAccountCta":"Cadastre-se aqui","popup":{"title":"Falta pouco pra entrar","text":"Crie sua conta na Superbet, volte aqui e finalize o preenchimento para entrar no grupo.","cta":"Criar conta agora"}},"links":{"registration":"https://wlsuperbet.adsrv.eacdn.com/C.ashx?btag=a_46521b_431c_&affid=873&siteid=46521&adid=431&c=","whatsapp":"https://api.wapsync.com.br/r/vipjon"},"supabase":{"url":"https://kjewrnbiadergwzepaoo.supabase.co","anonKey":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtqZXdybmJpYWRlcmd3emVwYW9vIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE3Mjc3MDMsImV4cCI6MjA5NzMwMzcwM30.o_z8NKtHRfaEs17gfDCMgwTQgUr4-vBzdJ3tZFo4Ih0","table":"lp_leads"},"sheet":{"url":"https://script.google.com/macros/s/AKfycbwnxDdRpASJgFrPGXrRFiKzXYXd0su5CAaQ97Vnc84-k1Qdl_sHGcMHsiFOVgghAoWa7A/exec"},"flow":"direct"};</script>
+  <script>window.BRAND = {"id":"jon","creator":"jon","source":"direta","meta":{"title":"Grupo VIP Jon — Entrar no grupo (direto)","description":"Responda as perguntas rápidas e a equipe te direciona pro grupo. Conteúdo para maiores de 18 anos.","themeColor":"#FD0104","favicon":"./brands/jon/assets/favicon.png"},"pixel":{"id":"2044295176436601","event":"CriarConta5000"},"tokens":{"--red":"#c9a24b","--red-rgb":"201, 162, 75","--red-deep":"#0b0b0c","--burgundy":"#540031","--dark-purple":"#0b0b0c","--ink":"#f4f0e8","--ink-soft":"#b9b2a3","--ink-faint":"#837d70","--white":"#ffffff","--bg-2":"#16161b","--line":"rgba(255, 255, 255, 0.08)","--line-strong":"rgba(201, 162, 75, 0.35)","--yellow":"#c9a24b","--yellow-text":"#0b0b0c"},"fonts":{"google":"Inter:wght@400;500;600;700&family=Roboto+Flex:ital,opsz,wght@0,8..144,400..900;1,8..144,600..900","faces":[]},"hero":{"brandLogo":"https://i.ibb.co/YBhrn1zz/Superbet-Logo-svg.png","brandLogoWhite":true,"brandWordmark":"superbet","creatorLogo":"./brands/jon/assets/jonvlogs.png","creatorAlt":"Jon Vlogs","creatorPhoto":"./brands/jon/assets/jon-desktop.webp","creatorBanner":"./brands/jon/assets/jon-mobile.webp","creatorPhotoAlt":"Jon Vlogs","title":"Grupo VIP Jon","subtitleMobile":"Responda abaixo e garanta sua vaga no grupo do Jon Vlogs.","subtitleDesktop":"Responda ao lado e garanta sua vaga no grupo do Jon Vlogs.","headlineHTML":"Faça parte do grupo do <span class=\"lp-gate__hl\">Jon Vlogs</span>","subheadline":"Acesso gratuito e direto pra quem é da comunidade. Responda abaixo e garanta sua vaga no grupo."},"gate":{"eyebrow":"Comece por aqui","questionHTML":"Você já tem conta na <span class=\"lp-gate__hl\">Superbet</span>?","sub":"Em 1 toque a gente te leva pro caminho certo.","yes":"Sim, já tenho","no":"Ainda não tenho"},"create":{"eyebrow":"Falta pouco","titleHTML":"Crie sua conta na <span class=\"lp-gate__hl\">Superbet</span>","sub":"É rápido e gratuito. Assim que criar, volte aqui pra liberar seu acesso ao grupo.","steps":["Crie sua conta na Superbet","Volte para esta página","Responda e entre no grupo"],"cta":"Criar conta agora","back":"Já tenho conta"},"form":{"sectionLabel":"Seus dados","successIntro":"Agora que deu tudo certo com o cadastro, responde essas perguntas pra liberar o seu acesso:","fields":[{"id":"nome","label":"Nome Completo","type":"text","autocomplete":"name","placeholder":"Seu nome completo"},{"id":"contato","label":"E-mail ou ID Superbet","type":"text","autocomplete":"email","placeholder":"email@exemplo.com ou seu ID"},{"id":"telefone","label":"WhatsApp","type":"tel","autocomplete":"tel","inputmode":"tel","placeholder":"(11) 99999-9999"}],"bet":{"id":"faixa_aposta","label":"Quanto você aposta por mês?","options":[{"value":"ate_1000","label":"Até R$ 1.000"},{"value":"1000_3000","label":"R$ 1.000 a 3.000"},{"value":"3000_5000","label":"R$ 3.000 a 5.000"},{"value":"5000_mais","label":"R$ 5.000+","track":true}]},"consentText":"Ao enviar, você concorda com os ","termsLink":"Termos e Condições","cta":"Quero entrar no grupo VIP agora","order":["nome","telefone","bet","contato"]},"done":{"title":"Tudo certo!","text":"Recebemos seus dados. Em instantes você entra no Grupo VIP Jon. Caso o redirecionamento não funcione, clique abaixo:"},"seal":{"age":"18+","imageUrl":"","text":"Jogue com responsabilidade. Portaria SPA/MF Nº 2.090."},"legal":{"age":"18+","msgHTML":"<strong>Ministério da Fazenda adverte:</strong> Aposta não é investimento.","extra":"Autorizada pela Portaria SPA/MF nº 2.090 · Jogue com responsabilidade · Consulte os T&Cs."},"terms":["Ao enviar seus dados nesta página, você declara ter no mínimo 18 anos e concorda em receber comunicações do Grupo VIP Jon na Superbet pelos contatos informados (WhatsApp, e-mail e/ou telefone).","Seus dados são tratados conforme a Lei Geral de Proteção de Dados (LGPD) e utilizados para qualificação, comunicação e ações de marketing relacionadas à Superbet. Você pode solicitar a remoção a qualquer momento.","Esta página não promete prêmios, bônus ou aumento de chance de ganho como recompensa por cadastro ou depósito. Promoções, quando existirem, são comunicadas dentro do grupo e seguem regras próprias.","Conteúdo destinado a maiores de 18 anos. Aposte com responsabilidade. Este texto é um rascunho e deve passar por revisão jurídica."],"direct":{"noAccountLabel":"Não possui cadastro?","noAccountCta":"Cadastre-se aqui","popup":{"title":"Falta pouco pra entrar","text":"Crie sua conta na Superbet, volte aqui e finalize o preenchimento para entrar no grupo.","cta":"Criar conta agora"}},"links":{"registration":"https://wlsuperbet.adsrv.eacdn.com/C.ashx?btag=a_46521b_431c_&affid=873&siteid=46521&adid=431&c=","whatsapp":"https://api.wapsync.com.br/r/vipjon"},"supabase":{"url":"https://kjewrnbiadergwzepaoo.supabase.co","anonKey":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtqZXdybmJpYWRlcmd3emVwYW9vIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE3Mjc3MDMsImV4cCI6MjA5NzMwMzcwM30.o_z8NKtHRfaEs17gfDCMgwTQgUr4-vBzdJ3tZFo4Ih0","table":"lp_leads"},"sheet":{"url":"https://script.google.com/macros/s/AKfycbwnxDdRpASJgFrPGXrRFiKzXYXd0su5CAaQ97Vnc84-k1Qdl_sHGcMHsiFOVgghAoWa7A/exec"},"flow":"direct"};</script>
   <script>
 /* ===========================================================
    LP Engine — núcleo genérico (multi-marca)
@@ -1865,6 +1942,20 @@ html, body { background: #0b0b0c; }
     foot.appendChild(buildSeal());
     foot.appendChild(el('span', null, B.seal.text));
   }
+
+  // Barra legal obrigatória (Lei das Bets) — preenche o texto a partir de B.legal.
+  function renderLegalBar() {
+    var bar = document.getElementById('lpLegal');
+    var L = B.legal;
+    if (!bar) return;
+    if (!L) { bar.style.display = 'none'; return; }  // marca sem config -> não mostra
+    var badge = bar.querySelector('.lp-legal__18');
+    var msg = bar.querySelector('.lp-legal__msg');
+    var extra = bar.querySelector('.lp-legal__extra');
+    if (badge) badge.textContent = L.age || '18+';
+    if (msg) msg.innerHTML = L.msgHTML || '';
+    if (extra) extra.textContent = L.extra || '';
+  }
   function buildSeal() {
     if (B.seal && B.seal.imageUrl) {
       var img = el('img', 'lp-seal-img');
@@ -1933,6 +2024,7 @@ html, body { background: #0b0b0c; }
   applyBranding();
   paintHeroSeal();
   renderFooter();
+  renderLegalBar();
   flushQueue(); // reenvia leads que ficaram pendentes em visitas anteriores
   if (B.flow === 'direct') { state.hasAccount = 'sim'; renderForm(false); }
   else renderGate();

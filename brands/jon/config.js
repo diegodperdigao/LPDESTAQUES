@@ -123,6 +123,13 @@ window.BRAND = {
     text: 'Jogue com responsabilidade. Portaria SPA/MF Nº 2.090.'
   },
 
+  // Barra legal obrigatória (Lei das Bets) — fixa no rodapé.
+  legal: {
+    age: '18+',
+    msgHTML: '<strong>Ministério da Fazenda adverte:</strong> Aposta não é investimento.',
+    extra: 'Autorizada pela Portaria SPA/MF nº 2.090 · Jogue com responsabilidade · Consulte os T&Cs.'
+  },
+
   terms: [
     'Ao enviar seus dados nesta página, você declara ter no mínimo 18 anos e concorda em receber comunicações do Grupo VIP Jon na Superbet pelos contatos informados (WhatsApp, e-mail e/ou telefone).',
     'Seus dados são tratados conforme a Lei Geral de Proteção de Dados (LGPD) e utilizados para qualificação, comunicação e ações de marketing relacionadas à Superbet. Você pode solicitar a remoção a qualquer momento.',

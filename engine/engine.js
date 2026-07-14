@@ -602,6 +602,20 @@
     foot.appendChild(buildSeal());
     foot.appendChild(el('span', null, B.seal.text));
   }
+
+  // Barra legal obrigatória (Lei das Bets) — preenche o texto a partir de B.legal.
+  function renderLegalBar() {
+    var bar = document.getElementById('lpLegal');
+    var L = B.legal;
+    if (!bar) return;
+    if (!L) { bar.style.display = 'none'; return; }  // marca sem config -> não mostra
+    var badge = bar.querySelector('.lp-legal__18');
+    var msg = bar.querySelector('.lp-legal__msg');
+    var extra = bar.querySelector('.lp-legal__extra');
+    if (badge) badge.textContent = L.age || '18+';
+    if (msg) msg.innerHTML = L.msgHTML || '';
+    if (extra) extra.textContent = L.extra || '';
+  }
   function buildSeal() {
     if (B.seal && B.seal.imageUrl) {
       var img = el('img', 'lp-seal-img');
@@ -670,6 +684,7 @@
   applyBranding();
   paintHeroSeal();
   renderFooter();
+  renderLegalBar();
   flushQueue(); // reenvia leads que ficaram pendentes em visitas anteriores
   if (B.flow === 'direct') { state.hasAccount = 'sim'; renderForm(false); }
   else renderGate();

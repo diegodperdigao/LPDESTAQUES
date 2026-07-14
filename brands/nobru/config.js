@@ -137,6 +137,13 @@ window.BRAND = {
     text: 'Jogue com responsabilidade. O jogo pode causar dependência. Autorizado pela Portaria SPA/MF n°.246/2025'
   },
 
+  // Barra legal obrigatória (Lei das Bets) — fixa no rodapé.
+  legal: {
+    age: '18+',
+    msgHTML: '<strong>Ministério da Fazenda adverte:</strong> Aposta não é investimento.',
+    extra: 'Autorizada pela Portaria SPA/MF nº 2.465/2025 · Jogue com responsabilidade · Consulte os T&Cs.'
+  },
+
   terms: [
     'Ao enviar seus dados nesta página, você declara ter no mínimo 18 anos e concorda em receber comunicações do grupo pelos contatos informados (WhatsApp, e-mail e/ou telefone).',
     'Seus dados são tratados conforme a LGPD e utilizados para qualificação, comunicação e ações de marketing. Você pode solicitar a remoção a qualquer momento.',
