@@ -27,11 +27,12 @@ var HEADERS = [
   'Nome', 'E-mail/ID', 'WhatsApp',
   'Faixa de aposta', 'Ja tinha conta',
   'utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term',
-  'Referrer', 'Landing URL'
+  'Referrer', 'Landing URL',
+  'Converteu conta?'   // SIM = nao->sim/criou_agora (criou conta apos interagir)
 ];
 
-// Indices (0-based) das colunas usadas na deduplicacao / merge
-var COL_DATA = 0, COL_STATUS = 4, COL_CID = 5, COL_TEL = 8;
+// Indices (0-based) das colunas usadas na deduplicacao / merge / metrica
+var COL_DATA = 0, COL_STATUS = 4, COL_CID = 5, COL_TEL = 8, COL_JTC = 10, COL_CONV = 18;
 
 function doPost(e) {
   var lock = LockService.getScriptLock();
@@ -66,14 +67,16 @@ function doGet() {
   return json_({ ok: true, msg: 'LP lead receiver ativo (dedup por client_id/telefone).' });
 }
 
-// monta a linha (18 colunas) a partir do payload
+// monta a linha a partir do payload
 function rowFromData_(d, now) {
+  var jtc = d.ja_tinha_conta || '';
   return [
     now, d.creator || '', d.source || '', d.flow || '', d.status || '', d.client_id || '',
     d.nome || '', d.contato || '', d.telefone || '',
-    d.faixa_aposta_label || '', d.ja_tinha_conta || '',
+    d.faixa_aposta_label || '', jtc,
     d.utm_source || '', d.utm_medium || '', d.utm_campaign || '', d.utm_content || '', d.utm_term || '',
-    d.referrer || '', d.landing_url || ''
+    d.referrer || '', d.landing_url || '',
+    jtc === 'criou_agora' ? 'SIM' : ''   // Converteu conta? (na 1a gravacao)
   ];
 }
 
@@ -102,8 +105,23 @@ function mergeRows_(existing, incoming) {
   var curS = String(existing[COL_STATUS] || '');
   var newS = String(incoming[COL_STATUS] || '');
   out[COL_STATUS] = (rank[newS] || 0) >= (rank[curS] || 0) ? (newS || curS) : curS;
+
+  // "Converteu conta?" (sticky): era 'nao' e virou 'sim'/'criou_agora', ou
+  // veio 'criou_agora'. Usa os valores ANTES do merge (existing vs incoming).
+  var prevFlag = String(existing[COL_CONV] || '');
+  var exJTC = String(existing[COL_JTC] || '');
+  var inJTC = String(incoming[COL_JTC] || '');
+  var converted = prevFlag === 'SIM'
+    || inJTC === 'criou_agora'
+    || (exJTC === 'nao' && (inJTC === 'sim' || inJTC === 'criou_agora'));
+  out[COL_CONV] = converted ? 'SIM' : prevFlag;
+
+  // "Ja tinha conta" tambem so sobe (nao volta de sim/criou_agora p/ nao)
+  var jRank = { 'nao': 1, 'sim': 2, 'criou_agora': 3 };
+  out[COL_JTC] = (jRank[inJTC] || 0) >= (jRank[exJTC] || 0) ? (inJTC || exJTC) : exJTC;
+
   for (var i = 0; i < incoming.length; i++) {
-    if (i === COL_DATA || i === COL_STATUS) continue; // ja tratados / preservados
+    if (i === COL_DATA || i === COL_STATUS || i === COL_CONV || i === COL_JTC) continue; // tratados
     var nv = incoming[i];
     if (nv !== '' && nv !== null && nv !== undefined) out[i] = nv;
   }
@@ -116,6 +134,9 @@ function getSheet_(name) {
   if (sh.getLastRow() === 0) {
     sh.appendRow(HEADERS);
     sh.setFrozenRows(1);
+  } else {
+    // garante o cabecalho atual (ex.: abas antigas ganham a coluna nova)
+    sh.getRange(1, 1, 1, HEADERS.length).setValues([HEADERS]);
   }
   return sh;
 }
