@@ -25,14 +25,15 @@
 var HEADERS = [
   'Data/Hora', 'Creator', 'Origem', 'Fluxo', 'Status', 'Client ID',
   'Nome', 'E-mail/ID', 'WhatsApp',
-  'Faixa de aposta', 'Ja tinha conta',
+  'Faixa de aposta', 'Ja tinha conta (atual)',
   'utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term',
   'Referrer', 'Landing URL',
-  'Converteu conta?'   // SIM = nao->sim/criou_agora (criou conta apos interagir)
+  'Converteu conta?',            // SIM = nao->sim/criou_agora (criou conta apos interagir)
+  'Ja tinha conta (1o contato)'  // valor da PRIMEIRA vez (nao e sobrescrito)
 ];
 
 // Indices (0-based) das colunas usadas na deduplicacao / merge / metrica
-var COL_DATA = 0, COL_STATUS = 4, COL_CID = 5, COL_TEL = 8, COL_JTC = 10, COL_CONV = 18;
+var COL_DATA = 0, COL_STATUS = 4, COL_CID = 5, COL_TEL = 8, COL_JTC = 10, COL_CONV = 18, COL_JTC0 = 19;
 
 function doPost(e) {
   var lock = LockService.getScriptLock();
@@ -76,7 +77,8 @@ function rowFromData_(d, now) {
     d.faixa_aposta_label || '', jtc,
     d.utm_source || '', d.utm_medium || '', d.utm_campaign || '', d.utm_content || '', d.utm_term || '',
     d.referrer || '', d.landing_url || '',
-    jtc === 'criou_agora' ? 'SIM' : ''   // Converteu conta? (na 1a gravacao)
+    jtc === 'criou_agora' ? 'SIM' : '',  // Converteu conta? (na 1a gravacao)
+    jtc                                  // Ja tinha conta (1o contato)
   ];
 }
 
@@ -116,12 +118,14 @@ function mergeRows_(existing, incoming) {
     || (exJTC === 'nao' && (inJTC === 'sim' || inJTC === 'criou_agora'));
   out[COL_CONV] = converted ? 'SIM' : prevFlag;
 
-  // "Ja tinha conta" tambem so sobe (nao volta de sim/criou_agora p/ nao)
+  // "Ja tinha conta (atual)" so sobe (nao volta de sim/criou_agora p/ nao)
   var jRank = { 'nao': 1, 'sim': 2, 'criou_agora': 3 };
   out[COL_JTC] = (jRank[inJTC] || 0) >= (jRank[exJTC] || 0) ? (inJTC || exJTC) : exJTC;
+  // "Ja tinha conta (1o contato)" nunca muda depois de gravado
+  out[COL_JTC0] = String(existing[COL_JTC0] || '') || incoming[COL_JTC0] || '';
 
   for (var i = 0; i < incoming.length; i++) {
-    if (i === COL_DATA || i === COL_STATUS || i === COL_CONV || i === COL_JTC) continue; // tratados
+    if (i === COL_DATA || i === COL_STATUS || i === COL_CONV || i === COL_JTC || i === COL_JTC0) continue;
     var nv = incoming[i];
     if (nv !== '' && nv !== null && nv !== undefined) out[i] = nv;
   }
