@@ -1488,6 +1488,16 @@ window.BRAND = {
     } catch (e) { return uuid(); } // localStorage indisponível: id de sessão
   }
   var state = { hasAccount: null, data: {}, bet: null, clientId: persistentClientId(), partialSent: false, regEventSent: false };
+
+  // Injeta o client_id no parâmetro ?c= do link de cadastro (afiliado). A casa
+  // devolve esse c= no postback S2S -> a gente casa o registro/FTD na planilha.
+  function regUrlWithLead(reg) {
+    if (!reg) return reg;
+    var id = encodeURIComponent(state.clientId);
+    if (/[?&]c=/.test(reg)) return reg.replace(/([?&]c=)[^&]*/, '$1' + id); // troca c= (mesmo vazio)
+    return reg + (reg.indexOf('?') >= 0 ? '&' : '?') + 'c=' + id;
+  }
+
   var FIELDS = B.form.fields;
   var BET = B.form.bet;
   var screenEl = document.getElementById('screen');
@@ -1632,7 +1642,7 @@ window.BRAND = {
     // Link real -> NOVA aba garantida (PC, mobile, in-app)
     var reg = (B.links && B.links.registration) || '';
     var btn = el('a', 'lp-cta lp-cta--pulse', c.cta);
-    btn.href = reg || '#';
+    btn.href = regUrlWithLead(reg) || '#';
     btn.target = '_blank';
     btn.rel = 'noopener noreferrer';
     btn.setAttribute('role', 'button');
@@ -2070,7 +2080,7 @@ window.BRAND = {
     if (x) x.textContent = D.text || '';
     if (cta) {
       cta.textContent = D.cta || 'Clique aqui e se cadastre';
-      cta.href = reg || '#';
+      cta.href = regUrlWithLead(reg) || '#';
       cta.onclick = function (e) {
         if (!reg) { e.preventDefault(); console.warn('[reg] links.registration não configurado.'); }
         trackCompleteRegistration(); // Meta Pixel: também conta como registro completo (sem trava de faixa)

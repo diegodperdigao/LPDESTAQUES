@@ -29,11 +29,15 @@ var HEADERS = [
   'utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term',
   'Referrer', 'Landing URL',
   'Converteu conta?',            // SIM = nao->sim/criou_agora (criou conta apos interagir)
-  'Ja tinha conta (1o contato)'  // valor da PRIMEIRA vez (nao e sobrescrito)
+  'Ja tinha conta (1o contato)', // valor da PRIMEIRA vez (nao e sobrescrito)
+  // --- conversao confirmada pela casa (postback S2S do Income Access) ---
+  'Registrou?', 'Data registro', 'FTD?', 'Valor FTD', 'Data FTD'
 ];
 
 // Indices (0-based) das colunas usadas na deduplicacao / merge / metrica
 var COL_DATA = 0, COL_STATUS = 4, COL_CID = 5, COL_TEL = 8, COL_JTC = 10, COL_CONV = 18, COL_JTC0 = 19;
+// conversao (preenchidas pelo postback)
+var COL_REG = 20, COL_REG_DT = 21, COL_FTD = 22, COL_FTD_VAL = 23, COL_FTD_DT = 24;
 
 function doPost(e) {
   var lock = LockService.getScriptLock();
@@ -64,8 +68,65 @@ function doPost(e) {
   }
 }
 
-function doGet() {
-  return json_({ ok: true, msg: 'LP lead receiver ativo (dedup por client_id/telefone).' });
+// GET: se vier ?c=<lead_id> é o POSTBACK da casa (registro/FTD); senão, health.
+function doGet(e) {
+  var p = (e && e.parameter) || {};
+  if (!p.c && !p.lead_id) {
+    return json_({ ok: true, msg: 'LP lead receiver ativo (dedup + postback).' });
+  }
+  return handlePostback_(p);
+}
+
+// Postback S2S (Income Access): acha o lead pelo client_id (c=) e marca
+// Registrou / FTD / Valor na linha dele. Seguranca opcional por token.
+function handlePostback_(p) {
+  var lock = LockService.getScriptLock();
+  lock.tryLock(30000);
+  try {
+    var secret = PropertiesService.getScriptProperties().getProperty('POSTBACK_TOKEN');
+    if (secret && String(p.token || '') !== secret) {
+      return json_({ ok: false, error: 'token invalido' });
+    }
+    var leadId = String(p.c || p.lead_id || '').trim();
+    if (!leadId) return json_({ ok: false, error: 'c (lead_id) ausente' });
+
+    var loc = findByClientId_(leadId);
+    if (!loc) return json_({ ok: true, matched: false, note: 'lead nao encontrado' });
+
+    var ev = String(p.event || 'registration').toLowerCase();
+    var isFtd = /ftd|deposit|sale|first|purchase/.test(ev);
+    var value = p.value || p.amount || '';
+    var now = Utilities.formatDate(new Date(), Session.getScriptTimeZone(), 'yyyy-MM-dd HH:mm:ss');
+    var sh = loc.sheet, row = loc.rowIndex;
+
+    // todo postback confirma registro
+    sh.getRange(row, COL_REG + 1).setValue('SIM');
+    if (!sh.getRange(row, COL_REG_DT + 1).getValue()) sh.getRange(row, COL_REG_DT + 1).setValue(now);
+    if (isFtd) {
+      sh.getRange(row, COL_FTD + 1).setValue('SIM');
+      if (value !== '') sh.getRange(row, COL_FTD_VAL + 1).setValue(value);
+      sh.getRange(row, COL_FTD_DT + 1).setValue(now);
+    }
+    return json_({ ok: true, matched: true, event: isFtd ? 'ftd' : 'registration', row: row });
+  } catch (err) {
+    return json_({ ok: false, error: String(err) });
+  } finally {
+    try { lock.releaseLock(); } catch (e2) {}
+  }
+}
+
+// procura o client_id em TODAS as abas (Jon/Nobru) — ids sao unicos
+function findByClientId_(cid) {
+  var sheets = SpreadsheetApp.getActiveSpreadsheet().getSheets();
+  for (var s = 0; s < sheets.length; s++) {
+    var sh = sheets[s], last = sh.getLastRow();
+    if (last < 2) continue;
+    var ids = sh.getRange(2, COL_CID + 1, last - 1, 1).getValues();
+    for (var i = 0; i < ids.length; i++) {
+      if (String(ids[i][0] || '').trim() === cid) return { sheet: sh, rowIndex: i + 2 };
+    }
+  }
+  return null;
 }
 
 // monta a linha a partir do payload

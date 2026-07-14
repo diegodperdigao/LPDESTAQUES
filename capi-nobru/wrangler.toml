@@ -1,0 +1,19 @@
+name = "capi-nobru"
+main = "src/worker.js"
+compatibility_date = "2024-11-01"
+
+# Pixel do Nobru (público) e URL da LP p/ o evento
+[vars]
+PIXEL_ID = "1787191679332721"
+EVENT_SOURCE_URL = "https://SEU-DOMINIO/nobru/"
+
+# KV que guarda lead_id -> dados do clique (fbp/fbc/ip/ua).
+# Crie com:  wrangler kv namespace create LEADS
+# e cole o id retornado aqui:
+kv_namespaces = [
+  { binding = "LEADS", id = "COLE_O_ID_DO_KV_AQUI" }
+]
+
+# Secrets (NÃO vão no arquivo — setar via CLI):
+#   wrangler secret put CAPI_TOKEN        (token do Events Manager -> Conversions API)
+#   wrangler secret put POSTBACK_SECRET   (o segredo que vai no ?token= do postback)
