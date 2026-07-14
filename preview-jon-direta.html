@@ -1303,7 +1303,17 @@ html, body { background: #0b0b0c; }
     try { if (window.crypto && crypto.randomUUID) return crypto.randomUUID(); } catch (e) {}
     return 'lp-' + Date.now() + '-' + Math.random().toString(16).slice(2);
   }
-  var state = { hasAccount: null, data: {}, bet: null, clientId: uuid(), partialSent: false, regEventSent: false };
+  // client_id PERSISTENTE por creator: quem volta no mesmo navegador mantém o
+  // mesmo id, então o recebedor casa a reentrada na mesma linha (não duplica).
+  function persistentClientId() {
+    var key = 'lp_cid_' + (B.creator || 'x');
+    try {
+      var v = localStorage.getItem(key);
+      if (!v) { v = uuid(); localStorage.setItem(key, v); }
+      return v;
+    } catch (e) { return uuid(); } // localStorage indisponível: id de sessão
+  }
+  var state = { hasAccount: null, data: {}, bet: null, clientId: persistentClientId(), partialSent: false, regEventSent: false };
   var FIELDS = B.form.fields;
   var BET = B.form.bet;
   var screenEl = document.getElementById('screen');
