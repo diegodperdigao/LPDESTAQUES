@@ -2142,6 +2142,11 @@ window.BRAND = {
     if (badge) badge.textContent = L.age || '18+';
     if (msg) msg.innerHTML = L.msgHTML || '';
     if (extra) extra.textContent = L.extra || '';
+    // a barra legal substitui os selos/textos antigos (footer do corpo + selo do hero)
+    var foot = document.getElementById('lpFoot');
+    if (foot) foot.style.display = 'none';
+    var heroFoot = document.querySelector('.lp-hero__foot');
+    if (heroFoot) heroFoot.style.display = 'none';
   }
   function buildSeal() {
     if (B.seal && B.seal.imageUrl) {
