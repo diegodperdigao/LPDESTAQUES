@@ -116,25 +116,30 @@ function handlePostback_(p) {
     var siteId = String(p.SiteID || p.siteid || p.siteId || '').trim();
     var creator = SITE_CREATOR[siteId] || '';
 
-    // BONUS: marca na planilha se achar o lead (e descobre o creator se faltar)
-    var loc = findByClientId_(leadId);
-    if (loc) {
-      if (!creator) creator = String(loc.sheet.getName()).toLowerCase();
-      var now = Utilities.formatDate(new Date(), Session.getScriptTimeZone(), 'yyyy-MM-dd HH:mm:ss');
-      var sh = loc.sheet, row = loc.rowIndex;
-      sh.getRange(row, COL_REG + 1).setValue('SIM');
-      if (!sh.getRange(row, COL_REG_DT + 1).getValue()) sh.getRange(row, COL_REG_DT + 1).setValue(now);
-      if (isFtd) {
-        sh.getRange(row, COL_FTD + 1).setValue('SIM');
-        if (value !== '') sh.getRange(row, COL_FTD_VAL + 1).setValue(value);
-        sh.getRange(row, COL_FTD_DT + 1).setValue(now);
+    // BONUS/best-effort: se existir planilha, marca a linha e descobre o creator
+    // caso falte. Tudo aqui é envolvido em try -> NUNCA quebra o CAPI.
+    var matched = false;
+    try {
+      var loc = findByClientId_(leadId);
+      if (loc) {
+        matched = true;
+        if (!creator) creator = String(loc.sheet.getName()).toLowerCase();
+        var now = Utilities.formatDate(new Date(), Session.getScriptTimeZone(), 'yyyy-MM-dd HH:mm:ss');
+        var sh = loc.sheet, row = loc.rowIndex;
+        sh.getRange(row, COL_REG + 1).setValue('SIM');
+        if (!sh.getRange(row, COL_REG_DT + 1).getValue()) sh.getRange(row, COL_REG_DT + 1).setValue(now);
+        if (isFtd) {
+          sh.getRange(row, COL_FTD + 1).setValue('SIM');
+          if (value !== '') sh.getRange(row, COL_FTD_VAL + 1).setValue(value);
+          sh.getRange(row, COL_FTD_DT + 1).setValue(now);
+        }
       }
-    }
+    } catch (eSheet) { /* sem planilha / erro: ignora — o CAPI nao depende dela */ }
 
-    // PRINCIPAL: dispara o evento no Meta (CAPI). Independe da planilha.
+    // PRINCIPAL: dispara o evento no Meta (CAPI). Independe 100% da planilha.
     var capi = fireCapi_(creator, leadId, isFtd);
 
-    return json_({ ok: true, matched: !!loc, event: isFtd ? 'ftd' : 'reg', creator: creator, capi: capi });
+    return json_({ ok: true, matched: matched, event: isFtd ? 'ftd' : 'reg', creator: creator, capi: capi });
   } catch (err) {
     return json_({ ok: false, error: String(err) });
   } finally {
