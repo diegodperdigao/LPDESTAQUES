@@ -40,10 +40,18 @@ var COL_DATA = 0, COL_STATUS = 4, COL_CID = 5, COL_TEL = 8, COL_JTC = 10, COL_CO
 var COL_REG = 20, COL_REG_DT = 21, COL_FTD = 22, COL_FTD_VAL = 23, COL_FTD_DT = 24;
 
 function doPost(e) {
+  // se o afiliado mandar a conversao via POST (payload com acid/et), trata como postback
+  var pp = (e && e.parameter) || {};
+  if (pp.acid || pp.et) return handlePostback_(pp);
+  var bodyRaw = (e && e.postData && e.postData.contents) || '{}';
+  var maybe = {};
+  try { maybe = JSON.parse(bodyRaw); } catch (e0) {}
+  if (maybe && (maybe.acid || maybe.et)) return handlePostback_(maybe);
+
   var lock = LockService.getScriptLock();
   lock.tryLock(30000); // serializa: evita corrida entre 2 envios simultaneos
   try {
-    var data = JSON.parse((e && e.postData && e.postData.contents) || '{}');
+    var data = JSON.parse(bodyRaw);
     var creator = String(data.creator || 'Outros');
     var tab = creator.charAt(0).toUpperCase() + creator.slice(1); // jon -> Jon
     var sheet = getSheet_(tab);
@@ -68,17 +76,20 @@ function doPost(e) {
   }
 }
 
-// GET: se vier ?c=<lead_id> é o POSTBACK da casa (registro/FTD); senão, health.
+// GET: se vier o payload da conversao (acid/et/c/lead_id) é POSTBACK; senão, health.
 function doGet(e) {
   var p = (e && e.parameter) || {};
-  if (!p.c && !p.lead_id) {
+  if (!p.acid && !p.et && !p.c && !p.lead_id) {
     return json_({ ok: true, msg: 'LP lead receiver ativo (dedup + postback).' });
   }
   return handlePostback_(p);
 }
 
-// Postback S2S (Income Access): acha o lead pelo client_id (c=) e marca
-// Registrou / FTD / Valor na linha dele. Seguranca opcional por token.
+// Postback de conversao. O servidor do afiliado manda o payload pronto:
+//   et   -> 'reg' (registro) | 'ftd' (deposito)
+//   acid -> o nosso client_id (o que foi no c= do link de cadastro)
+//   SiteID / AdID -> identificadores da campanha
+// Acha o lead pelo client_id e marca Registrou / FTD na linha. Token opcional.
 function handlePostback_(p) {
   var lock = LockService.getScriptLock();
   lock.tryLock(30000);
@@ -87,13 +98,13 @@ function handlePostback_(p) {
     if (secret && String(p.token || '') !== secret) {
       return json_({ ok: false, error: 'token invalido' });
     }
-    var leadId = String(p.c || p.lead_id || '').trim();
-    if (!leadId) return json_({ ok: false, error: 'c (lead_id) ausente' });
+    var leadId = String(p.acid || p.c || p.lead_id || '').trim();
+    if (!leadId) return json_({ ok: false, error: 'acid (lead_id) ausente' });
 
     var loc = findByClientId_(leadId);
     if (!loc) return json_({ ok: true, matched: false, note: 'lead nao encontrado' });
 
-    var ev = String(p.event || 'registration').toLowerCase();
+    var ev = String(p.et || p.event || 'reg').toLowerCase();
     var isFtd = /ftd|deposit|sale|first|purchase/.test(ev);
     var value = p.value || p.amount || '';
     var now = Utilities.formatDate(new Date(), Session.getScriptTimeZone(), 'yyyy-MM-dd HH:mm:ss');
