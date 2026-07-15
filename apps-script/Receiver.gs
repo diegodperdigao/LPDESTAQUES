@@ -39,6 +39,15 @@ var COL_DATA = 0, COL_STATUS = 4, COL_CID = 5, COL_TEL = 8, COL_JTC = 10, COL_CO
 // conversao (preenchidas pelo postback)
 var COL_REG = 20, COL_REG_DT = 21, COL_FTD = 22, COL_FTD_VAL = 23, COL_FTD_DT = 24;
 
+// SiteID (do payload do afiliado) -> creator. Define o pixel/token do CAPI.
+var SITE_CREATOR = { '2001773': 'nobru', '46521': 'jon' };
+// Config do Meta CAPI por creator. O token vem de Script Property (secreto,
+// fora do codigo). Pixel e publico. Setar:  CAPI_TOKEN_NOBRU / CAPI_TOKEN_JON.
+var CAPI = {
+  nobru: { pixel: '1787191679332721', tokenProp: 'CAPI_TOKEN_NOBRU' },
+  jon:   { pixel: '2044295176436601', tokenProp: 'CAPI_TOKEN_JON' }
+};
+
 function doPost(e) {
   // se o afiliado mandar a conversao via POST (payload com acid/et), trata como postback
   var pp = (e && e.parameter) || {};
@@ -101,29 +110,70 @@ function handlePostback_(p) {
     var leadId = String(p.acid || p.c || p.lead_id || '').trim();
     if (!leadId) return json_({ ok: false, error: 'acid (lead_id) ausente' });
 
-    var loc = findByClientId_(leadId);
-    if (!loc) return json_({ ok: true, matched: false, note: 'lead nao encontrado' });
-
     var ev = String(p.et || p.event || 'reg').toLowerCase();
     var isFtd = /ftd|deposit|sale|first|purchase/.test(ev);
     var value = p.value || p.amount || '';
-    var now = Utilities.formatDate(new Date(), Session.getScriptTimeZone(), 'yyyy-MM-dd HH:mm:ss');
-    var sh = loc.sheet, row = loc.rowIndex;
+    var siteId = String(p.SiteID || p.siteid || p.siteId || '').trim();
+    var creator = SITE_CREATOR[siteId] || '';
 
-    // todo postback confirma registro
-    sh.getRange(row, COL_REG + 1).setValue('SIM');
-    if (!sh.getRange(row, COL_REG_DT + 1).getValue()) sh.getRange(row, COL_REG_DT + 1).setValue(now);
-    if (isFtd) {
-      sh.getRange(row, COL_FTD + 1).setValue('SIM');
-      if (value !== '') sh.getRange(row, COL_FTD_VAL + 1).setValue(value);
-      sh.getRange(row, COL_FTD_DT + 1).setValue(now);
+    // BONUS: marca na planilha se achar o lead (e descobre o creator se faltar)
+    var loc = findByClientId_(leadId);
+    if (loc) {
+      if (!creator) creator = String(loc.sheet.getName()).toLowerCase();
+      var now = Utilities.formatDate(new Date(), Session.getScriptTimeZone(), 'yyyy-MM-dd HH:mm:ss');
+      var sh = loc.sheet, row = loc.rowIndex;
+      sh.getRange(row, COL_REG + 1).setValue('SIM');
+      if (!sh.getRange(row, COL_REG_DT + 1).getValue()) sh.getRange(row, COL_REG_DT + 1).setValue(now);
+      if (isFtd) {
+        sh.getRange(row, COL_FTD + 1).setValue('SIM');
+        if (value !== '') sh.getRange(row, COL_FTD_VAL + 1).setValue(value);
+        sh.getRange(row, COL_FTD_DT + 1).setValue(now);
+      }
     }
-    return json_({ ok: true, matched: true, event: isFtd ? 'ftd' : 'registration', row: row });
+
+    // PRINCIPAL: dispara o evento no Meta (CAPI). Independe da planilha.
+    var capi = fireCapi_(creator, leadId, isFtd);
+
+    return json_({ ok: true, matched: !!loc, event: isFtd ? 'ftd' : 'reg', creator: creator, capi: capi });
   } catch (err) {
     return json_({ ok: false, error: String(err) });
   } finally {
     try { lock.releaseLock(); } catch (e2) {}
   }
+}
+
+// Dispara o evento confirmado no Meta via Conversions API.
+//   reg -> CompleteRegistration ; ftd -> Purchase (value 0, Betano nao manda valor)
+// external_id = SHA256(lead_id) p/ matching. No-op se nao houver token do creator.
+function fireCapi_(creator, leadId, isFtd) {
+  var cfg = CAPI[String(creator || '').toLowerCase()];
+  if (!cfg) return { skipped: 'creator desconhecido' };
+  var token = PropertiesService.getScriptProperties().getProperty(cfg.tokenProp);
+  if (!token) return { skipped: 'sem token (' + cfg.tokenProp + ')' };
+
+  var event = {
+    event_name: isFtd ? 'Purchase' : 'CompleteRegistration',
+    event_time: Math.floor(Date.now() / 1000),
+    action_source: 'website',
+    event_id: leadId + '-' + (isFtd ? 'ftd' : 'reg'),
+    user_data: { external_id: [sha256Hex_(leadId)] }
+  };
+  if (isFtd) event.custom_data = { currency: 'BRL', value: 0 };
+
+  try {
+    var res = UrlFetchApp.fetch(
+      'https://graph.facebook.com/v21.0/' + cfg.pixel + '/events?access_token=' + encodeURIComponent(token),
+      { method: 'post', contentType: 'application/json',
+        payload: JSON.stringify({ data: [event] }), muteHttpExceptions: true });
+    return { code: res.getResponseCode(), body: res.getContentText().slice(0, 200) };
+  } catch (e) { return { error: String(e) }; }
+}
+
+function sha256Hex_(s) {
+  var bytes = Utilities.computeDigest(Utilities.DigestAlgorithm.SHA_256, String(s), Utilities.Charset.UTF_8);
+  var hex = '';
+  for (var i = 0; i < bytes.length; i++) { var b = (bytes[i] + 256) % 256; hex += (b < 16 ? '0' : '') + b.toString(16); }
+  return hex;
 }
 
 // procura o client_id em TODAS as abas (Jon/Nobru) — ids sao unicos
