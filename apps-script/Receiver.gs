@@ -296,9 +296,10 @@ function getSheet_(name) {
 // AUTORIZAR o acesso externo (UrlFetchApp) que o CAPI usa. Aprove as
 // permissoes quando aparecer o pop-up. Ja dispara um evento de teste no Meta.
 function autorizar() {
-  var r = fireCapi_('nobru', 'AUTORIZACAO-TESTE', false);
-  Logger.log('CAPI: ' + JSON.stringify(r));
-  return r;
+  // Chamada externa DIRETA e SEM try/catch -> forca o Apps Script a exibir o
+  // pop-up de autorizacao do escopo script.external_request. Aprove tudo.
+  var r = UrlFetchApp.fetch('https://graph.facebook.com/v21.0/', { muteHttpExceptions: true });
+  Logger.log('Autorizado! UrlFetchApp liberado. Status HTTP: ' + r.getResponseCode());
 }
 
 function json_(obj) {
