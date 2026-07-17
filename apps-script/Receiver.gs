@@ -44,8 +44,8 @@ var SITE_CREATOR = { '2001773': 'nobru', '46521': 'jon' };
 // Config do Meta CAPI por creator. O token vem de Script Property (secreto,
 // fora do codigo). Pixel e publico. Setar:  CAPI_TOKEN_NOBRU / CAPI_TOKEN_JON.
 var CAPI = {
-  nobru: { pixel: '1787191679332721', tokenProp: 'CAPI_TOKEN_NOBRU' },
-  jon:   { pixel: '2044295176436601', tokenProp: 'CAPI_TOKEN_JON' }
+  nobru: { pixel: '1787191679332721', tokenProp: 'CAPI_TOKEN_NOBRU', inlineToken: '' },
+  jon:   { pixel: '2044295176436601', tokenProp: 'CAPI_TOKEN_JON', inlineToken: '' }
 };
 
 function doPost(e) {
@@ -173,7 +173,7 @@ function handlePostback_(p) {
 function fireCapi_(creator, leadId, isFtd) {
   var cfg = CAPI[String(creator || '').toLowerCase()];
   if (!cfg) return { skipped: 'creator desconhecido' };
-  var token = PropertiesService.getScriptProperties().getProperty(cfg.tokenProp);
+  var token = PropertiesService.getScriptProperties().getProperty(cfg.tokenProp) || cfg.inlineToken;
   if (!token) return { skipped: 'sem token (' + cfg.tokenProp + ')' };
 
   var event = {
