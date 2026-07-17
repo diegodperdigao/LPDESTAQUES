@@ -292,6 +292,15 @@ function getSheet_(name) {
   return sh;
 }
 
+// Rode UMA VEZ no editor (seletor de função -> autorizar -> ▶ Run) para
+// AUTORIZAR o acesso externo (UrlFetchApp) que o CAPI usa. Aprove as
+// permissoes quando aparecer o pop-up. Ja dispara um evento de teste no Meta.
+function autorizar() {
+  var r = fireCapi_('nobru', 'AUTORIZACAO-TESTE', false);
+  Logger.log('CAPI: ' + JSON.stringify(r));
+  return r;
+}
+
 function json_(obj) {
   return ContentService
     .createTextOutput(JSON.stringify(obj))
