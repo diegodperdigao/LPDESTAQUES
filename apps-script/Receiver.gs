@@ -85,13 +85,30 @@ function doPost(e) {
   }
 }
 
-// GET: se vier o payload da conversao (acid/et/c/lead_id) é POSTBACK; senão, health.
+// GET: ?stats=1 -> contadores; payload (acid/et/c/lead_id) -> POSTBACK; senão health.
 function doGet(e) {
   var p = (e && e.parameter) || {};
+  if (p.stats) return statsReport_();
   if (!p.acid && !p.et && !p.c && !p.lead_id) {
     return json_({ ok: true, msg: 'LP lead receiver ativo (dedup + postback).' });
   }
   return handlePostback_(p);
+}
+
+// Contadores de quantos registros/FTDs chegaram no webhook (por creator).
+// Guardados em Script Properties. Nao expõe token nem dado pessoal.
+function bumpStats_(creator, kind) {
+  try {
+    var props = PropertiesService.getScriptProperties();
+    var key = 'stats_' + (creator || 'unknown') + '_' + kind;
+    props.setProperty(key, String((parseInt(props.getProperty(key) || '0', 10) || 0) + 1));
+  } catch (e) { /* nunca quebra o fluxo */ }
+}
+function statsReport_() {
+  var all = PropertiesService.getScriptProperties().getProperties();
+  var stats = {};
+  Object.keys(all).forEach(function (k) { if (k.indexOf('stats_') === 0) stats[k] = Number(all[k]); });
+  return json_({ ok: true, stats: stats });
 }
 
 // Postback de conversao. O servidor do afiliado manda o payload pronto:
@@ -138,6 +155,9 @@ function handlePostback_(p) {
 
     // PRINCIPAL: dispara o evento no Meta (CAPI). Independe 100% da planilha.
     var capi = fireCapi_(creator, leadId, isFtd);
+
+    // conta quantos reg/ftd chegaram no webhook (ver com ?stats=1)
+    bumpStats_(creator || SITE_CREATOR[siteId] || 'unknown', isFtd ? 'ftd' : 'reg');
 
     return json_({ ok: true, matched: matched, event: isFtd ? 'ftd' : 'reg', creator: creator, capi: capi });
   } catch (err) {
