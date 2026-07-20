@@ -1448,7 +1448,7 @@ window.BRAND = {
         { value: 'ate_1000', label: 'Até R$ 1.000' },
         { value: '1000_3000', label: 'R$ 1.000 a 3.000' },
         { value: '3000_5000', label: 'R$ 3.000 a 5.000' },
-        { value: '5000_mais', label: 'R$ 5.000+', track: true }
+        { value: '5000_mais', label: 'R$ 5.000+', track: true, whatsapp: 'https://wa.me/5511955024776' }
       ]
     },
     consentText: 'Ao enviar, você concorda com os ',
@@ -2096,7 +2096,10 @@ window.BRAND = {
 
   function goToGroup(row) {
     var L = B.links || {};
-    var url = L.whatsapp || '';
+    // Destino por faixa: se a opção escolhida tem seu próprio whatsapp (ex.:
+    // 5.000+ -> agente VIP), usa ele; senão, cai no grupo padrão da marca.
+    var bm = betMeta(state.bet) || {};
+    var url = bm.whatsapp || L.whatsapp || '';
     // Sempre renderiza a tela final (com botão) — assim o usuário nunca trava
     // em "Enviando..." mesmo se o redirect automático demorar/for bloqueado.
     renderDone(row, url);

@@ -569,7 +569,10 @@
 
   function goToGroup(row) {
     var L = B.links || {};
-    var url = L.whatsapp || '';
+    // Destino por faixa: se a opção escolhida tem seu próprio whatsapp (ex.:
+    // 5.000+ -> agente VIP), usa ele; senão, cai no grupo padrão da marca.
+    var bm = betMeta(state.bet) || {};
+    var url = bm.whatsapp || L.whatsapp || '';
     // Sempre renderiza a tela final (com botão) — assim o usuário nunca trava
     // em "Enviando..." mesmo se o redirect automático demorar/for bloqueado.
     renderDone(row, url);
