@@ -69,6 +69,17 @@
     </div>
   </div>
 
+  <!-- Modal: "Onde encontrar seu ID" (print). Conteúdo vem do campo (config help). -->
+  <div class="lp-modal" id="idHelpModal" hidden>
+    <div class="lp-modal__backdrop" data-close></div>
+    <div class="lp-modal__panel lp-modal__panel--help" role="dialog" aria-modal="true" aria-labelledby="idHelpTitle">
+      <button class="lp-modal__close" type="button" data-close aria-label="Fechar">&times;</button>
+      <h2 class="lp-modal__title" id="idHelpTitle"></h2>
+      <p class="lp-modal__lead" id="idHelpText"></p>
+      <img class="lp-idhelp__img" id="idHelpImg" alt="" decoding="async" />
+    </div>
+  </div>
+
   <!--BRAND_CONFIG-->
   <script src="./engine/engine.js" defer></script>
 </body>

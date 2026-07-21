@@ -514,6 +514,49 @@ body {
   padding-top: 3px;
 }
 
+/* "Onde encontrar?" ao lado do label (ex.: ID) -> abre o modal com o print */
+.lp-q__help {
+  margin-left: auto;
+  flex: 0 0 auto;
+  align-self: center;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 0;
+  background: none;
+  border: 0;
+  cursor: pointer;
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--red);
+  white-space: nowrap;
+}
+.lp-q__help:hover { text-decoration: underline; }
+.lp-q__help-ic {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  border: 1.5px solid currentColor;
+  font-size: 9.5px;
+  font-weight: 800;
+  line-height: 1;
+}
+
+/* imagem (print) dentro do modal "Onde encontrar o ID" */
+.lp-modal__panel--help { max-width: 380px; }
+.lp-idhelp__img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 12px;
+  border: 1px solid var(--line);
+  margin-top: 4px;
+}
+
 /* Chips */
 .lp-chips {
   display: flex;
@@ -1327,6 +1370,17 @@ html, body { background: #160a30; }
     </div>
   </div>
 
+  <!-- Modal: "Onde encontrar seu ID" (print). Conteúdo vem do campo (config help). -->
+  <div class="lp-modal" id="idHelpModal" hidden>
+    <div class="lp-modal__backdrop" data-close></div>
+    <div class="lp-modal__panel lp-modal__panel--help" role="dialog" aria-modal="true" aria-labelledby="idHelpTitle">
+      <button class="lp-modal__close" type="button" data-close aria-label="Fechar">&times;</button>
+      <h2 class="lp-modal__title" id="idHelpTitle"></h2>
+      <p class="lp-modal__lead" id="idHelpText"></p>
+      <img class="lp-idhelp__img" id="idHelpImg" alt="" decoding="async" />
+    </div>
+  </div>
+
   <script>
 /* ===========================================================
    CONFIG DO CREATOR — Nobru (Nobru × Betano)
@@ -1437,7 +1491,13 @@ window.BRAND = {
       { id: 'nome', label: 'Nome Completo', type: 'text', autocomplete: 'name',
         placeholder: 'Seu nome completo' },
       { id: 'contato', label: 'ID Betano', type: 'text',
-        autocomplete: 'off', placeholder: 'Seu ID Betano' },
+        autocomplete: 'off', placeholder: 'Seu ID Betano',
+        help: {
+          link: 'Onde encontrar?',
+          title: 'Onde encontrar seu ID',
+          text: 'Basta acessar sua conta e clicar em <strong>Perfil</strong> — seu ID é o nome de usuário que aparece ali, assim como na imagem.',
+          image: './brands/nobru/assets/idbetano.png'
+        } },
       { id: 'telefone', label: 'WhatsApp', type: 'tel', autocomplete: 'tel',
         inputmode: 'tel', placeholder: '(11) 99999-9999' }
     ],
@@ -1772,6 +1832,16 @@ window.BRAND = {
 
     function fieldCard(f) {
       var card = cardShell(n++, f.label);
+      // "Onde encontrar?" ao lado do label (ex.: ID) -> abre modal com o print
+      if (f.help) {
+        var head = card.querySelector('.lp-q__head');
+        var help = el('button', 'lp-q__help');
+        help.type = 'button';
+        help.innerHTML = '<span class="lp-q__help-ic" aria-hidden="true">?</span>' +
+          escapeHtml(f.help.link || 'Onde encontrar?');
+        help.addEventListener('click', function () { openIdHelp(f.help); });
+        if (head) head.appendChild(help);
+      }
       var input = el('input', 'lp-input');
       input.type = f.type;
       input.name = f.id;
@@ -2213,6 +2283,25 @@ window.BRAND = {
   if (regModal) {
     regModal.addEventListener('click', function (e) { if (e.target.hasAttribute('data-close')) closeReg(); });
     document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !regModal.hidden) closeReg(); });
+  }
+
+  /* ----------------------- Modal "Onde encontrar o ID" ----------------------- */
+  var idHelpModal = document.getElementById('idHelpModal');
+  function openIdHelp(help) {
+    if (!idHelpModal || !help) return;
+    var t = idHelpModal.querySelector('#idHelpTitle');
+    var x = idHelpModal.querySelector('#idHelpText');
+    var img = idHelpModal.querySelector('#idHelpImg');
+    if (t) t.textContent = help.title || 'Onde encontrar seu ID';
+    if (x) x.innerHTML = help.text || '';
+    if (img) { img.src = help.image || ''; img.alt = help.title || ''; img.style.display = help.image ? '' : 'none'; }
+    idHelpModal.hidden = false;
+    document.body.style.overflow = 'hidden';
+  }
+  function closeIdHelp() { if (idHelpModal) { idHelpModal.hidden = true; document.body.style.overflow = ''; } }
+  if (idHelpModal) {
+    idHelpModal.addEventListener('click', function (e) { if (e.target.hasAttribute('data-close')) closeIdHelp(); });
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !idHelpModal.hidden) closeIdHelp(); });
   }
 
   /* ----------------------- Init ----------------------- */

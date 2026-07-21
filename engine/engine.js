@@ -245,6 +245,16 @@
 
     function fieldCard(f) {
       var card = cardShell(n++, f.label);
+      // "Onde encontrar?" ao lado do label (ex.: ID) -> abre modal com o print
+      if (f.help) {
+        var head = card.querySelector('.lp-q__head');
+        var help = el('button', 'lp-q__help');
+        help.type = 'button';
+        help.innerHTML = '<span class="lp-q__help-ic" aria-hidden="true">?</span>' +
+          escapeHtml(f.help.link || 'Onde encontrar?');
+        help.addEventListener('click', function () { openIdHelp(f.help); });
+        if (head) head.appendChild(help);
+      }
       var input = el('input', 'lp-input');
       input.type = f.type;
       input.name = f.id;
@@ -686,6 +696,25 @@
   if (regModal) {
     regModal.addEventListener('click', function (e) { if (e.target.hasAttribute('data-close')) closeReg(); });
     document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !regModal.hidden) closeReg(); });
+  }
+
+  /* ----------------------- Modal "Onde encontrar o ID" ----------------------- */
+  var idHelpModal = document.getElementById('idHelpModal');
+  function openIdHelp(help) {
+    if (!idHelpModal || !help) return;
+    var t = idHelpModal.querySelector('#idHelpTitle');
+    var x = idHelpModal.querySelector('#idHelpText');
+    var img = idHelpModal.querySelector('#idHelpImg');
+    if (t) t.textContent = help.title || 'Onde encontrar seu ID';
+    if (x) x.innerHTML = help.text || '';
+    if (img) { img.src = help.image || ''; img.alt = help.title || ''; img.style.display = help.image ? '' : 'none'; }
+    idHelpModal.hidden = false;
+    document.body.style.overflow = 'hidden';
+  }
+  function closeIdHelp() { if (idHelpModal) { idHelpModal.hidden = true; document.body.style.overflow = ''; } }
+  if (idHelpModal) {
+    idHelpModal.addEventListener('click', function (e) { if (e.target.hasAttribute('data-close')) closeIdHelp(); });
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !idHelpModal.hidden) closeIdHelp(); });
   }
 
   /* ----------------------- Init ----------------------- */

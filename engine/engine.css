@@ -482,6 +482,49 @@ body {
   padding-top: 3px;
 }
 
+/* "Onde encontrar?" ao lado do label (ex.: ID) -> abre o modal com o print */
+.lp-q__help {
+  margin-left: auto;
+  flex: 0 0 auto;
+  align-self: center;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 0;
+  background: none;
+  border: 0;
+  cursor: pointer;
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--red);
+  white-space: nowrap;
+}
+.lp-q__help:hover { text-decoration: underline; }
+.lp-q__help-ic {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  border: 1.5px solid currentColor;
+  font-size: 9.5px;
+  font-weight: 800;
+  line-height: 1;
+}
+
+/* imagem (print) dentro do modal "Onde encontrar o ID" */
+.lp-modal__panel--help { max-width: 380px; }
+.lp-idhelp__img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 12px;
+  border: 1px solid var(--line);
+  margin-top: 4px;
+}
+
 /* Chips */
 .lp-chips {
   display: flex;
