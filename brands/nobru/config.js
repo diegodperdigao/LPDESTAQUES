@@ -106,12 +106,12 @@ window.BRAND = {
     fields: [
       { id: 'nome', label: 'Nome Completo', type: 'text', autocomplete: 'name',
         placeholder: 'Seu nome completo' },
-      { id: 'contato', label: 'ID Betano', type: 'text',
-        autocomplete: 'off', placeholder: 'Seu ID Betano',
+      { id: 'contato', label: 'Nome de usuário', type: 'text',
+        autocomplete: 'off', placeholder: 'Seu nome de usuário',
         help: {
           link: 'Onde encontrar?',
-          title: 'Onde encontrar seu ID',
-          text: 'Basta acessar sua conta e clicar em <strong>Perfil</strong> — seu ID é o nome de usuário que aparece ali, assim como na imagem.',
+          title: 'Onde encontrar seu nome de usuário',
+          text: 'Basta acessar sua conta e clicar em <strong>Perfil</strong> — seu nome de usuário aparece ali, assim como na imagem.',
           image: './brands/nobru/assets/idbetano.png'
         } },
       { id: 'telefone', label: 'WhatsApp', type: 'tel', autocomplete: 'tel',
