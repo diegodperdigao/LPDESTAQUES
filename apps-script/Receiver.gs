@@ -85,14 +85,62 @@ function doPost(e) {
   }
 }
 
-// GET: ?stats=1 -> contadores; payload (acid/et/c/lead_id) -> POSTBACK; senão health.
+// Chave do relatorio (protege a leitura dos leads). Vazio no repo; preenchida
+// so na versao do clipboard do usuario. Sem ela, ?report fica bloqueado.
+var REPORT_KEY = '';
+
+// GET: ?report -> relatorio; ?stats=1 -> contadores; payload -> POSTBACK; senão health.
 function doGet(e) {
   var p = (e && e.parameter) || {};
+  if (p.report) return reportLeads_(p);
   if (p.stats) return statsReport_();
   if (!p.acid && !p.et && !p.c && !p.lead_id) {
     return json_({ ok: true, msg: 'LP lead receiver ativo (dedup + postback).' });
   }
   return handlePostback_(p);
+}
+
+// Relatorio de FORMS PREENCHIDOS (leads) por faixa + intervalo de data.
+//   ?report=1&key=<REPORT_KEY>&creator=nobru&faixa=5.000&from=2026-07-17&to=2026-07-17 23:00:00
+// creator/faixa/from/to sao opcionais. Devolve so CONTAGENS (sem dado pessoal).
+// Data/Hora é comparada como texto (formato yyyy-MM-dd HH:mm:ss), no fuso da planilha.
+function reportLeads_(p) {
+  if (!REPORT_KEY || String(p.key || '') !== REPORT_KEY) {
+    return json_({ ok: false, error: 'key invalida ou report desativado' });
+  }
+  var creator = String(p.creator || '').trim().toLowerCase();
+  var faixa = String(p.faixa || '').trim();     // substring na coluna "Faixa de aposta"
+  var from = String(p.from || '').trim();
+  var to = String(p.to || '').trim();
+  var COL_FAIXA = 9;
+
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var sheets = creator
+    ? [ss.getSheetByName(creator.charAt(0).toUpperCase() + creator.slice(1))].filter(Boolean)
+    : ss.getSheets();
+
+  var total = 0, porFaixa = {}, porStatus = {};
+  for (var s = 0; s < sheets.length; s++) {
+    var sh = sheets[s], last = sh.getLastRow();
+    if (last < 2) continue;
+    var rows = sh.getRange(2, 1, last - 1, HEADERS.length).getValues();
+    for (var i = 0; i < rows.length; i++) {
+      var dh = String(rows[i][COL_DATA] || '');
+      var fx = String(rows[i][COL_FAIXA] || '');
+      var st = String(rows[i][COL_STATUS] || '');
+      if (from && dh < from) continue;
+      if (to && dh > to) continue;
+      if (faixa && fx.indexOf(faixa) < 0) continue;
+      total++;
+      porFaixa[fx] = (porFaixa[fx] || 0) + 1;
+      porStatus[st] = (porStatus[st] || 0) + 1;
+    }
+  }
+  return json_({
+    ok: true,
+    filtro: { creator: creator || 'todas', faixa: faixa || 'todas', from: from || '-', to: to || '-' },
+    total: total, por_faixa: porFaixa, por_status: porStatus
+  });
 }
 
 // Contadores de quantos registros/FTDs chegaram no webhook (por creator).
