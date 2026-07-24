@@ -106,8 +106,11 @@ window.BRAND = {
     fields: [
       { id: 'nome', label: 'Nome Completo', type: 'text', autocomplete: 'name',
         placeholder: 'Seu nome completo' },
+      { id: 'email', label: 'E-mail', type: 'email', autocomplete: 'email',
+        inputmode: 'email', placeholder: 'seu@email.com' },
       { id: 'contato', label: 'Nome de usuário', type: 'text',
         autocomplete: 'off', placeholder: 'Seu nome de usuário',
+        noEmail: 'Aqui vai o seu nome de usuário, não o e-mail. Seu e-mail você coloca no campo E-mail acima.',
         help: {
           link: 'Onde encontrar?',
           title: 'Onde encontrar seu nome de usuário',
@@ -177,7 +180,7 @@ window.BRAND = {
       source: 'direta',               // distingue a origem na MESMA tabela
       meta: { title: 'Grupo VIP Nobru — Entrar no grupo (direto)' },
       // no fluxo direto, o e-mail/ID vem DEPOIS da faixa de aposta
-      form: { order: ['nome', 'telefone', 'bet', 'contato'] }
+      form: { order: ['nome', 'email', 'telefone', 'bet', 'contato'] }
     }
   },
 

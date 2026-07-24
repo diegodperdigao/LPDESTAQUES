@@ -267,6 +267,20 @@
         card.classList.remove('is-pending');
       });
       card.appendChild(input);
+      // Trava anti-e-mail (opt-in): mostra um aviso em tempo real se a pessoa
+      // digitar um e-mail aqui e marca o campo como pendente (bloqueia o envio).
+      if (f.noEmail) {
+        var warn = el('p', 'lp-input__warn');
+        warn.textContent = (typeof f.noEmail === 'string') ? f.noEmail
+          : 'Isso parece um e-mail. Coloque seu e-mail no campo de e-mail — aqui vai só o nome de usuário.';
+        warn.hidden = true;
+        card.appendChild(warn);
+        input.addEventListener('input', function () {
+          var bad = looksLikeEmail(input.value);
+          warn.hidden = !bad;
+          if (bad) card.classList.add('is-pending');
+        });
+      }
       card.dataset.field = f.id;
       return card;
     }
@@ -345,14 +359,28 @@
   function requiredIds() {
     return FIELDS.map(function (f) { return f.id; }).concat([BET.id]);
   }
+  // Detecta um e-mail COMPLETO (algo@dominio.tld) em qualquer parte do texto.
+  // NÃO barra só por "@": um nome de usuário pode conter @ (ex.: @nobru). Só
+  // acusa quando há domínio com ponto e extensão (o que caracteriza um e-mail).
+  function looksLikeEmail(v) {
+    return /[^\s@]+@[^\s@]+\.[a-z]{2,}/i.test(String(v || ''));
+  }
+  function fieldById(id) {
+    return FIELDS.filter(function (x) { return x.id === id; })[0];
+  }
   function validateField(id) {
     var v = (state.data[id] || '').trim();
     if (id === BET.id) return state.bet != null;
     if (!v) return false;
+    // Trava anti-e-mail (opt-in via `noEmail` no config do campo): impede digitar
+    // o e-mail onde vai o nome de usuário. Só afeta marcas que marcarem a flag —
+    // o Jon, cujo `contato` é "E-mail ou ID Superbet", continua aceitando e-mail.
+    var fc = fieldById(id);
+    if (fc && fc.noEmail && looksLikeEmail(v)) return false;
     if (id === 'contato') {
-      var isEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
-      return isEmail || v.length >= 3;
+      return looksLikeEmail(v) || v.length >= 3;
     }
+    if (id === 'email') return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
     if (id === 'telefone') return v.replace(/\D/g, '').length >= 10;
     return v.length >= 2;
   }
@@ -478,6 +506,14 @@
   async function postLead(row) {
     var ep = leadEndpoint();
     if (!ep) { console.log('[submitLead] (Supabase não configurado) row:', row); await wait(120); return; }
+    // `email` é campo só do Nobru e ainda não existe no schema legado do Supabase;
+    // remove do payload p/ não estourar 400 (PostgREST rejeita coluna inexistente).
+    // A planilha recebe o email cheio via postToSheet. Some daqui quando migrarmos o banco.
+    var payload = row;
+    if (payload && Object.prototype.hasOwnProperty.call(payload, 'email')) {
+      payload = Object.assign({}, row);
+      delete payload.email;
+    }
     var ctrl = (typeof AbortController !== 'undefined') ? new AbortController() : null;
     var to = ctrl ? setTimeout(function () { ctrl.abort(); }, 6000) : null;
     try {
@@ -489,7 +525,7 @@
           'Authorization': 'Bearer ' + ep.key,
           'Prefer': 'return=minimal'
         },
-        body: JSON.stringify(row),
+        body: JSON.stringify(payload),
         keepalive: true,
         signal: ctrl ? ctrl.signal : undefined
       });

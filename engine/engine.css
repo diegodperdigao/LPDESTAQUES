@@ -451,6 +451,17 @@ body {
   box-shadow: 0 0 0 3px rgba(var(--red-rgb), 0.10);
 }
 
+/* Aviso anti-e-mail no campo de nome de usuário (trava opt-in) */
+.lp-input__warn {
+  margin: 7px 0 0;
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.35;
+  color: var(--red);
+}
+.lp-input__warn[hidden] { display: none; }
+
 .lp-q__head {
   display: flex;
   align-items: flex-start;

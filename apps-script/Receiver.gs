@@ -31,7 +31,9 @@ var HEADERS = [
   'Converteu conta?',            // SIM = nao->sim/criou_agora (criou conta apos interagir)
   'Ja tinha conta (1o contato)', // valor da PRIMEIRA vez (nao e sobrescrito)
   // --- conversao confirmada pela casa (postback S2S do Income Access) ---
-  'Registrou?', 'Data registro', 'FTD?', 'Valor FTD', 'Data FTD'
+  'Registrou?', 'Data registro', 'FTD?', 'Valor FTD', 'Data FTD',
+  // --- coluna nova no FIM (nao desloca nenhum COL_* acima) ---
+  'E-mail'
 ];
 
 // Indices (0-based) das colunas usadas na deduplicacao / merge / metrica
@@ -273,7 +275,9 @@ function rowFromData_(d, now) {
     d.utm_source || '', d.utm_medium || '', d.utm_campaign || '', d.utm_content || '', d.utm_term || '',
     d.referrer || '', d.landing_url || '',
     jtc === 'criou_agora' ? 'SIM' : '',  // Converteu conta? (na 1a gravacao)
-    jtc                                  // Ja tinha conta (1o contato)
+    jtc,                                 // Ja tinha conta (1o contato)
+    '', '', '', '', '',                  // 20-24: postback (Registrou/FTD) — preenchidas depois
+    d.email || ''                        // 25: E-mail
   ];
 }
 
