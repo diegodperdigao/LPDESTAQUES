@@ -1496,8 +1496,11 @@ window.BRAND = {
     fields: [
       { id: 'nome', label: 'Nome Completo', type: 'text', autocomplete: 'name',
         placeholder: 'Seu nome completo' },
-      { id: 'contato', label: 'E-mail ou ID Superbet', type: 'text',
-        autocomplete: 'email', placeholder: 'email@exemplo.com ou seu ID' },
+      { id: 'email', label: 'E-mail', type: 'email', autocomplete: 'email',
+        inputmode: 'email', placeholder: 'seu@email.com' },
+      { id: 'contato', label: 'Nome de usuário Superbet', type: 'text',
+        autocomplete: 'off', placeholder: 'Seu nome de usuário Superbet',
+        noEmail: 'Aqui vai o seu nome de usuário Superbet, não o e-mail. Seu e-mail você coloca no campo E-mail acima.' },
       { id: 'telefone', label: 'WhatsApp', type: 'tel', autocomplete: 'tel',
         inputmode: 'tel', placeholder: '(11) 99999-9999' }
     ],
@@ -1560,7 +1563,7 @@ window.BRAND = {
       source: 'direta',
       meta: { title: 'Grupo VIP Jon — Entrar no grupo (direto)' },
       // no fluxo direto, o e-mail/ID vem DEPOIS da faixa de aposta
-      form: { order: ['nome', 'telefone', 'bet', 'contato'] }
+      form: { order: ['nome', 'email', 'telefone', 'bet', 'contato'] }
     }
   },
 
