@@ -113,7 +113,7 @@ window.BRAND = {
         { value: 'ate_1000', label: 'Até R$ 1.000' },
         { value: '1000_3000', label: 'R$ 1.000 a 3.000' },
         { value: '3000_5000', label: 'R$ 3.000 a 5.000' },
-        { value: '5000_mais', label: 'R$ 5.000+', track: true }
+        { value: '5000_mais', label: 'R$ 5.000+', track: true, whatsapp: 'https://www.wapsync.com.br/f/jon-vlogs-vip' }
       ]
     },
     consentText: 'Ao enviar, você concorda com os ',
