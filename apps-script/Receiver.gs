@@ -72,14 +72,20 @@ function doPost(e) {
     var cid = String(data.client_id || '').trim();
     var tel = normPhone_(data.telefone);
 
+    // CAPI (server-side): espelha o evento custom da LP (ex.: CriarConta5000)
+    // quando o lead chega com capi_event_id. Deduplica com o Pixel do navegador
+    // pelo MESMO event_id. Best-effort: nunca quebra a gravacao do lead.
+    var capi = null;
+    try { if (data.capi_event_id) capi = fireCapiCustom_(creator, data); } catch (eC) { capi = { error: String(eC) }; }
+
     var found = findRow_(sheet, cid, tel);
     if (found) {
       var merged = mergeRows_(found.values, incoming);
       sheet.getRange(found.rowIndex, 1, 1, merged.length).setValues([merged]);
-      return json_({ ok: true, action: 'update', row: found.rowIndex });
+      return json_({ ok: true, action: 'update', row: found.rowIndex, capi: capi });
     }
     sheet.appendRow(incoming);
-    return json_({ ok: true, action: 'insert' });
+    return json_({ ok: true, action: 'insert', capi: capi });
   } catch (err) {
     return json_({ ok: false, error: String(err) });
   } finally {
@@ -234,6 +240,46 @@ function fireCapi_(creator, leadId, isFtd) {
     user_data: { external_id: [sha256Hex_(leadId)] }
   };
   if (isFtd) event.custom_data = { currency: 'BRL', value: 0 };
+
+  try {
+    var res = UrlFetchApp.fetch(
+      'https://graph.facebook.com/v21.0/' + cfg.pixel + '/events?access_token=' + encodeURIComponent(token),
+      { method: 'post', contentType: 'application/json',
+        payload: JSON.stringify({ data: [event] }), muteHttpExceptions: true });
+    return { code: res.getResponseCode(), body: res.getContentText().slice(0, 200) };
+  } catch (e) { return { error: String(e) }; }
+}
+
+// CAPI p/ evento CUSTOM da LP (ex.: CriarConta5000), disparado quando o lead
+// chega com capi_event_id — o MESMO event_id usado no Pixel do navegador, entao
+// o Meta DEDUPLICA (nao conta 2x). user_data: email/telefone (SHA256) + fbp/fbc
+// (raw) + user agent -> melhora o match. No-op se nao houver token do creator.
+function fireCapiCustom_(creator, data) {
+  var cfg = CAPI[String(creator || '').toLowerCase()];
+  if (!cfg) return { skipped: 'creator desconhecido' };
+  var token = PropertiesService.getScriptProperties().getProperty(cfg.tokenProp) || cfg.inlineToken;
+  if (!token) return { skipped: 'sem token (' + cfg.tokenProp + ')' };
+  if (!data.capi_event_id) return { skipped: 'sem event_id' };
+
+  var ud = {};
+  var em = String(data.email || '').trim().toLowerCase();
+  if (em) ud.em = [sha256Hex_(em)];
+  var ph = normPhone_(data.telefone);
+  if (ph) { if (ph.length <= 11) ph = '55' + ph; ud.ph = [sha256Hex_(ph)]; } // E.164 BR
+  if (data.client_id) ud.external_id = [sha256Hex_(String(data.client_id))];
+  if (data.fbp) ud.fbp = String(data.fbp);
+  if (data.fbc) ud.fbc = String(data.fbc);
+  if (data.user_agent) ud.client_user_agent = String(data.user_agent);
+
+  var event = {
+    event_name: String(data.capi_event || 'CriarConta5000'),
+    event_time: Math.floor(Date.now() / 1000),
+    action_source: 'website',
+    event_id: String(data.capi_event_id),
+    user_data: ud,
+    custom_data: { faixa_aposta: String(data.faixa_aposta || ''), creator: String(creator || '') }
+  };
+  if (data.landing_url) event.event_source_url = String(data.landing_url);
 
   try {
     var res = UrlFetchApp.fetch(

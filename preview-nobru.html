@@ -2013,14 +2013,17 @@ window.BRAND = {
   function trackPixelConversion() {
     var opt = betMeta(state.bet);
     if (!opt || !opt.track) return;
-    if (typeof window.fbq !== 'function') return;
     var evt = (B.pixel && B.pixel.event) || 'CriarConta5000';
+    // event_id p/ deduplicar navegador <-> servidor (CAPI). Setado ANTES do check
+    // do fbq: se o Pixel estiver bloqueado (adblock/iOS), o CAPI ainda entrega.
+    state.capi = { event: evt, event_id: state.clientId + '-c5k' };
+    if (typeof window.fbq !== 'function') return;
     try {
       window.fbq('trackCustom', evt, {
         creator: B.creator,
         source: B.source,
         faixa_aposta: state.bet
-      });
+      }, { eventID: state.capi.event_id });
     } catch (e) { /* pixel indisponível: nunca bloqueia o fluxo */ }
   }
 
@@ -2040,6 +2043,12 @@ window.BRAND = {
         faixa_aposta: state.bet
       });
     } catch (e) { /* pixel indisponível: nunca bloqueia o fluxo */ }
+  }
+
+  // lê um cookie (ex.: _fbp / _fbc do Meta) p/ melhorar o match do CAPI.
+  function getCookie(name) {
+    var m = ('; ' + document.cookie).split('; ' + name + '=');
+    return m.length === 2 ? decodeURIComponent(m.pop().split(';').shift()) : '';
   }
 
   function buildRow(opts) {
@@ -2068,6 +2077,11 @@ window.BRAND = {
       user_agent: navigator.userAgent
     };
     FIELDS.forEach(function (f) { row[f.id] = (state.data[f.id] || '').trim(); });
+    // dados só p/ o CAPI (server-side): lidos pelo Apps Script, ignorados pela
+    // planilha e REMOVIDOS antes do Supabase (ver postLead) p/ não estourar 400.
+    row.fbp = getCookie('_fbp');
+    row.fbc = getCookie('_fbc');
+    if (state.capi) { row.capi_event = state.capi.event; row.capi_event_id = state.capi.event_id; }
     return row;
   }
 
@@ -2110,10 +2124,12 @@ window.BRAND = {
     // `email` é campo só do Nobru e ainda não existe no schema legado do Supabase;
     // remove do payload p/ não estourar 400 (PostgREST rejeita coluna inexistente).
     // A planilha recebe o email cheio via postToSheet. Some daqui quando migrarmos o banco.
-    var payload = row;
-    if (payload && Object.prototype.hasOwnProperty.call(payload, 'email')) {
+    // remove campos que NÃO existem no schema do Supabase (email + os do CAPI).
+    // Eles vão só pra planilha via postToSheet; o Supabase rejeitaria (400).
+    var payload = row, SB_STRIP = ['email', 'fbp', 'fbc', 'capi_event', 'capi_event_id'];
+    if (SB_STRIP.some(function (k) { return Object.prototype.hasOwnProperty.call(row, k); })) {
       payload = Object.assign({}, row);
-      delete payload.email;
+      SB_STRIP.forEach(function (k) { delete payload[k]; });
     }
     var ctrl = (typeof AbortController !== 'undefined') ? new AbortController() : null;
     var to = ctrl ? setTimeout(function () { ctrl.abort(); }, 6000) : null;
@@ -2176,6 +2192,15 @@ window.BRAND = {
   // Salva o lead PARCIAL (fluxo direto): dispara quando a pessoa marca
   // "Não possui cadastro?" — captura o que já preencheu antes de sair pro
   // cadastro (pode não voltar). Mesmo client_id do envio final p/ casar depois.
+  // Gatilho do CAPI: reposta o lead (com capi_event_id) pra planilha no MESMO
+  // instante do pixel "criar conta". Só planilha — não toca facebook.com, então
+  // não sofre adblock/iOS. O Receiver casa por client_id e dispara o CAPI com o
+  // MESMO event_id -> o Meta deduplica com o Pixel do navegador (sem contar 2x).
+  function postCapiTrigger() {
+    if (!state.capi) return;
+    try { postToSheet(buildRow({ partial: true })); } catch (e) { /* best-effort */ }
+  }
+
   function sendPartial() {
     if (state.partialSent) return;
     state.partialSent = true;
@@ -2317,6 +2342,7 @@ window.BRAND = {
         if (!reg) { e.preventDefault(); console.warn('[reg] links.registration não configurado.'); }
         trackCompleteRegistration(); // Meta Pixel: também conta como registro completo (sem trava de faixa)
         trackPixelConversion(); // Meta Pixel: só dispara p/ a faixa 5.000+ (track:true)
+        postCapiTrigger(); // espelho server-side (CAPI) do CriarConta5000, deduplicado
         sendPartial(); // garante o early-save mesmo se o change não disparou
       };
     }
