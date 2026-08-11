@@ -8,8 +8,9 @@ html, body { background: #0b0b0c; }
 .lp { background: #0b0b0c; }
 .lp-body { background: #0b0b0c; }
 
-/* Hero: preto com brilho dourado sutil */
-.lp-hero { background: radial-gradient(130% 110% at 50% -10%, #241a08 0%, #0b0b0c 58%); }
+/* Hero: fundo LISO igual ao resto da página (sem gradiente -> sem "quadro"
+   mais escuro em volta do Jon; a foto transparente senta num fundo uniforme). */
+.lp-hero { background: #0b0b0c; }
 .lp-hero::after { background: radial-gradient(circle, rgba(201, 162, 75, 0.22), transparent 70%); }
 
 /* Superfícies escuras (inputs, opções, chips, cards) */
@@ -67,10 +68,9 @@ html, body { background: #0b0b0c; }
 .lp-jon-motion { height: 30px; }
 @media (min-width: 880px) { .lp-jon-motion { height: 38px; } }
 
-/* Desktop: equilibra os 2 painéis (imagem | form). Sem isso, o painel do form
-   pega toda a largura restante e centraliza o form, deixando um vão vazio entre
-   a imagem e o form em telas largas. Aqui limitamos a largura do form e
-   centralizamos o par imagem+form na tela. */
+/* Desktop: centraliza o par imagem+form e limita a largura do painel do form
+   (posicionamento equilibrado). Com o fundo do hero agora LISO (igual ao resto),
+   não há mais "quadro" mais escuro em volta da imagem. */
 @media (min-width: 880px) {
   .lp { justify-content: center; }
   .lp-body { flex: 0 1 auto; max-width: 716px; }
