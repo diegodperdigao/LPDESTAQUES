@@ -1328,6 +1328,15 @@ html, body { background: #0b0b0c; }
 .lp-jon-motion { height: 30px; }
 @media (min-width: 880px) { .lp-jon-motion { height: 38px; } }
 
+/* Desktop: equilibra os 2 painéis (imagem | form). Sem isso, o painel do form
+   pega toda a largura restante e centraliza o form, deixando um vão vazio entre
+   a imagem e o form em telas largas. Aqui limitamos a largura do form e
+   centralizamos o par imagem+form na tela. */
+@media (min-width: 880px) {
+  .lp { justify-content: center; }
+  .lp-body { flex: 0 1 auto; max-width: 716px; }
+}
+
 </style>
 </head>
 <body>
