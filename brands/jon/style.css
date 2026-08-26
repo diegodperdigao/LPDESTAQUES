@@ -17,7 +17,7 @@ html, body { background: #0b0b0c; }
    vertical/desktop reaproveitada). Empurra o form pra baixo -> não parece que
    a imagem "bugou no loading". Override da regra do engine (52vw). Só o Jon. */
 @media (max-width: 879px) {
-  [data-flow="direct"] .lp-hero { min-height: 76vw; }
+  [data-flow="direct"] .lp-hero { min-height: 100vw; }
 }
 
 /* Superfícies escuras (inputs, opções, chips, cards) */
