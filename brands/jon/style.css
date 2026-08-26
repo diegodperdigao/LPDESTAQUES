@@ -13,6 +13,13 @@ html, body { background: #0b0b0c; }
 .lp-hero { background: #0b0b0c; }
 .lp-hero::after { background: radial-gradient(circle, rgba(201, 162, 75, 0.22), transparent 70%); }
 
+/* MOBILE (fluxo direto): hero mais alto p/ mostrar o corpo do Jon (a foto é
+   vertical/desktop reaproveitada). Empurra o form pra baixo -> não parece que
+   a imagem "bugou no loading". Override da regra do engine (52vw). Só o Jon. */
+@media (max-width: 879px) {
+  [data-flow="direct"] .lp-hero { min-height: 76vw; }
+}
+
 /* Superfícies escuras (inputs, opções, chips, cards) */
 .lp-gate__opt {
   background: #15151a;
