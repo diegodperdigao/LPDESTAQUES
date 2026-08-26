@@ -55,7 +55,7 @@ window.BRAND = {
     creatorAlt: 'Jon Vlogs',
     // Influenciador (imagens finais do Jon — WebP otimizado p/ alto tráfego):
     creatorPhoto: './brands/jon/assets/jon-desktop.webp',  // desktop: vertical 3:4 (136KB)
-    creatorBanner: './brands/jon/assets/jon-mobile.webp',  // mobile: horizontal 16:10 (118KB)
+    creatorBanner: './brands/jon/assets/jon-desktop.webp',  // mobile: MESMA foto do desktop (reaproveitada; crop center-top na faixa)
     creatorPhotoAlt: 'Jon Vlogs',
     title: 'Grupo VIP Jon',
     subtitleMobile: 'Responda abaixo e garanta sua vaga no grupo do Jon Vlogs.',
