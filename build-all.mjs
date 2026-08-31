@@ -17,7 +17,9 @@ const targets = [
   ['jon'],
   ['jon', 'direta'],
   ['nobru'],
-  ['nobru', 'direta']
+  ['nobru', 'direta'],
+  ['hudson'],
+  ['hudson', 'direta']
 ];
 
 rmSync('dist', { recursive: true, force: true });

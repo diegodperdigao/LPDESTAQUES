@@ -515,6 +515,28 @@
     } catch (e) { /* best-effort: nunca bloqueia o fluxo */ }
   }
 
+  // Espelha o lead pro endpoint central de ingest (3C Dashboard). Aditivo e
+  // best-effort — no-op se B.leadsApi.url vazio (Jon/Nobru não têm ainda, seguem
+  // só no Supabase/planilha). sendBeacon manda a chave NO CORPO (não dá header
+  // custom) e usa text/plain -> sem preflight CORS. O servidor faz upsert por
+  // client_id ("só melhora"). Nunca bloqueia a conversão.
+  function postToCentral(row) {
+    var api = B.leadsApi;
+    if (!api || !api.url) return;
+    try {
+      var payload = api.key ? Object.assign({ key: api.key }, row) : row;
+      var body = JSON.stringify(payload);
+      if (navigator.sendBeacon) {
+        navigator.sendBeacon(api.url, new Blob([body], { type: 'text/plain;charset=UTF-8' }));
+      } else {
+        fetch(api.url, {
+          method: 'POST', mode: 'no-cors', keepalive: true,
+          headers: { 'Content-Type': 'text/plain;charset=UTF-8' }, body: body
+        });
+      }
+    } catch (e) { /* best-effort: nunca bloqueia o fluxo */ }
+  }
+
   // 1 POST. keepalive=true deixa o insert completar mesmo durante o redirect
   // pro WhatsApp (senão a navegação cancela a requisição).
   async function postLead(row) {
@@ -597,7 +619,7 @@
   // MESMO event_id -> o Meta deduplica com o Pixel do navegador (sem contar 2x).
   function postCapiTrigger() {
     if (!state.capi) return;
-    try { postToSheet(buildRow({ partial: true })); } catch (e) { /* best-effort */ }
+    try { var r = buildRow({ partial: true }); postToSheet(r); postToCentral(r); } catch (e) { /* best-effort */ }
   }
 
   function sendPartial() {
@@ -605,6 +627,7 @@
     state.partialSent = true;
     var row = buildRow({ partial: true });
     postToSheet(row); // espelha na planilha do time
+    postToCentral(row); // + endpoint central (Fly) se configurado
     try {
       submitLead(row).catch(function (err) {
         console.warn('[sendPartial] falhou — enfileirando:', err);
@@ -619,6 +642,7 @@
     // criar conta. O evento sai só de quem clica em "criar conta agora".
     var row = buildRow();
     postToSheet(row); // espelha na planilha do time (independe do pixel)
+    postToCentral(row); // + endpoint central (Fly) se configurado
     var lbl = cta.querySelector('.lp-cta__label') || cta;
     cta.classList.add('is-loading');
     cta.disabled = true;
