@@ -1604,7 +1604,14 @@ window.BRAND = {
 
   // Espelho dos leads numa planilha do Google (Apps Script Web App). Vazio =
   // não envia. Mesma URL p/ Jon e Nobru; o recebedor separa por aba (creator).
-  sheet: { url: 'https://script.google.com/macros/s/AKfycbwnxDdRpASJgFrPGXrRFiKzXYXd0su5CAaQ97Vnc84-k1Qdl_sHGcMHsiFOVgghAoWa7A/exec' }
+  sheet: { url: 'https://script.google.com/macros/s/AKfycbwnxDdRpASJgFrPGXrRFiKzXYXd0su5CAaQ97Vnc84-k1Qdl_sHGcMHsiFOVgghAoWa7A/exec' },
+
+  // Dual-write: além do Supabase/planilha, espelha CADA lead no endpoint central
+  // (3C Dashboard). Aditivo — Supabase/planilha/pixel/CAPI seguem intocados.
+  leadsApi: {
+    url: 'https://3cdashboard.fly.dev/ingest/leads',
+    key: '795b76c04e7225f63ce67ac55a5fc9161f6740b59d2d6812'
+  }
 };
 
 </script>
