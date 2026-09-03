@@ -82,3 +82,22 @@ html, body { background: #0b0b0c; }
   .lp { justify-content: center; }
   .lp-body { flex: 0 1 auto; max-width: 716px; }
 }
+
+/* ============================================================
+   HUDSON — foto de hero HORIZONTAL (Hudson + balões, fundo transparente).
+   O hero foi feito p/ imagem vertical 3:4; cover cortava os balões e
+   deixava espaço estranho. Aqui mostra a ARTE INTEIRA (contain), sem corte.
+   ============================================================ */
+
+/* Mobile (fluxo direto): banner curto na proporção da arte; imagem inteira. */
+@media (max-width: 879px) {
+  [data-flow="direct"] .lp-hero { min-height: 56vw; }   /* override do 100vw herdado */
+  .lp-hero { padding-bottom: 0; }
+  .lp-hero__banner { object-fit: contain; object-position: center bottom; }
+  .lp-hero__scrim { display: none; }                    /* arte já é dark/transparente */
+}
+
+/* Desktop: mantém cover (preenche o painel), só centraliza melhor no Hudson. */
+@media (min-width: 880px) {
+  .lp-hero__photo { object-position: center 42%; }
+}
